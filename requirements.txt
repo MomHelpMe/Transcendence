@@ -4,8 +4,11 @@ djangorestframework==3.15.2
 drf-yasg==1.21.7
 inflection==0.5.1
 packaging==24.1
+psycopg2==2.9.9
+python-dotenv==1.0.1
 pytz==2024.1
 PyYAML==6.0.1
+setuptools==71.1.0
 sqlparse==0.5.1
 typing_extensions==4.12.2
 uritemplate==4.1.1
