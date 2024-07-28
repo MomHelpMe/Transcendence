@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENV_DIR="myenv"
+ENV_DIR="venv"
 
 if [ ! -d "$ENV_DIR" ]; then
     python3 -m venv $ENV_DIR

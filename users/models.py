@@ -4,7 +4,7 @@ from django.db import models
 class User(models.Model):
     user_id = models.AutoField(primary_key=True)
     nickname = models.CharField(max_length=255)
-    img_url = models.URLField()
+    img_url = models.URLField(blank=True)
     is_2FA = models.BooleanField(default=False)
     is_online = models.BooleanField(default=False)
 
