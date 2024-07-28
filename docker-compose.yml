@@ -35,7 +35,7 @@ services:
         container_name: frontend
         restart: on-failure
         expose:
-            - "3000"
+            - "5173"
         networks:
             - network
 
