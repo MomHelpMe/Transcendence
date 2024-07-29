@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENV_DIR="myenv"
+ENV_DIR="venv"
 
 if [ ! -d "$ENV_DIR" ]; then
     python3 -m venv $ENV_DIR
@@ -11,6 +11,8 @@ fi
 
 source $ENV_DIR/bin/activate
 echo "Virtual environment activated."
+
+pip install --upgrade pip
 
 if [ -f "requirements.txt" ]; then
     pip install -r requirements.txt
