@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -58,17 +58,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# CORS_ORIGIN_WHITELIST = [
-#     "http://localhost:5173",
-# ]
-
-CORS_ORIGIN_ALLOW_ALL = True  # <- 모든 호스트 허용
+CORS_ORIGIN_ALLOW_ALL = True  # <- 모든 호스트 허용 (보안 취약)
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
-# CORS_ALLOW_CREDENTIALS = True  # <- 쿠키 허용
+CORS_ALLOW_CREDENTIALS = True  # <- 쿠키 허용
 
 ROOT_URLCONF = 'transcendence.urls'
 
@@ -94,7 +90,7 @@ WSGI_APPLICATION = 'transcendence.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-load_dotenv()
+# load_dotenv()
 
 DATABASES = {
     'default': {
