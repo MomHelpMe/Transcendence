@@ -2,7 +2,7 @@ services:
     db:
         build: ./db
         image: postgres:trancendence
-        container_name:  postgres
+        container_name: postgres
         restart: on-failure
         environment:
             - POSTGRES_USER=${POSTGRES_USER}
@@ -18,14 +18,20 @@ services:
         #     - postgres_data:/var/lib/postgresql/data/
         networks:
             - network
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${DB_NAME}"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
     backend:
         depends_on:
-            - db
+            db:
+                condition: service_healthy
         build: ./backend
         image: backend:trancendence
         container_name: backend
-        environment: 
+        environment:
             - POSTGRES_USER=${POSTGRES_USER}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
             - DB_NAME=${DB_NAME}
@@ -33,41 +39,55 @@ services:
             - DB_PASSWORD=${DB_PASSWORD}
             - DB_HOST=${DB_HOST}
             - DB_PORT=${DB_PORT}
-        # restart: on-failure
+        restart: on-failure
         # expose:
         #     - "8000"
         ports:
             - "8000:8000"
         networks:
             - network
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://localhost:8000/ || exit 1"]
+            interval: 30s
+            retries: 3
+            start_period: 30s
+            timeout: 10s
 
-    # frontend:
-    #     build: ./frontend
-    #     image: frontend:trancendence
-    #     container_name: frontend
-    #     restart: on-failure
-    #     expose:
-    #         - "5173"
-    #     networks:
-    #         - network
+    frontend:
+        build: ./frontend
+        image: frontend:trancendence
+        container_name: frontend
+        restart: on-failure
+        # ports:
+        #     - "5173:5173"
+        networks:
+            - network
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://localhost:5173/ || exit 1"]
+            interval: 30s
+            retries: 3
+            start_period: 30s
+            timeout: 10s
 
-    # nginx:
-    #     depends_on:
-    #         backend:
-    #           condition: service_healthy
-    #         frontend:
-    #           condition: service_healthy
-    #     image: nginx:latest
-    #     container_name: nginx
-    #     restart: on-failure
-    #     ports:
-    #         - "80:80"
-    #     networks:
-    #         - network
+    nginx:
+        depends_on:
+            backend:
+                condition: service_healthy
+            frontend:
+                condition: service_healthy
+        image: nginx:1.27.0-bookworm
+        container_name: nginx
+        restart: on-failure
+        ports:
+            - "80:80"
+        volumes:
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+        networks:
+            - network
 
 # volumes:
-    # postgres_data:
-    
+# postgres_data:
+
 networks:
     network:
         driver: bridge
