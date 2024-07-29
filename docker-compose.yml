@@ -10,12 +10,10 @@ services:
             - DB_NAME=${DB_NAME}
             - DB_USER=${DB_USER}
             - DB_PASSWORD=${DB_PASSWORD}
-            - DB_HOST=${DB_HOST}
-            - DB_PORT=${DB_PORT}
         expose:
             - "5432"
-        # volumes:
-        #     - postgres_data:/var/lib/postgresql/data/
+        volumes:
+            - db_data:/var/lib/postgresql/data/
         networks:
             - network
         healthcheck:
@@ -32,16 +30,13 @@ services:
         image: backend:trancendence
         container_name: backend
         environment:
-            - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
             - DB_NAME=${DB_NAME}
             - DB_USER=${DB_USER}
             - DB_PASSWORD=${DB_PASSWORD}
             - DB_HOST=${DB_HOST}
             - DB_PORT=${DB_PORT}
         restart: on-failure
-        # expose:
-        #     - "8000"
+        # TEST: 테스트를 위해 포트를 열어둠
         ports:
             - "8000:8000"
         networks:
@@ -58,8 +53,6 @@ services:
         image: frontend:trancendence
         container_name: frontend
         restart: on-failure
-        # ports:
-        #     - "5173:5173"
         networks:
             - network
         healthcheck:
@@ -75,7 +68,8 @@ services:
                 condition: service_healthy
             frontend:
                 condition: service_healthy
-        image: nginx:1.27.0-bookworm
+        build: ./nginx
+        image: nginx:trancendence
         container_name: nginx
         restart: on-failure
         ports:
@@ -85,8 +79,8 @@ services:
         networks:
             - network
 
-# volumes:
-# postgres_data:
+volumes:
+    db_data:
 
 networks:
     network:

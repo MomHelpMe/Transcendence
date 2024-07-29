@@ -51,7 +51,7 @@ stop:
 start:
 	@echo "$(FG_GREEN)Started$(RESET)"
 	@docker-compose -f docker-compose.yml start
-	@echo "$(FG_GREEN)Connect to $(FG_WHITE)$(UNDERLINE)https://localhost$(RESET)"
+	@echo "$(FG_GREEN)Connect to $(FG_WHITE)$(UNDERLINE)http://localhost$(RESET)"
 
 re:
 	@echo "$(FG_GREEN)Restarted$(RESET)"
