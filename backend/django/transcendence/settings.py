@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-# from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,10 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    "corsheaders",
     'drf_yasg',
     'ansanking',
     "users",
-    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -58,7 +57,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True  # <- 모든 호스트 허용 (보안 취약)
+CORS_ORIGIN_ALLOW_ALL = True  # TEST: 모든 도메인 허용 (보안 취약)
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -90,7 +89,9 @@ WSGI_APPLICATION = 'transcendence.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# load_dotenv()
+# TEST: 로컬에서 테스트할 때 사용
+from dotenv import load_dotenv
+load_dotenv()
 
 DATABASES = {
     'default': {
