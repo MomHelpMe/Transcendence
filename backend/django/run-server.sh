@@ -14,6 +14,14 @@ else
     sed -i '' 's/^DB_HOST=.*$/DB_HOST=localhost/' .env
 fi
 
+# .env 파일의 변수들을 환경 변수로 설정
+if [ -f "$DOT_ENV_FILE" ]; then
+    export $(grep -v '^#' $DOT_ENV_FILE | xargs)
+    echo "Exported .env variables to environment."
+else
+    echo ".env file not found."
+fi
+
 
 if [ ! -d "$ENV_DIR" ]; then
     python3 -m venv $ENV_DIR
@@ -22,10 +30,10 @@ else
     echo "Virtual environment already exists at $ENV_DIR."
 fi
 
+pip install --upgrade pip
+
 source $ENV_DIR/bin/activate
 echo "Virtual environment activated."
-
-pip install --upgrade pip
 
 if [ -f "requirements.txt" ]; then
     pip install -r requirements.txt
@@ -37,6 +45,14 @@ fi
 echo "Applying migrations..."
 python manage.py makemigrations
 python manage.py migrate
+
+# Create a superuser
+echo "Creating superuser..."
+DJANGO_SUPERUSER_USERNAME=$DJANGO_SUPERUSER_USERNAME
+DJANGO_SUPERUSER_PASSWORD=$DJANGO_SUPERUSER_PASSWORD
+DJANGO_SUPERUSER_EMAIL=$DJANGO_SUPERUSER_EMAIL
+
+python manage.py createsuperuser --username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL --noinput || true
 
 echo "Starting development server..."
 python manage.py runserver localhost:8000

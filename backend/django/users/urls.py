@@ -1,16 +1,12 @@
 from django.urls import path
 from .views import (
-    UserListCreateAPIView,
-    FriendListAPIView,
-    FriendCreateDeleteAPIView,
-    GameListCreateAPIView,
-    TournamentListCreateAPIView,
+    get_user,
+    get_user_list,
+    create_user,
 )
 
 urlpatterns = [
-    path('users/', UserListCreateAPIView.as_view(), name='user-list-create'),
-    path('friends/<int:user_id>/', FriendListAPIView.as_view(), name='friend-list'),
-    path('friends/<int:user_id>/<int:friend_id>/', FriendCreateDeleteAPIView.as_view(), name='friend-create-delete'),
-    path('games/<int:user_id>/', GameListCreateAPIView.as_view(), name='game-list-create'),
-    path('tournaments/', TournamentListCreateAPIView.as_view(), name='tournament-list-create'),
+    path('user/get/', get_user_list),
+    path('user/get/<str:nickname>/', get_user),
+    path('user/create/<str:nickname>/', create_user),
 ]
