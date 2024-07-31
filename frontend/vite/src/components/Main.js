@@ -1,5 +1,5 @@
 import { Default } from "./Default.js";
-import { Menu } from "./Menu.js";
+import { Menu } from "./Main-Menu.js";
 
 export class Main extends Default {
 	mounted(){

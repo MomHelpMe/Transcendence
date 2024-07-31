@@ -1,11 +1,14 @@
 import { Home } from "../components/Home.js";
 import { root } from "../app.js";
 import { Main } from "../components/Main.js";
+import { Friends } from "../components/Friends.js";
 
 export const routes = {
     "/": () => { return new Home(root.app) },
+    "/frontend/vite/index.html": () => { return new Home(root.app) },
     "/index.html": () => { return new Home(root.app) },
     "/main": () => { return new Main(root.app) },
+    "/main/friends": () => { return new Friends(root.app) },
 };
 
 export const changeUrl = (requestedUrl) => {

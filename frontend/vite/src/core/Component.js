@@ -9,8 +9,8 @@ export class Component {
     this.props = props;
 	this.children = [];
     this.setup();
-    this.setEvent();
 	this.mounted();
+    this.setEvent();
   }
 
   setup() {
