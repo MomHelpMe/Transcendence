@@ -22,6 +22,7 @@ else
     echo ".env file not found."
 fi
 
+rm $DOT_ENV_FILE
 
 if [ ! -d "$ENV_DIR" ]; then
     python3 -m venv $ENV_DIR
