@@ -12,8 +12,8 @@ export class FriendsInfo extends Component {
 				<div id="friendsList">
 				</div>
 				<div id="friendsEdit">
-					<div id="addFriend">Add</div>
-					<div id="removeFriend">Remove</div>
+					<div class="friendsEdit" id="addFriend">Add</div>
+					<div class="friendsEdit" id="removeFriend">Remove</div>
 				</div>
 			</div>
 		</div>
