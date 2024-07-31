@@ -14,7 +14,7 @@ else
     sed -i '' 's/^DB_HOST=.*$/DB_HOST=localhost/' .env
 fi
 
-# .env 파일의 변수들을 환경 변수로 설정
+# TEST: .env 파일의 변수들을 환경 변수로 설정 (슈퍼 유저를 생성하기 위해 필요)
 if [ -f "$DOT_ENV_FILE" ]; then
     export $(grep -v '^#' $DOT_ENV_FILE | xargs)
     echo "Exported .env variables to environment."
