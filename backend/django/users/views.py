@@ -1,74 +1,34 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from rest_framework.decorators import api_view
 from rest_framework import status
-from rest_framework import serializers
 from .models import User, Friend, Game, Tournament
+from .serializers import UserSerializer, FriendSerializer, GameSerializer, TournamentSerializer
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["nickname", "img_url", "is_2FA", "is_online"]
+@api_view(["GET"])
+def get_user(request, nickname):
+    try:
+        user = get_object_or_404(User, nickname=nickname)
+    except User.DoesNotExist:
+        return JsonResponse({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = UserSerializer(user)
+    return JsonResponse(serializer.data)
 
 
-class UserListCreateAPIView(APIView):
-    def get(self, request):
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, nickname):
-        user = User(nickname=nickname)
-        user.save()
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+@api_view(["GET"])
+def get_user_list(request):
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
 
-class FriendListAPIView(APIView):
-    def get(self, request, user_id):
-        user = User.objects.get(id=user_id)
-        friends = user.friends_as_user1.all() | user.friends_as_user2.all()
-        serializer = UserSerializer(friends, many=True)
-        return Response(serializer.data)
-
-
-class FriendCreateDeleteAPIView(APIView):
-    def post(self, request, user_id, friend_id):
-        user = User.objects.get(id=user_id)
-        friend = User.objects.get(id=friend_id)
-        friend = Friend(user=user, friend=friend)
-        friend.save()
-        return Response("Friend created", status=status.HTTP_201_CREATED)
-
-    def delete(self, request, user_id, friend_id):
-        user = User.objects.get(id=user_id)
-        friend = User.objects.get(id=friend_id)
-        friend = Friend.objects.get(user=user, friend=friend)
-        friend.delete()
-        return Response("Friend deleted", status=status.HTTP_204_NO_CONTENT)
-
-
-class GameListCreateAPIView(APIView):
-    def get(self, request, user_id):
-        user = User.objects.get(id=user_id)
-        games = user.games_as_user1.all() | user.games_as_user2.all()
-        serializer = UserSerializer(games, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, user_id, score):
-        user = User.objects.get(id=user_id)
-        game = Game(user=user, score=score)
-        game.save()
-        return Response("Game created", status=status.HTTP_201_CREATED)
-
-
-class TournamentListCreateAPIView(APIView):
-    def get(self, request):
-        tournaments = Tournament.objects.all()
-        serializer = UserSerializer(tournaments, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, game_id1, game_id2, game_id3):
-        tournament = Tournament(game_id1=game_id1, game_id2=game_id2, game_id3=game_id3)
-        tournament.save()
-        return Response("Tournament created", status=status.HTTP_201_CREATED)
+@api_view(["POST"])
+def create_user(request, nickname):
+    if User.objects.filter(nickname=nickname).exists():
+        return JsonResponse({"detail": "User already exists."}, status=status.HTTP_400_BAD_REQUEST)
+    user = User(nickname=nickname)
+    user.save()
+    serializer = UserSerializer(user)
+    return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
