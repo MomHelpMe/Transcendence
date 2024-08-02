@@ -107,6 +107,51 @@ export class FriendsList extends Component {
 		this.children.push(this.search);
 	  });
 
+	  this.addEvent('keydown', '#addInput', (event) =>{
+		if (event.key === 'Enter') {
+			const searchInput = document.querySelector("input#addInput");
+			const nickname = searchInput.value.trim();
+
+			let friendExists = false;
+
+			for (let i = 0; i < this.friends.length; i++) {
+				if (this.friends[i].nickname === nickname) {
+					friendExists = true;
+					break;
+				}
+			}
+
+			if (friendExists)
+			{
+				const alert = document.querySelector("span#addInputAlert");
+				alert.textContent = "already exists in your friends list";
+				return ;
+			}
+
+			// user 존재 확인
+			// let userExists = false;
+
+			// for (let i = 0; i < this.user.length; i++) {
+			// 	if (this.user[i].nickname === nickname) {
+			// 		friendExists = true;
+			// 		break;
+			// 	}
+			// }
+
+			// if (!friendExists)
+			// {
+			// 	const alert = document.querySelector("span#addInputAlert");
+			// 	alert.textContent = "user does not exist";
+			// 	return ;
+			// }
+
+
+			// friend 추가
+			
+			changeUrl(window.location.pathname);
+		}
+	  })
+
 	  this.addEvent('click', '#addInputImage', (event) =>{
 		const searchInput = document.querySelector("input#addInput");
 		const nickname = searchInput.value.trim();
@@ -150,6 +195,7 @@ export class FriendsList extends Component {
 		changeUrl(window.location.pathname);
 	  })
 
+	  
 	  this.addEvent('click', '#removeFriend', (event) => {
 		const ulElement = document.querySelector("div#search");
 
@@ -162,6 +208,33 @@ export class FriendsList extends Component {
 		this.search = new Input(ulElement, {inputId: "removeInput", imageId: "removeInputImage", img: "../../minus.png"});
 		this.children.push(this.search);
 	  });
+
+	  this.addEvent('keydown', '#removeInput', (event) =>{
+		if (event.key === 'Enter') {
+			const searchInput = document.querySelector("input#removeInput");
+			const nickname = searchInput.value.trim();
+
+			let friendExists = false;
+
+			for (let i = 0; i < this.friends.length; i++) {
+				if (this.friends[i].nickname === nickname) {
+					friendExists = true;
+					break;
+				}
+			}
+
+			if (!friendExists)
+			{
+				const alert = document.querySelector("span#removeInputAlert");
+				alert.textContent = `nickname is not on your friends list`;
+				return ;
+			}
+
+			// friend 삭제
+
+			changeUrl(window.location.pathname);
+		}
+	  })
 
 	  this.addEvent('click', '#removeInputImage', (event) =>{
 		const searchInput = document.querySelector("input#removeInput");
