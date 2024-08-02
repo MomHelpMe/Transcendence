@@ -246,6 +246,7 @@ li.showInfo:hover {
 }
 
 div#friendsBox {
+	position: relative;
 	width: 100%;
 	height: 100%;
 	display: flex;
@@ -254,6 +255,7 @@ div#friendsBox {
 }
 
 div#friendsWindow{
+	margin-top: 3%;
 	width: 60%;
 	height: 80%;
 	border-radius: 50px;
@@ -264,7 +266,7 @@ div#friendsWindow{
 }
 
 div#friendsMenu {
-	margin-top: 10px;
+	margin-top: 15px;
 	margin-right: 0;
 	width: 80%;
 	height: 10%;
@@ -274,7 +276,8 @@ div#friendsMenu {
 }
 
 p#friendsMenu {
-	color: #848484;
+	font-weight: 700;
+	color:#31363F;
     width: 200px;
     height: 100%;
     font-size: 2rem;
@@ -480,7 +483,13 @@ div#inputBox {
     align-items: flex-end; /* 요소들을 오른쪽으로 정렬 */
 }
 
-span#alert {
+span#addInputAlert {
+	margin-right: 20px;
+	color: red;
+	font-size: 10px;
+}
+
+span#removeInputAlert {
 	margin-right: 20px;
 	color: red;
 	font-size: 10px;
@@ -521,5 +530,32 @@ img#removeInputImage {
 }
 
 img#removeInputImage:hover {
+	transform: scale(1.1); /* 이미지를 10% 확대 */
+}
+
+div#defaultImgBox {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+img#friendDefaultImg {
+	width: 50%;
+	height: 50%;
+}
+
+img#goBack{
+	cursor: pointer;
+	position:absolute;
+	top: 50px;
+	left: 50px;
+	width: 50px;
+	height: 50px;
+	transition: transform 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+img#goBack:hover {
 	transform: scale(1.1); /* 이미지를 10% 확대 */
 }

@@ -31,7 +31,7 @@ export const changeUrl = (requestedUrl) => {
     parsePath(requestedUrl);
 };
 
-function parsePath(path) {
+export function parsePath(path) {
     const routeKeys = Object.keys(routes);
     for (const key of routeKeys) {
         const route = routes[key];

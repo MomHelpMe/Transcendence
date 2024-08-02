@@ -1,8 +1,8 @@
 import { Component } from "../core/Component.js";
 import { FriendsInfo } from "./Friends-Info.js";
 import { List } from "./List.js";
-import { changeUrl } from "../core/router.js";
-import { Search } from "./Search.js";
+import { changeUrl, parsePath } from "../core/router.js";
+import { Input } from "./Input.js";
 
 export class FriendsList extends Component {
 
@@ -17,6 +17,7 @@ export class FriendsList extends Component {
   template () {
     return `
         <div id="friendsBox">
+			<img src="../../back.png" id="goBack"></img>
             <div id="friendsWindow">
                 <div id="friendsMenu">
                     <p id="friendsMenu">Friends List</p>
@@ -26,6 +27,9 @@ export class FriendsList extends Component {
                       <ul id="friendsLists"></ul>
                     </div>
                     <div id="friendsInfo">
+						<div id="defaultImgBox">
+							<img id="friendDefaultImg" src="../../friends.png"></img>
+						</div>
                     </div>
                 </div>
                 <div id="friendsEdit">
@@ -82,6 +86,10 @@ export class FriendsList extends Component {
       this.children.push(this.info);
     });
 
+	this.addEvent('click', '#goBack', (event) => {
+		window.history.back();
+	  });
+
 	this.addEvent('click', '.goProfile', (event) => {
 		changeUrl(`/main/profile/${event.target.id}`);
 	  });
@@ -95,7 +103,7 @@ export class FriendsList extends Component {
 			this.children.splice(index, 1);
 		  }
 		}
-		this.search = new Search(ulElement, {inputId: "addInput", imageId: "addInputImage", img: "../../plus.jpeg"});
+		this.search = new Input(ulElement, {inputId: "addInput", imageId: "addInputImage", img: "../../plus.jpeg"});
 		this.children.push(this.search);
 	  });
 
@@ -114,7 +122,7 @@ export class FriendsList extends Component {
 
 		if (friendExists)
 		{
-			const alert = document.querySelector("span#alert");
+			const alert = document.querySelector("span#addInputAlert");
 			alert.textContent = "already exists in your friends list";
 			return ;
 		}
@@ -131,7 +139,7 @@ export class FriendsList extends Component {
 
 		// if (!friendExists)
 		// {
-		// 	const alert = document.querySelector("span#alert");
+		// 	const alert = document.querySelector("span#addInputAlert");
 		// 	alert.textContent = "user does not exist";
 		// 	return ;
 		// }
@@ -151,7 +159,7 @@ export class FriendsList extends Component {
 			this.children.splice(index, 1);
 		  }
 		}
-		this.search = new Search(ulElement, {inputId: "removeInput", imageId: "removeInputImage", img: "../../minus.png"});
+		this.search = new Input(ulElement, {inputId: "removeInput", imageId: "removeInputImage", img: "../../minus.png"});
 		this.children.push(this.search);
 	  });
 
@@ -170,7 +178,7 @@ export class FriendsList extends Component {
 
 		if (!friendExists)
 		{
-			const alert = document.querySelector("span#alert");
+			const alert = document.querySelector("span#removeInputAlert");
 			alert.textContent = `nickname is not on your friends list`;
 			return ;
 		}
