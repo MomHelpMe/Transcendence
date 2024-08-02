@@ -549,10 +549,10 @@ img#friendDefaultImg {
 img#goBack{
 	cursor: pointer;
 	position:absolute;
-	top: 50px;
-	left: 50px;
-	width: 50px;
-	height: 50px;
+	bottom: 50px;
+	right: 50px;
+	width: 80px;
+	height: 80px;
 	transition: transform 0.3s ease; /* 부드러운 전환 효과 */
 }
 
