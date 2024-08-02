@@ -255,9 +255,9 @@ div#friendsBox {
 }
 
 div#friendsWindow{
-	margin-top: 3%;
+	margin-top: 1%;
 	width: 60%;
-	height: 80%;
+	height: 90%;
 	border-radius: 50px;
 	background-color: rgba(90, 93, 106, 0.05);
 	display: flex;
@@ -441,8 +441,8 @@ div#friendImage {
 
 img#friendImage {
 	border-radius: 10px;
-	width: 250px;
-	height: 250px;
+	width: 300px;
+	height: 300px;
 }
 
 div.goProfile {
