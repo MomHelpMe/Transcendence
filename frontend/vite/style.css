@@ -310,6 +310,7 @@ div.friendsEdit{
     font-size: 1.5rem;
 	color: #848484;
 	text-align: center;
+    cursor: pointer;
 	display: flex; /* Flexbox 활성화 */
 	align-items: center; /* 수직 중앙 정렬 */
 	justify-content: center; /* 수평 중앙 정렬 */
@@ -321,7 +322,77 @@ div.friendsEdit:hover {
     color: white; /* 선택 사항: 텍스트 색 변경 */
 }
 
+div#friendsBody{
+	margin-top: 20px;
+	width: 80%;
+	height: 80%;
+	display: flex;
+	align-items: center;
+}
+
 div#friendsList{
-	border-radius: 10px;
+	margin-top: 0;
+	margin-right: 20px;
+	border-radius: 20px;
 	background-color: rgba(70, 73, 86, 0.1);
+	width: 30%;
+	height: 100%;
+}
+
+
+div#friendsInfo{	
+	border-radius: 20px;
+	background-color: rgba(70, 73, 86, 0.1);
+	width: 80%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+ul#friendsLists{
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	list-style-type: none;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding-left: 0;
+}
+
+li.fList{
+	margin-top: 2%;
+	margin-bottom: 2%;
+    width: 80%;
+    height: 10%;
+	font-weight: 700;
+    font-size: 1.4rem;
+    border-radius: 10px;
+    color: #31363F;
+    cursor: pointer;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+li.fList:hover {
+	color: #f10000; /* 마우스를 올렸을 때 변경될 글자 색 */
+}
+
+div#onlineInfo {
+	width: 80%;
+	height: 10%;
+	align-items: center;
+}
+
+div#online{
+	margin-top: 40px;
+	margin-left: 20px;
+	border-radius: 50%;
+	width: 10px;
+	height: 10px;
+	background-color: rgb(52, 240, 86);
 }
