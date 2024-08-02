@@ -1,13 +1,17 @@
 import { Component } from "../core/Component.js";
 import { FriendsInfo } from "./Friends-Info.js";
 import { List } from "./List.js";
+import { changeUrl } from "../core/router.js";
+import { Search } from "./Search.js";
 
 export class FriendsList extends Component {
 
   constructor($el, props) {
     super($el, props);
-    this.users = []; // users 속성을 초기화
+	this.user = [];
+    this.friends = []; // friends 속성을 초기화
     this.info = null; // info 속성을 초기화
+	this.search = null;
   }
 
   template () {
@@ -27,6 +31,7 @@ export class FriendsList extends Component {
                 <div id="friendsEdit">
                     <div class="friendsEdit" id="addFriend">Add</div>
                     <div class="friendsEdit" id="removeFriend">Remove</div>
+					<div id="search"></div>
                 </div>
             </div>
         </div>
@@ -44,10 +49,10 @@ export class FriendsList extends Component {
       }
 
       // JSON 형식으로 응답 데이터를 파싱합니다.
-      this.users = await response.json();
+      this.friends = await response.json();
 
       // 유저 목록에서 닉네임 배열을 추출합니다.
-      const nicknames = this.users.map(user => user.nickname);
+      const nicknames = this.friends.map(user => user.nickname);
 
       // HTML 요소를 선택하고, 닉네임을 기반으로 리스트를 생성합니다.
       const ulElement = document.querySelector("ul#friendsLists");
@@ -70,15 +75,109 @@ export class FriendsList extends Component {
         }
       }
 
-	  const friend = this.users.find(user => user.nickname === event.target.textContent);
+	  const friend = this.friends.find(user => user.nickname === event.target.id);
 
       // 새로운 FriendsInfo 인스턴스를 생성하고, this.children에 추가
       this.info = new FriendsInfo(ulElement, {is_online: friend.is_online, nickname: friend.nickname, img_url: friend.img_url});
       this.children.push(this.info);
     });
 
-	// this.addEvent('click', '#goProfile', (target) => {
-	// 	changeUrl(`/main/profile/${target.}`);
-	//   });
+	this.addEvent('click', '.goProfile', (event) => {
+		changeUrl(`/main/profile/${event.target.id}`);
+	  });
+
+	this.addEvent('click', '#addFriend', (event) => {
+		const ulElement = document.querySelector("div#search");
+
+		if (this.search) {
+		  const index = this.children.indexOf(this.search);
+		  if (index !== -1) {
+			this.children.splice(index, 1);
+		  }
+		}
+		this.search = new Search(ulElement, {inputId: "addInput", imageId: "addInputImage", img: "../../plus.jpeg"});
+		this.children.push(this.search);
+	  });
+
+	  this.addEvent('click', '#addInputImage', (event) =>{
+		const searchInput = document.querySelector("input#addInput");
+		const nickname = searchInput.value.trim();
+
+		let friendExists = false;
+
+		for (let i = 0; i < this.friends.length; i++) {
+			if (this.friends[i].nickname === nickname) {
+				friendExists = true;
+				break;
+			}
+		}
+
+		if (friendExists)
+		{
+			const alert = document.querySelector("span#alert");
+			alert.textContent = "already exists in your friends list";
+			return ;
+		}
+
+		// user 존재 확인
+		// let userExists = false;
+
+		// for (let i = 0; i < this.user.length; i++) {
+		// 	if (this.user[i].nickname === nickname) {
+		// 		friendExists = true;
+		// 		break;
+		// 	}
+		// }
+
+		// if (!friendExists)
+		// {
+		// 	const alert = document.querySelector("span#alert");
+		// 	alert.textContent = "user does not exist";
+		// 	return ;
+		// }
+
+
+		// friend 추가
+		
+		changeUrl(window.location.pathname);
+	  })
+
+	  this.addEvent('click', '#removeFriend', (event) => {
+		const ulElement = document.querySelector("div#search");
+
+		if (this.search) {
+		  const index = this.children.indexOf(this.search);
+		  if (index !== -1) {
+			this.children.splice(index, 1);
+		  }
+		}
+		this.search = new Search(ulElement, {inputId: "removeInput", imageId: "removeInputImage", img: "../../minus.png"});
+		this.children.push(this.search);
+	  });
+
+	  this.addEvent('click', '#removeInputImage', (event) =>{
+		const searchInput = document.querySelector("input#removeInput");
+		const nickname = searchInput.value.trim();
+
+		let friendExists = false;
+
+		for (let i = 0; i < this.friends.length; i++) {
+			if (this.friends[i].nickname === nickname) {
+				friendExists = true;
+				break;
+			}
+		}
+
+		if (!friendExists)
+		{
+			const alert = document.querySelector("span#alert");
+			alert.textContent = `nickname is not on your friends list`;
+			return ;
+		}
+
+		// friend 삭제
+
+		changeUrl(window.location.pathname);
+	  })
   }
 }
