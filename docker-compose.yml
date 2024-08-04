@@ -35,6 +35,10 @@ services:
             - DB_PASSWORD=${DB_PASSWORD}
             - DB_HOST=${DB_HOST}
             - DB_PORT=${DB_PORT}
+            - SECRET_KEY=${SECRET_KEY}
+            - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
+            - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
+            - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
         restart: on-failure
         # TEST: 테스트를 위해 포트를 열어둠
         ports:

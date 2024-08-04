@@ -13,7 +13,9 @@ export class Login extends Component {
 
   setEvent () {
     this.addEvent('click', '#login', () => {
-      changeUrl("/main");
+      // 백엔드 서버의 로그인 엔드포인트로 리디렉션
+      window.location.href = 'http://localhost:8000/api/login';
+      changeUrl('/login');
     });
   }
 }
