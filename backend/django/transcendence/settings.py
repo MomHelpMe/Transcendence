@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'ansanking',
     "users",
+    "django",
 ]
 
 MIDDLEWARE = [
@@ -70,7 +71,8 @@ ROOT_URLCONF = 'transcendence.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # feature01-42OAuth_Login 에서 추가됨 원래 [] 로 비어있었음
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
