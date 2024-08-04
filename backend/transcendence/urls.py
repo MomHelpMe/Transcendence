@@ -20,12 +20,6 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.urls import include
-from django.http import HttpResponse
-from users import views
-
-# 홈 페이지 뷰 함수 추가
-def home(request):
-    return HttpResponse("Hello, world!")
 
 # Swagger 설정
 schema_view = get_schema_view(
@@ -44,10 +38,9 @@ schema_view = get_schema_view(
 # URL 패턴 설정
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home, name='home'),
-    path('api/', include('ansanking.urls')),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/', include('users.urls')),
+    path('api/', include('login.urls')),
 ]

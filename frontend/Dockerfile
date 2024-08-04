@@ -4,7 +4,7 @@ FROM node:22.5-alpine3.19
 WORKDIR /app
 
 # 3. package.json 및 package-lock.json을 복사합니다.
-COPY vite/package*.json ./
+COPY package*.json ./
 
 # 4. 의존성을 설치합니다.
 RUN npm install && \
@@ -12,7 +12,7 @@ RUN npm install && \
     apk add --no-cache curl
 
 # 5. 나머지 애플리케이션 소스를 복사합니다.
-COPY vite/ .
+COPY . .
 
 # 6. Vite 서버를 실행합니다.
 CMD ["npm", "run", "dev"]

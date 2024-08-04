@@ -6,13 +6,9 @@ DOT_ENV_FILE=".env"
 # 스크립트 파일의 디렉토리로 이동
 cd "$(dirname "$0")"
 
-if [ -f "$DOT_ENV_FILE" ]; then
-    echo "$DOT_ENV_FILE already exists."
-else
-    cp ../../$DOT_ENV_FILE .
+cp ../$DOT_ENV_FILE .
     echo "Copied $DOT_ENV_FILE."
     sed -i '' 's/^DB_HOST=.*$/DB_HOST=localhost/' .env
-fi
 
 # TEST: .env 파일의 변수들을 환경 변수로 설정 (슈퍼 유저를 생성하기 위해 필요)
 if [ -f "$DOT_ENV_FILE" ]; then
@@ -20,9 +16,8 @@ if [ -f "$DOT_ENV_FILE" ]; then
     echo "Exported .env variables to environment."
 else
     echo ".env file not found."
+    exit 1
 fi
-
-rm $DOT_ENV_FILE
 
 if [ ! -d "$ENV_DIR" ]; then
     python3 -m venv $ENV_DIR

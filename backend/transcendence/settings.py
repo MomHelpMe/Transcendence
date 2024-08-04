@@ -41,9 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     "corsheaders",
     'drf_yasg',
-    'ansanking',
-    "users",
-    "django",
+    "users.apps.UsersConfig",
+    "login.apps.LoginConfig",
 ]
 
 MIDDLEWARE = [
