@@ -56,13 +56,18 @@ def callback(request):
 
     # 사용자 정보 처리 (예: DB 저장)
     nickname = user_data.get("login")  # 42 API에서 사용자 로그인 이름
+    email = user_data.get("email")  # 42 API에서 사용자 이메일
     img_url = user_data.get("image", {}).get("link")  # 42 API에서 사용자 이미지 URL
     is_2FA = user_data.get("is_2fa", False)  # 2FA 여부
     is_online = False  # 기본값으로 설정 (온라인 상태는 API에서 제공하지 않음)
 
     # 사용자 정보 저장 또는 업데이트
     user, created = User.objects.update_or_create(
-        nickname=nickname, defaults={"img_url": img_url, "is_2FA": is_2FA, "is_online": is_online}
+        nickname=nickname, defaults={
+            "email": email,
+            "img_url": img_url,
+            "is_2FA": is_2FA, 
+            "is_online": is_online}
     )
 
     # 생성된 경우, 추가 로직 (예: 환영 메시지 등)

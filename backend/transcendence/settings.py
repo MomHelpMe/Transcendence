@@ -1,6 +1,6 @@
 from pathlib import Path
 import os
-# TEST: 로컬에서 테스트할 때 사용
+# TEST: 로컬에서 테스트할 때 사용, docker-compose 이용 시 환경변수로 알아서 설정됨
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -73,7 +73,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # feature01-42OAuth_Login 에서 추가됨 원래 [] 로 비어있었음
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
