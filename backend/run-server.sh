@@ -32,10 +32,16 @@ source $ENV_DIR/bin/activate
 echo "Virtual environment activated."
 
 if [ -f "requirements.txt" ]; then
-    pip install -r requirements.txt
-    echo "Installed packages from requirements.txt."
+    cnt=$(pip freeze | grep -f requirements.txt | wc -l)
+    if [ $cnt -lt $(cat requirements.txt | wc -l) ]; then
+            pip install -r requirements.txt
+            echo "Installed packages from requirements.txt."
+    else
+        echo "Packages from requirements.txt are already installed."
+    fi
 else
     echo "requirements.txt not found."
+    exit 1
 fi
 
 echo "Applying migrations..."
@@ -43,12 +49,22 @@ python manage.py makemigrations
 python manage.py migrate
 
 # Create a superuser
-echo "Creating superuser..."
 DJANGO_SUPERUSER_USERNAME=$DJANGO_SUPERUSER_USERNAME
 DJANGO_SUPERUSER_PASSWORD=$DJANGO_SUPERUSER_PASSWORD
 DJANGO_SUPERUSER_EMAIL=$DJANGO_SUPERUSER_EMAIL
 
-python manage.py createsuperuser --username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL --noinput || true
+USER_EXISTS=$(python manage.py shell -c "
+from django.contrib.auth import get_user_model;
+User = get_user_model();
+print(User.objects.filter(username='admin').exists())
+")
+
+if [ "$USER_EXISTS" = "False" ]; then
+    echo "Creating superuser..."
+    python manage.py createsuperuser --username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL --noinput || true
+fi
 
 echo "Starting development server..."
+clear
+
 python manage.py runserver localhost:8000
