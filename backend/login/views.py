@@ -1,12 +1,14 @@
-import requests
 from django.shortcuts import redirect
-from users.models import User
-from datetime import datetime, timedelta
-import jwt
+from django.views.decorators.csrf import csrf_exempt
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
 from django.conf import settings
-import os
+from users.models import User
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from datetime import datetime, timedelta
+import requests
+import jwt
+import os
 
 
 @api_view(["GET"])
@@ -81,3 +83,20 @@ def callback(request):
     response.set_cookie("jwt", token, httponly=True, secure=True, samesite='Lax')
 
     return response
+
+@csrf_exempt
+def validate_token(request):
+    # CSRF 토큰 발급
+    get_token(request)
+    
+    token = request.COOKIES.get('jwt')
+    if not token:
+        return JsonResponse({"isValid": False})
+
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        return JsonResponse({"isValid": True, "user": payload})
+    except jwt.ExpiredSignatureError:
+        return JsonResponse({"isValid": False, "error": "Token has expired"})
+    except jwt.InvalidTokenError:
+        return JsonResponse({"isValid": False, "error": "Invalid token"})
