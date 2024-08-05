@@ -15,7 +15,9 @@ export class FriendsInfo extends Component {
 		<div id="friendImage">
 			<img id="friendImage" src="../../소년명수.png"></img>
 		</div>
-		<div class="goProfile" id="${nickname}">Profile
+		<div id="friendBottom">
+			<div class="goProfile" id="${nickname}">View Profile</div>
+			<div class="removeFriend" id="${nickname}">Remove</div>
 		</div>
     `;
   }
