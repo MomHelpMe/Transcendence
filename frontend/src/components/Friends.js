@@ -1,9 +1,9 @@
 import { Default } from "./Default.js";
-import { FriendsInfo } from "./Friends-Info.js";
+import { FriendsList } from "./Friends-List.js";
 
 export class Friends extends Default {
 
 	mounted(){
-		this.children.push(new FriendsInfo(document.querySelector("div#contents")));
+		this.children.push(new FriendsList(document.querySelector("div#contents")));
 	}
 }

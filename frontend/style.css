@@ -93,8 +93,10 @@ div#margin {
 }
 
 div#border {
+	min-width: 1300px;
+	min-height: 700px;
 	width: 75%;
-	height: 70%;
+	height: 80%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -111,15 +113,15 @@ div#contents {
 
 svg#topParticle {
 	position: absolute;
-	top: 20px;
-	right: 185px;
+	top: 10px;
+	right: 145px;
 }
 
 
 svg#bottomParticle {
 	position: absolute;
-	bottom: 20px;
-	left: 185px;
+	bottom: 10px;
+	left: 145px;
 }
 
 svg#topBall {
@@ -178,10 +180,9 @@ ul#gameMenu{
 	list-style-type: none;
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	align-items:flex-end;
 	padding-left: 10%;
 	padding-right: 10%;
-	padding-top: 15%;
 }
 
 li.gameMode{
@@ -190,7 +191,7 @@ li.gameMode{
     width: 250px;
     height: 230px;
     font-size: 2.7rem;
-    border-radius: 30%;
+    border-radius: 50px;
     color: white;
     cursor: pointer;
 	text-align: center;
@@ -214,10 +215,10 @@ ul#userMenu{
 	list-style-type: none;
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	align-items: flex-start;
 	padding-left: 30%;
 	padding-right: 30%;
-	padding-bottom: 5%;
+	padding-top: 40px;
 }
 
 li.showInfo{
@@ -246,6 +247,7 @@ li.showInfo:hover {
 }
 
 div#friendsBox {
+	position: relative;
 	width: 100%;
 	height: 100%;
 	display: flex;
@@ -254,8 +256,9 @@ div#friendsBox {
 }
 
 div#friendsWindow{
+	margin-top: 1%;
 	width: 60%;
-	height: 80%;
+	height: 90%;
 	border-radius: 50px;
 	background-color: rgba(90, 93, 106, 0.05);
 	display: flex;
@@ -264,7 +267,7 @@ div#friendsWindow{
 }
 
 div#friendsMenu {
-	margin-top: 10px;
+	margin-top: 15px;
 	margin-right: 0;
 	width: 80%;
 	height: 10%;
@@ -274,42 +277,32 @@ div#friendsMenu {
 }
 
 p#friendsMenu {
-	color: #848484;
-    width: 200px;
+	font-weight: 900;
+	color:#31363F;
+    font-size: 2.5rem;
+    width: 300px;
     height: 100%;
-    font-size: 2rem;
 	text-align: center;
 	display: flex;
 	align-items: center;
-	justify-content: center;
-}
-
-div#friendsList{
-	margin-top: 10px;
-	margin-right: 0;
-	width: 80%;
-	height: 80%;
-	display: flex;
-	flex-direction: column;
 	justify-content: center;
 }
 
 div#friendsEdit {
-	width: 90%;
-	height: 25%;
+	width: 80%;
+	height: 20%;
 	display: flex;
-	align-items: center;
 }
 
 div.friendsEdit{
-	margin-top: 20px;
-	margin-left: 25px;
-	border-radius: 20px;
-	width: 120px;
-	height: 50px;
-    font-size: 1.5rem;
+	border-radius: 30px;
+	width: 140px;
+	height: 70px;
+    font-size: 1.8rem;
+	font-weight: 600;
 	color: #848484;
 	text-align: center;
+    cursor: pointer;
 	display: flex; /* Flexbox 활성화 */
 	align-items: center; /* 수직 중앙 정렬 */
 	justify-content: center; /* 수평 중앙 정렬 */
@@ -321,7 +314,442 @@ div.friendsEdit:hover {
     color: white; /* 선택 사항: 텍스트 색 변경 */
 }
 
+div#friendsBody{
+	margin-top: 10px;
+	width: 80%;
+	height: 80%;
+	display: flex;
+	align-items: center;
+}
+
 div#friendsList{
-	border-radius: 10px;
+	margin-right: 20px;
+	border-radius: 20px;
 	background-color: rgba(70, 73, 86, 0.1);
+	width: 25%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+div#addDiv{
+	width: 25%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin-right: 20px;
+}
+
+div#friendsInfo{
+	border-radius: 20px;
+	background-color: rgba(70, 73, 86, 0.1);
+	width: 70%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	overflow: hidden;
+}
+
+ul#friendsLists{
+	width: 90%;
+	height: 90%;
+	max-height: 90%; /* 최대 높이를 설정하여 스크롤을 활성화 */
+	overflow-y: auto; /* 세로 스크롤 활성화 */
+	text-align: center;
+	list-style-type: none;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start; /* 리스트 항목을 위쪽으로 정렬 */
+	align-items: center;
+	padding-left: 0;
+}
+
+li.fList{
+	margin-top: 2%;
+	margin-bottom: 2%;
+    width: 80%;
+    height: 10%;
+	font-weight: 700;
+    font-size: 1.7rem;
+    color: #31363F;
+    cursor: pointer;
+	text-align: left;
+	display: flex;
+	align-items: center;
+	justify-content: center;	
+}
+
+li.fList:hover {
+	color: #f10000; /* 마우스를 올렸을 때 변경될 글자 색 */
+}
+
+div#onlineInfo {
+	margin-top: 30px;
+	position: relative;
+	width: 100%;
+	height: 10%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+div#online{
+	border-radius: 50%;
+	width: 10px;
+	height: 10px;
+	position:absolute;
+	top: 10px;
+	background-color: rgb(52, 240, 86);
+	left: calc(30%);
+}
+
+div#offline{
+	border-radius: 50%;
+	width: 10px;
+	height: 10px;
+	position:absolute;
+	top: 10px;
+	background-color: rgb(116, 116, 116);
+	left: calc(30%);
+}
+
+div#friendNick{
+	width: 80%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
+	font-size: 2.3rem;
+	font-weight: 700;
+	color:#31363F;
+	flex-shrink: 1; /* 플렉스 항목이 축소되도록 설정 */
+}
+
+div#friendImage {
+	width: 70%;
+	height: 70%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+img#friendImage {
+	border-radius: 30px;
+	width: 90%;
+	height: 90%;
+}
+
+div#friendBottom {
+	width: 80%;
+	height: 10%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 10px;
+}
+
+div.goProfile {
+	margin-right: 15px;
+	border-radius: 20px;
+	width: 37%;
+	height: 80%;
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: #31363F;
+	text-align: center;
+    cursor: pointer;
+	display: flex; /* Flexbox 활성화 */
+	align-items: center;
+	justify-content: center; /* 수평 중앙 정렬 */
+}
+
+div.goProfile:hover {
+	background-color: #4B4E5A; /* 마우스를 올렸을 때의 배경색 */
+    color: white; /* 선택 사항: 텍스트 색 변경 */
+}
+
+div.removeFriend {
+	margin-left: 15px;
+	border-radius: 20px;
+	width: 37%;
+	height: 80%;
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: #31363F;
+	text-align: center;
+    cursor: pointer;
+	display: flex; /* Flexbox 활성화 */
+	align-items: center;
+	justify-content: center; /* 수평 중앙 정렬 */
+}
+
+div.removeFriend:hover {
+    background-color: #4B4E5A; /* 마우스를 올렸을 때의 배경색 */
+    color: white; /* 선택 사항: 텍스트 색 변경 */
+}
+
+
+div#search {
+	width: 70%;
+	display: flex;
+	justify-content: right;
+	align-items: center;
+	height: 100%;
+}
+
+div#inputBox {
+	width: 180px;
+	height: 30px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+
+input#searchInput {
+	width: 200px;
+	height: 50px;
+	margin-right: 40px;
+}
+
+.search-results {
+	margin-top: 30px;
+	margin-right: 20px;
+	border: 1px solid #ccc;
+	max-height: 60px;
+	overflow-y: auto;
+	width: 185px;
+	display: none;
+	position: absolute;
+	background-color: #fff;
+	z-index: 1;
+}
+
+.search-result-item {
+	padding: 8px;
+	cursor: pointer;
+}
+
+.search-result-item:hover {
+	background-color: #f0f0f0;
+}
+
+
+img#addInputImage {
+	cursor: pointer;
+	width: 40px;
+	height: 40px;
+	border-radius: 20px;
+	transition: transform 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+img#addInputImage:hover {
+	transform: scale(1.1); /* 이미지를 10% 확대 */
+}
+
+div#defaultImgBox {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+img#friendDefaultImg {
+	width: 50%;
+	height: 50%;
+}
+
+img#goBack{
+	cursor: pointer;
+	position:absolute;
+	bottom: 30px;
+	right: 30px;
+	width: 80px;
+	height: 80px;
+	transition: transform 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+img#goBack:hover {
+	transform: scale(1.1); /* 이미지를 10% 확대 */
+}
+
+
+div#profileBox {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+div#profile {
+	background-color: rgba(90, 93, 106, 0.05);
+	border-radius: 20px;
+	width: 85%;
+	height: 85%;
+	display: flex;
+}
+
+div#profile-left {
+	width: 40%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+}
+
+div#profile-right {
+	width: 60%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+div#profileHeaderBox {
+	margin-top: 50px;
+	height: 10%;
+	width: 80%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#profileHeader {
+	font-weight: 900;
+	color:#31363F;
+    font-size: 3.0rem;
+    width: 200px;
+    height: 100%;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+div#profile-edit {
+	margin-top: 30px;
+	height: 10%;
+	width: 100%;
+}
+
+div#profile-edit-button {
+	margin-left: 30px;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 20px;
+	font-weight: 500;
+	width: 70px;
+	height: 32px;
+	border-radius: 10px;
+	background-color: #31363F;
+	color: rgb(244, 244, 244);
+	box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* 기본 상태에서 그림자 없음 */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+div#profile-edit-button:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* 호버 시 더 깊은 그림자 */
+    transform: translateY(-2px); /* 살짝 위로 이동 */
+}
+
+
+div#userInfo {
+	width: 80%;
+	height: 70%;
+	margin-top: 20px;
+	background-color: rgba(70, 73, 86, 0.1);
+	border-radius: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+
+div#profileUserName {
+	width: 100%;
+	height: 10%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+span#profileNick{
+	font-size: 2.5rem;
+	font-weight: 700;
+	color:#31363F;
+}
+
+div#profileImgBox {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+img#profileImg {
+	border-radius: 20px;
+	width: 70%;
+	height: 80%;
+}
+
+div#match {
+	margin-top: 70px;
+	margin-left: 30px;
+	width: 85%;
+	height: 80%;
+	background-color: rgba(70, 73, 86, 0.1);
+	border-radius: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+div#matchInfo {
+	margin-top: 35px;
+	border-radius: 20px;
+	width: 530px;
+	height: 50px;
+	background: linear-gradient(to bottom right, #5A5D6A, #31363F);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#win {
+	color: white;
+	font-size: 30px;
+	font-weight: 700;
+	margin-right: 30px;
+}
+
+#lose {
+	color: white;
+	font-size: 30px;
+	font-weight: 700;
+	padding-left: 30px;
+	padding-right: 30px;
+	border-left: 2px solid white; /* 왼쪽 테두리 */
+	border-right: 2px solid white; /* 오른쪽 테두리 */
+}
+
+#rate {
+	color: white;
+	font-size: 30px;
+	font-weight: 700;
+	margin-left: 30px;
+}
+
+span#matchHeader {
+	
 }

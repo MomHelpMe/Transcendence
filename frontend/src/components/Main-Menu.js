@@ -22,5 +22,11 @@ export class Menu extends Component {
     this.addEvent('click', '#Friends', () => {
       changeUrl("/main/friends");
     });
+
+	this.addEvent('click', '#Profile', () => {
+		// api로 user 정보 가져오기
+		const user = "seonjo";
+	  changeUrl(`/main/profile/${user}`);
+	});
   }
 }
