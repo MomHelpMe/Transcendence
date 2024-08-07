@@ -38,7 +38,7 @@ build:
 
 up:
 	@docker-compose -f docker-compose.yml up -d
-	@echo "🛜  $(FG_GREEN)Connect to $(FG_WHITE)$(UNDERLINE)https://localhost$(RESET) 🛜"
+	@echo "🛜  $(FG_GREEN)Connect to $(FG_WHITE)$(UNDERLINE)https://localhost:80$(RESET) 🛜"
 
 down:
 	@docker-compose -f docker-compose.yml down
@@ -51,7 +51,7 @@ stop:
 start:
 	@echo "$(FG_GREEN)Started$(RESET)"
 	@docker-compose -f docker-compose.yml start
-	@echo "$(FG_GREEN)Connect to $(FG_WHITE)$(UNDERLINE)http://localhost$(RESET)"
+	@echo "$(FG_GREEN)Connect to $(FG_WHITE)$(UNDERLINE)http://localhost:80$(RESET)"
 
 re:
 	@echo "$(FG_GREEN)Restarted$(RESET)"
@@ -70,6 +70,7 @@ clean:
 fclean:
 	@$(MAKE) down
 	@docker system prune -af --volumes
+	@docker volume rm transcendence_db_data
 	@echo "🧹 $(FG_BLUE)Fully cleaned up$(RESET) 🧹"
 
 .PHONY: all build up down stop start re log clean fclean

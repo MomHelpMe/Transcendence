@@ -9,7 +9,6 @@ export default defineConfig({
                 // TEST: 평가 시 80번 포트로 변경 (nginx를 거쳐 api를 호출하도록)
                 target: "http://localhost:8000",
                 changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api/, ""),
             },
         },
     },

@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-COPY ./django/ .
+COPY . .
 RUN chmod -R 755 /app
 
 CMD ["sh", "docker-run-server.sh"]
