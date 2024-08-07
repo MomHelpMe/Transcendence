@@ -25,7 +25,8 @@ export class ProfileInfo extends Component {
 						<div id="profile-edit">
 							${this.props.nickname === this.user.nickname ? `<div id="profile-edit-button">edit</div>` : ""}
 						</div>
-						<div id="profileUserName">${this.user.nickname}
+						<div id="profileUserName">
+							<span id="profileNick">${this.user.nickname}</span>
 						</div>
 						<div id="profileImgBox">
 							${this.user.img_url === "" ?
@@ -48,8 +49,7 @@ export class ProfileInfo extends Component {
 							</span>
 						</div>
 						<div id="matchHistory">
-							<span id="matchHistory>
-							</span>
+							<span id="matchHeader>Match History</span>
 						</div>
 					</div>
 				</div>
