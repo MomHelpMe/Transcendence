@@ -716,40 +716,90 @@ div#match {
 }
 
 div#matchInfo {
-	margin-top: 35px;
-	border-radius: 20px;
-	width: 530px;
-	height: 50px;
-	background: linear-gradient(to bottom right, #5A5D6A, #31363F);
+	margin-top: 15px;
+	border-radius: 10px;
+	width: 95%;
+	height: 21%;
+	min-height: 115px;
+	background: linear-gradient(to bottom right, white, #ffffff);
 	display: flex;
-	justify-content: center;
+	justify-content: space-between;
 	align-items: center;
 }
 
+#winRateCircle {
+	margin-left: 30px;
+	font-family: Arial, sans-serif;
+	position: relative;
+	width: 100px;
+	height: 100px;
+}
+
+canvas.winRateCircle {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+}
+
+#percentage {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 18px;
+	font-weight: 700;
+	color: #31363F;
+}
+
 #win {
-	color: white;
-	font-size: 30px;
-	font-weight: 700;
-	margin-right: 30px;
-}
-
-#lose {
-	color: white;
-	font-size: 30px;
-	font-weight: 700;
-	padding-left: 30px;
-	padding-right: 30px;
-	border-left: 2px solid white; /* 왼쪽 테두리 */
-	border-right: 2px solid white; /* 오른쪽 테두리 */
-}
-
-#rate {
-	color: white;
+	color: #4074e0;
 	font-size: 30px;
 	font-weight: 700;
 	margin-left: 30px;
 }
 
-span#matchHeader {
-	
+#lose {
+	color: #e74c3c;
+	font-size: 30px;
+	font-weight: 700;
+	margin-left: 5px;
+}
+
+#winNum {
+	color: #31363F;
+	font-size: 30px;
+	font-weight: 700;
+	margin-right: 10px;
+}
+
+#loseNum {
+	color: #31363F;
+	font-size: 30px;
+	font-weight: 700;
+	margin-right: 5px;
+}
+
+#rate {
+	color: #31363F;
+	font-size: 30px;
+	margin-left: 10px;
+	margin-right: 20px;
+}
+
+div#matchHistory {
+	margin-top: 5%;
+	width: 95%;
+	height: 65%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+ul#matches {
+	width: 100%;
+	height: 100%;
+	list-style-type: none;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
 }
