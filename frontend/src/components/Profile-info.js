@@ -59,8 +59,8 @@ export class ProfileInfo extends Component {
   }
 
   setEvent () {
-    this.addEvent('click', '#login', () => {
-      changeUrl("/main");
-    });
+	this.addEvent('click', '#goBack', (event) => {
+		window.history.back();
+	  });
   }
 }
