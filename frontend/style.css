@@ -519,11 +519,11 @@ input#searchInput {
 
 .search-results {
 	margin-top: 30px;
-	margin-right: 20px;
+	margin-right: 40px;
 	border: 1px solid #ccc;
 	max-height: 60px;
 	overflow-y: auto;
-	width: 185px;
+	width: 205px;
 	display: none;
 	position: absolute;
 	background-color: #fff;
@@ -751,35 +751,35 @@ canvas.winRateCircle {
 	color: #31363F;
 }
 
-#win {
+span#win {
 	color: #4074e0;
 	font-size: 30px;
 	font-weight: 700;
 	margin-left: 30px;
 }
 
-#lose {
+span#lose {
 	color: #e74c3c;
 	font-size: 30px;
 	font-weight: 700;
 	margin-left: 5px;
 }
 
-#winNum {
+span#winNum {
 	color: #31363F;
 	font-size: 30px;
 	font-weight: 700;
 	margin-right: 10px;
 }
 
-#loseNum {
+span#loseNum {
 	color: #31363F;
 	font-size: 30px;
 	font-weight: 700;
 	margin-right: 5px;
 }
 
-#rate {
+span#rate {
 	color: #31363F;
 	font-size: 30px;
 	margin-left: 10px;
@@ -787,19 +787,64 @@ canvas.winRateCircle {
 }
 
 div#matchHistory {
-	margin-top: 5%;
+	margin-top: 1%;
 	width: 95%;
-	height: 65%;
+	height: 80%;
 	display: flex;
-	flex-direction: column;
-	align-items: center;
+	justify-content: center;
+	overflow: hidden;
 }
 
 ul#matches {
 	width: 100%;
-	height: 100%;
+	height: 98%; /* 높이를 고정하지 않고 부모 요소의 높이에 맞추기 위해 100%로 설정 */
 	list-style-type: none;
-	display: flex;
-	justify-content: center;
-	margin-bottom: 20px;
+	padding-left: 1%;
+	padding-right: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+	overflow-y: auto; /* 수직 스크롤 활성화 */
+	border-radius: 20px;
+}
+
+li.matchComponent {
+	border-radius: 10px;
+	width: 100%;
+	height: 120px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+li#winType {
+	background-color: #D0E7FF;
+	position: relative;
+}
+
+li#winType::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    background-color: #4A90E2; /* 진한 파란색 */
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+li#loseType {
+	background-color: #FFD6D6;
+	position: relative; /* ::before 사용을 위한 상대적 위치 설정 */
+}
+
+li#loseType::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 10px;
+	background-color: #E57373; /* 진한 빨간색 */
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
 }

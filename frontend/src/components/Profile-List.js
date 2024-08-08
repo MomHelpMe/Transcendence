@@ -6,8 +6,9 @@ export class MatchList extends Component {
 		const { matches } = this.props;
 		return `
 		  ${matches.map(element => {
+			console.log(element);
 			return `
-				<li id="${element.type}">
+				<li class="matchComponent" id="${element.type}Type">
 					<div id="matchTime">
 					</div>
 					<div id="matchOp">
