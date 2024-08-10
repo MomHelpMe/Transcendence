@@ -2,7 +2,7 @@ from django.db import models
 
 
 class User(models.Model):
-    user_id = models.AutoField(primary_key=True)
+    user_id = models.IntegerField(primary_key=True)
     nickname = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
     img_url = models.URLField(blank=True)

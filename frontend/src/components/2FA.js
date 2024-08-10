@@ -45,30 +45,60 @@ export class TwoFA extends Component {
 		}
     });
 
-	this.addEvent('click', '#resendButton', (event) => {
+	this.addEvent('click', '#resendButton', () => {
 		// resend msg 전송
-		// ok -> 다시 입력
-		// false -> login으로 redirect (changeUrl("/", false))
+		fetch('http://localhost:8000/api/send-mail/',{
+			method: 'GET',
+			credentials: 'include', // 쿠키를 포함하여 요청
+		})
+		.then(response => {
+			if (response.status == 200) {
+				console.log("Resend 성공");
+			}
+			else
+				changeUrl("/", false);
+		});
 	});
 
 	this.addEvent('submit', '#verificationForm', (event) => {
 		event.preventDefault();
-		let code = '';
+		let otpCode = '';
 		for (let i = 1; i <= 6; i++) {
-			code += document.getElementById('digit' + i).value;
+			otpCode += document.getElementById('digit' + i).value;
 		}
-	  
-		// API code 일치 확인 요청
-		const actualCode = '123456'; // 실제로는 서버에서 가져와야 합니다.
 		
-		const message = document.querySelector('#message2FA');
-		if (code === actualCode) {
-			message.textContent = 'Verification successful!';
-			message.style.color = 'green';
-			changeUrl('/main');
-		} else {
-			message.textContent = 'Invalid code. Please try again.';
-		}
+		// API code 일치 확인 요청
+		fetch('http://localhost:8000/api/verify-otp/', {
+            method: 'POST',
+			credentials: 'include', // 쿠키를 포함하여 요청
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ otp_code: otpCode })
+        })
+        .then(response => {
+			if (response.status == 200) return response.json();
+			else return null;
+		})
+        .then(data => {
+			if (data){
+				if (data.success) {
+					// OTP 인증 성공
+					//message.textContent = 'Verification successful!';
+					//message.style.color = 'green';
+					console.log("code good!");
+					changeUrl('/main'); // 메인 페이지로 이동
+				} else {
+					//message.textContent = 'Invalid code. Please try again.';
+					console.error('OTP 인증 실패:', data.message);
+				}
+			} else {
+				changeUrl("/", false);
+			}
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 	});
   }
 }
