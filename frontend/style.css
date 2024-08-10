@@ -93,8 +93,8 @@ div#margin {
 }
 
 div#border {
-	min-width: 1300px;
-	min-height: 700px;
+	min-width: 1540px;
+	min-height: 830px;
 	width: 75%;
 	height: 80%;
 	display: flex;
@@ -964,4 +964,220 @@ span#vsSign {
 span#opScore {
 	font-size: 30px;
 	font-weight: 700;
+}
+
+div#edit-box {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+div#editTitle {
+	margin-bottom: 30px;
+	margin-top: 30px;
+	width: 30%;
+	height: 10%;
+	font-weight: 900;
+	color:#31363F;
+    font-size: 3.0rem;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+div#editContents{
+	width: 100%;
+	height: 90%;
+	display: flex;
+	justify-content: center;
+}
+
+div#prevProfile {
+	min-height: 620px;
+	width: 40%;
+	height: 95%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+div#Arrow {
+	background-color: white;
+	width: 10%;
+	height: 90%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+img#arrowImg {
+	width: 80px;
+	height: 80px;
+}
+
+div#changedProfile {
+	width: 40%;
+	height: 95%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+div#presentNick {
+	font-weight: 500;
+    width: 30%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+div#edit-nick{
+	width: 100%;
+	height: 12%;
+	background-color: rgba(137, 137, 141, 0.1);
+	border-radius: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+
+#edit-nick label {
+    display: block;
+	margin-right: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+
+#edit-nick input[type="text"] {
+    width: 30%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+	font-weight: 500;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+#edit-nick input[type="text"]:focus {
+    border-color: #4A90E2;
+    outline: none;
+}
+
+div#edit-img {
+	width: 100%;
+	height: 60%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(137, 137, 141, 0.1);
+	border-radius: 20px;
+	margin-top: 30px;
+}
+
+#file-upload-wrapper {
+	position: relative;
+	width: 300px;
+	height: 50px;
+}
+
+#custom-file-upload {
+	width: 100%;
+	height: 100%;
+	background-color: #4A90E2;
+	color: white;
+	text-align: center;
+	line-height: 50px;
+	font-size: 16px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+#custom-file-upload:hover {
+	background-color: #357ABD;
+}
+
+#file-upload {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+
+#image-preview {
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+#presentImage {
+	margin-top: 20px;
+	width: 280px;
+    height: 240px;
+    object-fit: cover;
+	border-radius: 10px;
+}
+
+#profile-image {
+	margin-top: 20px;
+	width: 280px;
+    height: 240px;
+    object-fit: cover;
+	border-radius: 10px;
+}
+
+div#edit-2FA{
+	width: 100%;
+	height: 10%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: rgba(137, 137, 141, 0.1);
+	border-radius: 20px;
+	margin-top: 30px;
+}
+
+#edit-2FA label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+#edit-2FA input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button#profileChange {
+	margin-top: 20px;
+    width: 40%;
+    padding: 10px 20px;
+    background-color: #4A90E2;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button#profileChange:hover {
+    background-color: #357ABD;
 }

@@ -81,7 +81,7 @@ export class ProfileInfo extends Component {
 		});
 
 		this.addEvent('click', '#profile-edit', (event) => {
-			changeUrl("/main/profile/:nickname/edit");
+			changeUrl(`/main/profile/${this.nickname}/edit`);
 		});
 
 		// 컴포넌트가 렌더링된 후 원형 진행 막대를 그립니다.
