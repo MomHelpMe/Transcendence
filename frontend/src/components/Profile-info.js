@@ -1,11 +1,8 @@
 import { Component } from "../core/Component.js";
+import { changeUrl } from "../core/router.js";
 import { MatchList } from "./Profile-List.js";
 
 export class ProfileInfo extends Component {
-
-	constructor($el, props) {
-		super($el, props);
-	}
 
   template () {
 	this.user = { nickname: "seonjo", img_url: "../../소년명수.png"};
@@ -81,6 +78,10 @@ export class ProfileInfo extends Component {
 	setEvent() {
 		this.addEvent('click', '#goBack', (event) => {
 			window.history.back();
+		});
+
+		this.addEvent('click', '#profile-edit', (event) => {
+			changeUrl("/main/profile/:nickname/edit");
 		});
 
 		// 컴포넌트가 렌더링된 후 원형 진행 막대를 그립니다.

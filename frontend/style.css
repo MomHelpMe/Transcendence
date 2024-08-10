@@ -853,7 +853,7 @@ li#loseType::before {
 
 
 div#matchTime {
-	min-width: 130px;
+	min-width: 150px;
 	width: 20%;
 	height: 80%;
 	display: flex;
@@ -932,6 +932,7 @@ span#opNick{
 }
 
 div#matchScore {
+	margin-left: 3%;
 	width: 20%;
 	height: 80%;
 	display: flex;
