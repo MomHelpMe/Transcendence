@@ -13,6 +13,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
+REDIRECT_FRONT_URI = os.getenv('REDIRECT_FRONT_URI')
+
+OAUTH_URL = os.getenv('OAUTH_URL')
+OAUTH_TOKEN_URL = os.getenv('OAUTH_TOKEN_URL')
+OAUTH_USER_INFO_URL = os.getenv('OAUTH_USER_INFO_URL')
+OAUTH_CLIENT_ID = os.getenv('OAUTH_CLIENT_ID')
+OAUTH_CLIENT_SECRET = os.getenv('OAUTH_CLIENT_SECRET')
+OAUTH_STATE = os.getenv('OAUTH_STATE')
+
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

@@ -6,6 +6,81 @@ html, body, #app {
     overflow: hidden;
 }
 
+#TwoFAbody {
+	font-family: Arial, sans-serif;
+	background-color: #f7f7f7;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	margin: 0;
+}
+
+#TwoFAcontainer {
+	background-color: white;
+	padding: 40px;
+	border-radius: 12px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+	text-align: center;
+	width: 400px;
+}
+
+h1#TwoFA{
+	font-size: 36px;
+	margin-bottom: 30px;
+}
+
+p#TwoFA{
+	font-size: 18px;
+	margin-bottom: 20px;
+}
+
+.code-inputs {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
+.code-inputs input {
+	width: 50px;
+	height: 50px;
+	font-size: 24px;
+	text-align: center;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}
+
+button.Button2FA {
+	width: 50%;
+	padding: 15px;
+	background-color: #007bff;
+	border: none;
+	border-radius: 8px;
+	color: white;
+	font-size: 20px;
+	cursor: pointer;
+}
+
+button.Button2FA:hover {
+	background-color: #0056b3;
+}
+
+
+#resendButton {
+	margin-top: 10px;
+	background-color: #28a745;
+}
+
+#resendButton:hover {
+	background-color: #218838;
+}
+
+#message2FA {
+	margin-top: 30px;
+	font-size: 18px;
+	color: red;
+}
+
 div#BG {
 	height: 100%;
     width: 100%;
