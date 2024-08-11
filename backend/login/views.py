@@ -84,7 +84,7 @@ def get_acccess_token(code):
 
     data = {
         "grant_type": "authorization_code",
-        "code": code,
+        "code": code, 
         "client_id": client_id,
         "client_secret": client_secret,
         "redirect_uri": redirect_uri,
@@ -161,7 +161,7 @@ def send_2fa_email(request):
 
     if not validate_jwt(request):
         print("#########JWT NOT VALIDATE AT SEND_MAIL!!!###########")
-    #    return Response(status=401)
+        return Response(status=401)
     # 2FA 관련 코드를 생성하고 이메일 전송 로직 추가
 
     token = request.COOKIES.get('jwt')
@@ -228,6 +228,10 @@ def validate_jwt(request):
         # Invalid token
         return False
 
+        # 프론트 통신용 메서드 새로 만드는게 나을듯?
+        # FE 에서 api/validate 로 요청들어올 때 jwt의  is_verified 확인해서
+        # true 면 isValid: True data 에 담아서 반환
+        # false면 isValid: False data에 담아서 반환
 
 def generate_otp(length=6):
     otp_code = ''.join(secrets.choice('0123456789') for _ in range(length))
@@ -252,6 +256,7 @@ def verify_otp(request):
     token = request.COOKIES.get('jwt')
     payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     user_id = payload.get("id")
+    user_email = payload.get("email")
 
     cache_key = f"otp_code{user_id}"
     #cache_key = f"otp_code{1}"
@@ -268,8 +273,36 @@ def verify_otp(request):
         data = {
             "success": True
         }
+        is_verified = True
+        payload = {
+            "id": user_id,
+            "email": user_email,
+            "is_verified": is_verified,
+            "exp": datetime.utcnow() + timedelta(seconds=600),
+        }
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
+        response = Response(data, status=200)
+        response.set_cookie("jwt", token, httponly=False, secure=True, samesite='LAX')
     else:
         data = {
             "success": False
         }
-    return Response(data, status=200)
+        response = Response(data, status=200)
+    return response
+
+
+@api_view(["GET"])
+def verify_jwt(request):
+    token = request.COOKIES.get('jwt')
+    if not token:
+        print("!!!!!!!!!!!!!TOKEN")
+        return Response(status=401)
+    
+    payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+    
+    is_verified = payload.get('is_verified')
+    if is_verified == True:
+        print("((((((((((((((((((((베리파이드 트루!))))))))))))))))))))")
+        return Response(status=200)
+    else:
+        return Response(status=401)
