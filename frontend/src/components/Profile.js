@@ -1,5 +1,5 @@
 import { Default } from "./Default.js";
-import { ProfileInfo } from "./Profile-info.js";
+import { ProfileInfo } from "./Profile-Info.js";
 
 export class Profile extends Default {
 	mounted() {

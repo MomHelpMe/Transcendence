@@ -3,6 +3,7 @@ import { root } from "../app.js";
 import { Main } from "../components/Main.js";
 import { Friends } from "../components/Friends.js";
 import { Profile } from "../components/Profile.js";
+import { Edit } from "../components/Edit.js";
 
 export const routes = {
     "/": {
@@ -20,7 +21,11 @@ export const routes = {
     "/main/profile/:nickname": {
         component: (props) => new Profile(root.app, props),
         props: { nickname: "" }
-    }
+    },
+	"/main/profile/:nickname/edit": {
+		component: (props) => new Edit(root.app, props),
+		props: { nickname: "" }
+	}
 };
 
 export const changeUrl = (requestedUrl) => {
