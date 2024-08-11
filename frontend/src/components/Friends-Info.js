@@ -1,4 +1,5 @@
 import { Component } from "../core/Component.js";
+
 export class FriendsInfo extends Component {
 
   template () {

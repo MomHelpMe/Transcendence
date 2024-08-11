@@ -4,6 +4,7 @@ import { Main } from "../components/Main.js";
 import { Friends } from "../components/Friends.js";
 import { Profile } from "../components/Profile.js";
 import { TwoFA } from "../components/2FA.js";
+import { Edit } from "../components/Edit.js";
 
 export const routes = {
     "/": {
@@ -25,6 +26,10 @@ export const routes = {
 	"/2FA": {
 		component: () => new TwoFA(root.app),
         props: {}
+    },
+	"/main/profile/:nickname/edit": {
+		component: (props) => new Edit(root.app, props),
+		props: { nickname: "" }
 	}
 };
 
