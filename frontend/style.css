@@ -641,6 +641,7 @@ img#friendDefaultImg {
 }
 
 img#goBack{
+	z-index: 1;
 	cursor: pointer;
 	position:absolute;
 	bottom: 30px;
