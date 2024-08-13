@@ -641,6 +641,7 @@ img#friendDefaultImg {
 }
 
 img#goBack{
+	z-index: 1;
 	cursor: pointer;
 	position:absolute;
 	bottom: 30px;
@@ -1065,7 +1066,97 @@ div#editTitle {
 	justify-content: center;
 }
 
+
+div#deleteButton {
+	position: absolute;
+	right: 30px;
+	top: 30px;
+	width: 150px;
+	height: 50px;
+	border-radius: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: 700;
+	background-color: rgb(220, 53, 69); /* 약간 어두운 빨간색 */
+	color: white;
+	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s;
+}
+
+div#deleteButton:hover {
+	background-color: rgb(128, 0, 0); /* 더 어두운 빨간색 */
+	color: rgb(255, 204, 204); /* 약간의 핑크빛 흰색 */
+}
+
+div#deleteDoubleCheck {
+	position: absolute;
+	left: 50% - 250px;
+	top: 300px; /* deleteButton 아래에 위치하도록 */
+	width: 500px;
+	height: 200px;
+	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(255, 245, 245); /* 연한 배경색 */
+	border: 2px solid rgb(220, 53, 69); /* 테두리를 약간 진한 빨간색으로 */
+	z-index: 1;
+}
+
+div#deleteAlertMsg {
+	margin-top: 20px;
+	width: 80%;
+	height: 20%;
+	color: black;
+	font-weight: 700;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+div#deleteChoiceBox{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 60%;
+	height: 50%;
+}
+
+div#deleteYesButton, div#deleteNoButton {
+	width: 80px;
+	height: 40px;
+	border-radius: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s;
+}
+
+div#deleteYesButton {
+	background-color: rgb(220, 53, 69);
+	color: white;
+}
+
+div#deleteYesButton:hover {
+	background-color: rgb(128, 0, 0);
+	color: rgb(255, 204, 204);
+}
+
+div#deleteNoButton {
+	background-color: rgb(200, 200, 200);
+	color: black;
+}
+
+div#deleteNoButton:hover {
+	background-color: rgb(128, 128, 128);
+	color: white;
+}
+
 div#editContents{
+	z-index: 0;
 	width: 100%;
 	height: 90%;
 	display: flex;

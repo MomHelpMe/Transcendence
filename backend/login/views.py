@@ -41,7 +41,7 @@ def callback(request):
 
     user, created = save_or_update_user(user_data)
     # Test 위해서 True로 설정
-    user.is_2FA = True
+    # user.is_2FA = True
     if created:
         data = {"is_2FA": False}
     else:
