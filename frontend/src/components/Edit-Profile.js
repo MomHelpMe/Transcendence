@@ -145,7 +145,7 @@ export class EditProfile extends Component {
 
 			// API!!
 			fetch('주소', {
-				method: 'POST',
+				method: 'PUT',
 				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
 				body: formData
 			})
