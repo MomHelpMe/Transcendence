@@ -23,6 +23,16 @@ export class EditProfile extends Component {
 		.catch(error => console.error('Fetch error:', error));
 		return `
 			<div id="edit-box">
+				<div id="deleteButton">Delete Account</div>
+				<div id="deleteDoubleCheck">
+					<div id="deleteAlertMsg">
+						Are you sure you want to delete your account?
+					</div>
+					<div id="deleteChoiceBox">
+						<div id="deleteYesButton">Yes</div>
+						<div id="deleteNoButton">No</div>
+					</div>
+				</div>
 				<img src="/back.png" id="goBack"></img>
 				<div id="editTitle">
 					Edit Profile
@@ -91,6 +101,28 @@ export class EditProfile extends Component {
 			}
 		});
 
+		this.addEvent('click', '#deleteButton', (event) => {
+			document.getElementById('deleteDoubleCheck').style.display = 'flex';
+		});
+
+		this.addEvent('click', '#deleteNoButton', (event) => {
+			document.getElementById('deleteDoubleCheck').style.display = 'none';
+		});
+
+		this.addEvent('click', '#deleteYesButton', (event) => {
+			fetch(url, {
+				method: 'DELETE',
+				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				changeUrl(`/`);
+			})
+			.catch(error => console.error('Fetch error:', error));
+		});
+		
 		this.addEvent('click', '#profileChange', async (event) => {
 			event.preventDefault();
 			
