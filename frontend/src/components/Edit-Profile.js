@@ -1,64 +1,79 @@
 import { Component } from "../core/Component.js";
+import { changeUrl } from "../core/router.js";
 
 export class EditProfile extends Component {
 
-  template () {
-	this.nickname = "seonjo";
-	this.img_url = "/friends.png";
-	this.TwoFA = false;
-    return `
-		<div id="edit-box">
-			<img src="/back.png" id="goBack"></img>
-			<div id="editTitle">
-				Edit Profile
-			</div>
-			<div id="editContents">
-				<div id="prevProfile">
-					<div id="edit-nick">
-						<label for="nickname">Nickname:</label>
-						<div id="presentNick">${this.nickname}</div>
-					</div>
-					<div id="edit-img">
-						<div id="image-preview">
-							<img id="presentImage" src="${this.img_url}" alt="Profile Image"></img>
-						</div>
-					</div>
-					<div id="edit-2FA">
-						<label for="2fa-toggle">Enable 2FA:</label>
-						${this.TwoFA ? `<input type="checkbox" id="2fa-toggle" checked disabled>` : `<input type="checkbox" id="2fa-toggle" disabled>`}
-					</div>
+	template () {
+		//API!!
+		fetch(url, {
+			method: 'GET',
+			credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.json();
+		})
+		.then(data => {
+			this.nickname = data.user.nickname;
+			this.img_url = data.user.img_url;
+			this.twoFA = data.user.twoFA;
+		})
+		.catch(error => console.error('Fetch error:', error));
+		return `
+			<div id="edit-box">
+				<img src="/back.png" id="goBack"></img>
+				<div id="editTitle">
+					Edit Profile
 				</div>
-				<div id="Arrow">
-					<img id="arrowImg" src="/arrow.png"></img>
-				</div>
-				<div id="changedProfile">
-					<div class="edit" id="edit-nick">
-						<label for="nickname">Nickname:</label>
-						<input type="text" id="nickname" value="${this.nickname}">
-						<div id="nickname-error" class="error-message"></div>
-					</div>
-					<div  class="edit" id="edit-img">
-						<div id="image-preview">
-							<img id="profile-image" src="${this.img_url}" alt="Profile Image"></img>
+				<div id="editContents">
+					<div id="prevProfile">
+						<div id="edit-nick">
+							<label for="nickname">Nickname:</label>
+							<div id="presentNick">${this.nickname}</div>
 						</div>
-						<div id="file-upload-wrapper">
-							<div id="custom-file-upload">
-								<span>Click to choose a file</span>
+						<div id="edit-img">
+							<div id="image-preview">
+								<img id="presentImage" src="${this.img_url}" alt="Profile Image"></img>
 							</div>
-							<input type="file" id="file-upload" accept="image/*">
 						</div>
-						<div id="image-error" class="error-message"></div>
+						<div id="edit-2FA">
+							<label for="2fa-toggle">Enable 2FA:</label>
+							${this.twoFA ? `<input type="checkbox" id="2fa-toggle" checked disabled>` : `<input type="checkbox" id="2fa-toggle" disabled>`}
+						</div>
 					</div>
-					<div id="edit-2FA">
-						<label for="2fa-toggle">Enable 2FA:</label>
-						${this.TwoFA ? `<input type="checkbox" id="2fa-toggle" checked>` : `<input type="checkbox" id="2fa-toggle">`}
+					<div id="Arrow">
+						<img id="arrowImg" src="/arrow.png"></img>
 					</div>
-					<button id="profileChange" type="submit">Save Changes</button>
+					<div id="changedProfile">
+						<div class="edit" id="edit-nick">
+							<label for="nickname">Nickname:</label>
+							<input type="text" id="nickname" value="${this.nickname}" autocomplete="off">
+							<div id="nickname-error" class="error-message"></div>
+						</div>
+						<div  class="edit" id="edit-img">
+							<div id="image-preview">
+								<img id="profile-image" src="${this.img_url}" alt="Profile Image"></img>
+							</div>
+							<div id="file-upload-wrapper">
+								<div id="custom-file-upload">
+									<span>Click to choose a file</span>
+								</div>
+								<input type="file" id="file-upload" accept="image/*">
+							</div>
+							<div id="image-error" class="error-message"></div>
+						</div>
+						<div id="edit-2FA">
+							<label for="2fa-toggle">Enable 2FA:</label>
+							${this.twoFA ? `<input type="checkbox" id="2fa-toggle" checked>` : `<input type="checkbox" id="2fa-toggle">`}
+						</div>
+						<button id="profileChange" type="submit">Save Changes</button>
+					</div>
 				</div>
 			</div>
-		</div>
-    `;
-  }
+		`;
+	}
 
 	setEvent() {
 		this.addEvent('click', '#goBack', (event) => {
@@ -96,38 +111,38 @@ export class EditProfile extends Component {
 				formData.append('profileImage', imgFile);
 			}
 
-			document.getElementById('nickname-error').textContent = "nickname is invalid!";
-			document.getElementById('image-error').textContent = "image is invalid!"
-
-		// 	try {
-		// 		const response = await fetch('https://your-backend-api.com/api/update-profile', {
-		// 		  method: 'POST',
-		// 		  body: formData
-		// 		});
-		
-		// 		if (response.ok) {
-		// 		  const result = await response.json();
-		
-		// 		  // Handle validation results
-		// 		  if (!result.nicknameValid) {
-		// 			document.getElementById('nickname-error').textContent = result.message.nickname;
-		// 		  }
-		
-		// 		  if (!result.imageValid) {
-		// 			document.getElementById('image-error').textContent = result.message.image;
-		// 		  }
-		
-		// 		  if (result.nicknameValid && result.imageValid) {
-		// 			console.log('Profile updated successfully:', result);
-		// 			// 성공적인 업데이트 후의 추가 작업 (예: 메시지 표시, 리다이렉트 등)
-		// 		  }
-		
-		// 		} else {
-		// 		  console.error('Failed to update profile. Status:', response.status);
-		// 		}
-		// 	  } catch (error) {
-		// 		console.error('Error updating profile:', error);
-		// 	  }
-		  });
+			// API!!
+			fetch('주소', {
+				method: 'POST',
+				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+				body: formData
+			})
+			.then(response => {
+				if (response.ok) {
+					return response.json();
+				} else {
+					console.error('Failed to update profile. Status:', response.status);
+					throw new Error('Failed to update profile');
+				}
+			})
+			.then(result => {
+				// nickname이 유효하지 않으면 경고문 띄움
+				if (!result.isValidNick) {
+					document.getElementById('nickname-error').textContent = "nickname is invalid!";
+				}
+			
+				// image가 유효하지 않으면 경고문 띄움
+				if (!result.isValidImg) {
+					document.getElementById('image-error').textContent = "image is invalid!";
+				}
+			
+				if (result.isValidNick && result.isValidImg) {
+					changeUrl(`/main/profile/${this.props.nickname}/edit`);
+				}
+			})
+			.catch(error => {
+				console.error('Error updating profile:', error);
+			});
+		});
 	}
 }

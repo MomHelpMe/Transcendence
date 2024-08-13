@@ -4,84 +4,106 @@ import { MatchList } from "./Profile-List.js";
 
 export class ProfileInfo extends Component {
 
-  template () {
-	this.user = { nickname: "seonjo", img_url: "../../소년명수.png"};
-	// api로 win, lose, rate 호출
-	this.win = 35;
-	this.lose = 20;
-	this.rate = (35 / 55) * 100;
-	this.matches = [
-		{startTime: "7/5 18:05", playTime: "30 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 3, opNick: "michang" },
-		{startTime: "7/3 18:25", playTime: "22 min", img_url: "../../소년명수.png", type: "lose", myScore: 3, opScore: 5, opNick: "jiko" },
-		{startTime: "7/1 21:15", playTime: "18 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 2, opNick: "jaehejun" },
-		{startTime: "6/25 10:34", playTime: "22 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 3, opNick: "seunan" },
-		{startTime: "6/18 22:53", playTime: "17 min", img_url: "../../소년명수.png", type: "lose", myScore: 1, opScore: 5, opNick: "michang" },
-		{startTime: "6/17 12:14", playTime: "50 min", img_url: "../../소년명수.png", type: "lose", myScore: 0, opScore: 5, opNick: "jaehejun" },
-		{startTime: "6/5 18:21", playTime: "43 min", img_url: "../../소년명수.png", type: "lose", myScore: 2, opScore: 5, opNick: "jiko" },
-		{startTime: "6/2 11:42", playTime: "23 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 3, opNick: "seunan" },
-	];
-	console.log(this.props.nickname, this.user);
-    return `
-		<div id="profileBox">
-			<img src="../../back.png" id="goBack"></img>
-			<div id="profile">
-				<div id="profile-left">
-					<div id="profileHeaderBox">
-						<span id="profileHeader">Profile</span>
-					</div>
-					<div id="userInfo">
-						<div id="profile-edit">
-							${this.props.nickname === this.user.nickname ? `<div id="profile-edit-button">edit</div>` : ""}
+  	template () {
+		const url = `주소?nickname=${encodeURIComponent(this.props.nickname)}`;
+		fetch(url, {
+			method: 'GET',
+			credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.json();
+		})
+		.then(data => {
+			this.user = data.user;
+			this.win = data.win;
+			this.lose = data.lose;
+			this.rate = Math.round((this.win / this.lose) * 100);
+			this.matches = data.matches;
+			// this.user = { nickname: "seonjo", img_url: "../../소년명수.png"};
+			// this.win = 35;
+			// this.lose = 20;
+			// this.rate = (this.win / this.lose) * 100;
+			// this.matches = [
+			// 	{startTime: "7/5 18:05", playTime: "30 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 3, opNick: "michang" },
+			// 	{startTime: "7/3 18:25", playTime: "22 min", img_url: "../../소년명수.png", type: "lose", myScore: 3, opScore: 5, opNick: "jiko" },
+			// 	{startTime: "7/1 21:15", playTime: "18 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 2, opNick: "jaehejun" },
+			// 	{startTime: "6/25 10:34", playTime: "22 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 3, opNick: "seunan" },
+			// 	{startTime: "6/18 22:53", playTime: "17 min", img_url: "../../소년명수.png", type: "lose", myScore: 1, opScore: 5, opNick: "michang" },
+			// 	{startTime: "6/17 12:14", playTime: "50 min", img_url: "../../소년명수.png", type: "lose", myScore: 0, opScore: 5, opNick: "jaehejun" },
+			// 	{startTime: "6/5 18:21", playTime: "43 min", img_url: "../../소년명수.png", type: "lose", myScore: 2, opScore: 5, opNick: "jiko" },
+			// 	{startTime: "6/2 11:42", playTime: "23 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 3, opNick: "seunan" },
+			// ];
+		})
+		.catch(error => console.error('Fetch error:', error));
+		
+		// api로 win, lose, rate 호출
+		return `
+			<div id="profileBox">
+				<img src="../../back.png" id="goBack"></img>
+				<div id="profile">
+					<div id="profile-left">
+						<div id="profileHeaderBox">
+							<span id="profileHeader">Profile</span>
 						</div>
-						<div id="profileUserName">
-							<span id="profileNick">${this.user.nickname}</span>
-						</div>
-						<div id="profileImgBox">
-							${this.user.img_url === "" ?
-								`<img id="profileImg" src="../../friends.png"></img>` :
-								`<img id="profileImg" src="${this.user.img_url}"></img>`}
-						</div>
-					</div>
-				</div>
-				<div id="profile-right">
-					<div id="match">
-						<div id="matchInfo">
-							<div id="winRateCircle">
-								<canvas class="winRateCircle" id="backgroundCanvas" width="200" height="200"></canvas>
-								<canvas class="winRateCircle" id="progressCanvas" width="200" height="200"></canvas>
-								<div id="percentage"></div>
+						<div id="userInfo">
+							<div id="profile-edit">
+								${this.props.nickname === this.user.nickname ? `<div id="profile-edit-button">edit</div>` : ""}
 							</div>
-							<div id="winStat">
-								<span id="win">Win </span><span id="winNum">${this.win}</span>
-								<span id="lose">Lose </span><span id="loseNum">${this.lose}</span>
-								<span id="rate">(${this.rate.toFixed()}%)</span>
+							<div id="profileUserName">
+								<span id="profileNick">${this.user.nickname}</span>
+							</div>
+							<div id="profileImgBox">
+								${this.user.img_url === "" ?
+									`<img id="profileImg" src="../../friends.png"></img>` :
+									`<img id="profileImg" src="${this.user.img_url}"></img>`}
 							</div>
 						</div>
-						<div id="matchHistory">
-							<ul id="matches">
+					</div>
+					<div id="profile-right">
+						<div id="match">
+							<div id="matchInfo">
+								<div id="winRateCircle">
+									<canvas class="winRateCircle" id="backgroundCanvas" width="200" height="200"></canvas>
+									<canvas class="winRateCircle" id="progressCanvas" width="200" height="200"></canvas>
+									<div id="percentage"></div>
+								</div>
+								<div id="winStat">
+									<span id="win">Win </span><span id="winNum">${this.win}</span>
+									<span id="lose">Lose </span><span id="loseNum">${this.lose}</span>
+									<span id="rate">(${this.rate}%)</span>
+								</div>
+							</div>
+							<div id="matchHistory">
+								<ul id="matches">
 
-							</ul>
+								</ul>
+							</div>
 						</div>
-					</div>
-					<div id="history">
+						<div id="history">
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-    `;
-  }
+		`;
+	}
 
   	mounted() {
 		this.children.push(new MatchList(document.querySelector("ul#matches"), {matches: this.matches}));
 	}
 
 	setEvent() {
-		this.addEvent('click', '#goBack', (event) => {
+		this.addEvent('click', '#goBack', () => {
 			window.history.back();
 		});
 
-		this.addEvent('click', '#profile-edit', (event) => {
-			changeUrl(`/main/profile/${this.nickname}/edit`);
+		this.addEvent('click', '#profile-edit', () => {
+			changeUrl(`/main/profile/${this.props.nickname}/edit`);
 		});
 
 		// 컴포넌트가 렌더링된 후 원형 진행 막대를 그립니다.
@@ -119,6 +141,6 @@ export class ProfileInfo extends Component {
 	}
 
 	updatePercentage() {
-		document.getElementById('percentage').innerText = `${Math.round(this.rate)}%`;
+		document.getElementById('percentage').innerText = `${this.rate}%`;
 	}
 }
