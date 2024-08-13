@@ -9,7 +9,10 @@ class UserSerializer(serializers.ModelSerializer):
 class FriendSerializer(serializers.ModelSerializer):
     class Meta:
         model = Friend
-        fields = ['user', 'friend']
+        fields = ['user_id1', 'user_id2']
+
+class FriendRequestSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
 
 class GameSerializer(serializers.ModelSerializer):
     class Meta:

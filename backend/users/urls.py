@@ -1,12 +1,10 @@
 from django.urls import path
 from .views import (
-    get_user,
-    get_user_list,
-    create_user,
+    UserDetailView,
+    FriendDetailView,
 )
 
 urlpatterns = [
-    path('user/get/', get_user_list),
-    path('user/get/<str:nickname>/', get_user),
-    path('user/create/<str:nickname>/', create_user),
+    path('me/', UserDetailView.as_view()),
+    path('friends/', FriendDetailView.as_view()),
 ]

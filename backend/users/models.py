@@ -19,7 +19,7 @@ class Friend(models.Model):
     user_id2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="friends_as_user2")
 
     def __str__(self):
-        return f"Friend: {self.userId1.nickname} - {self.userId2.nickname}"
+        return f"Friend: {self.user_id1.nickname} - {self.user_id2.nickname}"
 
 
 class Game(models.Model):

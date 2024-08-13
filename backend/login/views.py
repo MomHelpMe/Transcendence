@@ -15,6 +15,7 @@ from rest_framework.response import Response
 
 import pprint
 
+
 @api_view(["GET"])
 def login(request):
     oauth_url = settings.OAUTH_URL
@@ -49,7 +50,7 @@ def callback(request):
     token = generate_jwt(user, data)
 
     response = Response(data, status=200)
-    response.set_cookie("jwt", token, httponly=False, secure=True, samesite='LAX')
+    response.set_cookie("jwt", token, httponly=False, secure=True, samesite="LAX")
     return response
 
 
@@ -61,7 +62,7 @@ def get_acccess_token(code):
 
     data = {
         "grant_type": "authorization_code",
-        "code": code, 
+        "code": code,
         "client_id": client_id,
         "client_secret": client_secret,
         "redirect_uri": redirect_uri,
@@ -73,17 +74,14 @@ def get_acccess_token(code):
 
 
 def get_user_info(access_token):
-    user_info_response = requests.get(
-        settings.OAUTH_USER_INFO_URL,
-        headers={"Authorization": f"Bearer {access_token}"}
-    )
+    user_info_response = requests.get(settings.OAUTH_USER_INFO_URL, headers={"Authorization": f"Bearer {access_token}"})
     if user_info_response.status_code == 200:
         return user_info_response.json()
     return None
 
 
 def save_or_update_user(user_data):
-    
+
     user_uid = user_data.get("id")
     nickname = user_data.get("login")
     email = user_data.get("email")
@@ -97,8 +95,8 @@ def save_or_update_user(user_data):
             "email": email,
             "img_url": img_url,
             "is_2FA": False,
-            "is_online": False
-        }
+            "is_online": False,
+        },
     )
     return user, created
 
@@ -117,6 +115,7 @@ def generate_jwt(user, data):
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
 
+
 def regenerate_jwt(user_id, user_email, is_verified):
     payload = {
         "id": user_id,
@@ -126,13 +125,13 @@ def regenerate_jwt(user_id, user_email, is_verified):
     }
     return jwt.encode(payload, settings.SECRET_KEY, algorithm="HS256")
 
+
 def decode_jwt(request):
-    token = request.COOKIES.get('jwt')
+    token = request.COOKIES.get("jwt")
     if not token:
         return None
     payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
     return payload
-
 
 
 @api_view(["GET"])
@@ -145,7 +144,7 @@ def send_2fa_email(request):
     user_id = payload.get("id")
     user_email = payload.get("email")
 
-    subject = 'Your OTP Code for 2FA'
+    subject = "Your OTP Code for 2FA"
     from_email = settings.DEFAULT_FROM_EMAIL
     to = [user_email]
     otp_code = generate_otp()
@@ -163,8 +162,8 @@ def send_2fa_email(request):
         </body>
     </html>
     """
-    
-    message = EmailMultiAlternatives(subject, '', from_email, to)
+
+    message = EmailMultiAlternatives(subject, "", from_email, to)
     message.attach_alternative(html_content, "text/html")
     message.send()
 
@@ -186,7 +185,7 @@ def validate_jwt(request):
 
 
 def generate_otp(length=6):
-    otp_code = ''.join(secrets.choice('0123456789') for _ in range(length))
+    otp_code = "".join(secrets.choice("0123456789") for _ in range(length))
     print("OTP_CODE : ", otp_code)
     return otp_code
 
@@ -195,7 +194,7 @@ def generate_otp(length=6):
 def verify_otp(request):
     if not validate_jwt(request):
         return Response(status=401)
-    
+
     input_otp = request.data.get("otp_code")
 
     payload = decode_jwt(request)
@@ -206,32 +205,28 @@ def verify_otp(request):
     cached_otp = cache.get(cache_key)
 
     if cached_otp and str(cached_otp) == str(input_otp):
-        data = {
-            "success": True
-        }
+        data = {"success": True}
         is_verified = True
         token = regenerate_jwt(user_id, user_email, is_verified)
         response = Response(data, status=200)
-        response.set_cookie("jwt", token, httponly=False, secure=True, samesite='LAX')
+        response.set_cookie("jwt", token, httponly=False, secure=True, samesite="LAX")
     else:
-        data = {
-            "success": False
-        }
+        data = {"success": False}
         response = Response(data, status=200)
     return response
 
 
 @api_view(["GET"])
 def verify_jwt(request):
-    #token = request.COOKIES.get('jwt')
-    #if not token:
+    # token = request.COOKIES.get('jwt')
+    # if not token:
     #    return Response(status=401)
-    
+
     payload = decode_jwt(request)
     if not payload:
         return Response(status=401)
-    
-    is_verified = payload.get('is_verified')
+
+    is_verified = payload.get("is_verified")
     if is_verified == True:
         return Response(status=200)
     else:
