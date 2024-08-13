@@ -19,17 +19,17 @@ export const routes = {
 		component: () => new Friends(root.app),
 		props: {}
 	},
-	"/main/profile/:nickname": {
+	"/main/profile/:uid": {
 		component: (props) => new Profile(root.app, props),
-		props: { nickname: "" }
+		props: { uid: "" }
 	},
 	"/2FA": {
 		component: () => new TwoFA(root.app),
 		props: {}
 	},
-	"/main/profile/:nickname/edit": {
+	"/main/profile/:uid/edit": {
 		component: (props) => new Edit(root.app, props),
-		props: { nickname: "" }
+		props: { uid: "" }
 	}
 };
 

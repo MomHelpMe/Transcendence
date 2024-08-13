@@ -55,7 +55,7 @@ export class FriendsList extends Component {
 			this.users = lists.users; // 응답에서 user list 꺼내기
 		
 			// 친구 목록에서 닉네임 리스트를 추출합니다.
-			const friendNicknameList = this.friends.map(friend => friend.nickname);
+			const friendNicknameList = this.friends.map(friend => `${friend.nickname}#${friend.uid}`);
 		
 			// 친구 닉네임 리스트를 이용해 친구 목록 생성
 			const ulElement = document.querySelector("ul#friendsLists");
@@ -75,14 +75,16 @@ export class FriendsList extends Component {
 			if (this.info) {
 				const index = this.children.indexOf(this.info);
 				if (index !== -1) {
-				this.children.splice(index, 1);
+					this.children.splice(index, 1);
 				}
 			}
 
-			const friend = this.friends.find(user => user.nickname === event.target.id);
+			const part = event.target.id.split('#');
+			const uid = part[1];
+			const friend = this.friends.find(user => user.uid === uid);
 
 			// 새로운 FriendsInfo 인스턴스를 생성하고, this.children에 추가
-			this.info = new FriendsInfo(ulElement, {is_online: friend.is_online, nickname: friend.nickname, img_url: friend.img_url});
+			this.info = new FriendsInfo(ulElement, {is_online: friend.is_online, nickname: `${friend.nickname}#${friend.uid}`, img_url: friend.img_url});
 			this.children.push(this.info);
 		});
 
@@ -91,7 +93,9 @@ export class FriendsList extends Component {
 		});
 
 		this.addEvent('click', '.goProfile', (event) => {
-			changeUrl(`/main/profile/${event.target.id}`);
+			const part = event.target.id.split('#');
+			const uid = part[1];
+			changeUrl(`/main/profile/${uid}`);
 		});
 
 		this.addEvent('click', '#addFriend', (event) => {
@@ -107,17 +111,21 @@ export class FriendsList extends Component {
 
 		function addInput(){
 			const searchInput = document.querySelector("input#addInput");
-			const nickname = searchInput.value.trim();
+			const part = searchInput.value.trim().split('#');
+			if (part.length !== 2)
+			{
+				// 올바르지 않은 입력입니다!
+				console.log("invalid input!");
+				return ;
+			} 
+			const nickname = part[0];
+			const uid = part[1];
 
-			const isFriend = this.friends.find(friend => friend.nickname === nickname);
-			const isUser = this.users.find(user => user.nickname === nickname);
-			if (isFriend)
+			const isFriend = this.friends.find(friend => friend.uid === uid);
+			const isUser = this.users.find(user => user.uid === uid);
+			if (isFriend || !isUser || isUser.nickname !== nickname)
 			{
-				// 이미 친구입니다!!
-			}
-			else if (!isUser)
-			{
-				// 해당 유저는 없습니다!!
+				console.log("invalid input!");
 			}
 			else
 			{
@@ -128,7 +136,7 @@ export class FriendsList extends Component {
 					headers: {
 					  'Content-Type': 'application/json'
 					},
-					body: JSON.stringify({ nickname: nickname })
+					body: JSON.stringify({ uid: uid })
 				})
 				.then(response => {
 					if (!response.ok) {
@@ -147,8 +155,10 @@ export class FriendsList extends Component {
 		
 		this.addEvent('input', '#searchInput', (event) => {
 			const searchResults = document.querySelector('#searchResults');
+			const part = event.target.value.split('#');
+			const nickname = part[0];
 
-			const query = event.target.value.toLowerCase();
+			const query = nickname.toLowerCase();
 			searchResults.innerHTML = ''; // 기존 결과 초기화
 
 			if (query.length === 0) {
@@ -164,21 +174,12 @@ export class FriendsList extends Component {
 				searchResults.style.display = 'none'; // 결과가 없으면 결과 숨김
 			}
 
-			filteredUsers.slice(0, 2).forEach(user => {
+			filteredUsers.forEach(user => {
 				const div = document.createElement('div');
 				div.className = 'search-result-item';
-				div.textContent = user.nickname;
+				div.textContent = `${user.nickname}#${user.uid}`;
 				searchResults.appendChild(div);
 			});
-
-			if (filteredUsers.length > 2) {
-				filteredUsers.slice(2).forEach(user => {
-					const div = document.createElement('div');
-					div.className = 'search-result-item';
-					div.textContent = user.nickname;
-					searchResults.appendChild(div);
-				});
-			}
 		})
 
 		this.addEvent('click', '#searchResults', (event) => {
@@ -191,15 +192,17 @@ export class FriendsList extends Component {
 		})
 		
 		this.addEvent('click', '.removeFriend', (event) => {
-			const nickname = event.target.id;
+			const part = event.target.id.split('#');
+			const uid = part[1];
+
 			// API 친구 삭제 요청!!
 			fetch("주소", {
-				method: 'POST',
+				method: 'DELETE',
 				credentials: 'include', // 쿠키를 포함하여 요청
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ nickname: nickname })
+				body: JSON.stringify({ uid: uid })
 			})
 			.then(response => {
 				if (!response.ok) {
