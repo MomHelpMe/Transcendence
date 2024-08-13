@@ -3,7 +3,7 @@ from .views import (
     UserDetailView,
     FriendDetailView,
     get_user,
-    get_user_list
+    get_user_list,
 )
 
 urlpatterns = [
