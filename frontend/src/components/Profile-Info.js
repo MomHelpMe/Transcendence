@@ -5,7 +5,11 @@ import { MatchList } from "./Profile-List.js";
 export class ProfileInfo extends Component {
 
 	template () {
-		const url = `주소?nickname=${encodeURIComponent(this.props.nickname)}`;
+		const payload = parseJWT();
+		if (!payload) this.uid = null;
+		else this.uid = payload.uid;
+
+		const url = `주소?nickname=${encodeURIComponent(this.props.uid)}`;
 		fetch(url, {
 			method: 'GET',
 			credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
@@ -53,10 +57,10 @@ export class ProfileInfo extends Component {
 						</div>
 						<div id="userInfo">
 							<div id="profile-edit">
-								${this.props.nickname === this.user.nickname ? `<div id="profile-edit-button">edit</div>` : ""}
+								${this.props.uid === this.uid ? `<div id="profile-edit-button">edit</div>` : ""}
 							</div>
 							<div id="profileUserName">
-								<span id="profileNick">${this.user.nickname}</span>
+								<span id="profileNick">${this.user.nickname}#${this.user.uid}</span>
 							</div>
 							<div id="profileImgBox">
 								${this.user.img_url === "" ?
@@ -103,7 +107,7 @@ export class ProfileInfo extends Component {
 		});
 
 		this.addEvent('click', '#profile-edit', () => {
-			changeUrl(`/main/profile/${this.props.nickname}/edit`);
+			changeUrl(`/main/profile/${this.props.uid}/edit`);
 		});
 
 		// 컴포넌트가 렌더링된 후 원형 진행 막대를 그립니다.
