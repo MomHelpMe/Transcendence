@@ -4,7 +4,7 @@ import { MatchList } from "./Profile-List.js";
 
 export class ProfileInfo extends Component {
 
-  	template () {
+	template () {
 		const url = `주소?nickname=${encodeURIComponent(this.props.nickname)}`;
 		fetch(url, {
 			method: 'GET',
@@ -93,7 +93,7 @@ export class ProfileInfo extends Component {
 		`;
 	}
 
-  	mounted() {
+	mounted() {
 		this.children.push(new MatchList(document.querySelector("ul#matches"), {matches: this.matches}));
 	}
 
