@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User, Friend, Game, Tournament
@@ -159,3 +160,16 @@ class FriendDetailView(APIView):
 
         friend.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(["GET"])
+def get_user(request, pk):
+    user = get_object_or_404(User, user_id=pk)
+    serializer = UserSerializer(user)
+    return JsonResponse(serializer.data)
+
+@api_view(["GET"])
+def get_user_list(request):
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)
+    return JsonResponse(serializer.data, safe=False)
