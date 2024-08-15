@@ -6,10 +6,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User, Friend, Game, Tournament
 from .serializers import UserSerializer, FriendSerializer, FriendRequestSerializer, GameSerializer, TournamentSerializer
+from drf_yasg.utils import swagger_auto_schema
 from django.conf import settings
 import jwt
-
-from drf_yasg.utils import swagger_auto_schema
 
 
 # NOTE: JWT 토큰 검증 함수 필요 (재사용을 위해서 login/views.py에 있는 함수를 가져와서 사용하거나 app을 분리해서 사용하기)
@@ -83,7 +82,6 @@ class FriendDetailView(APIView):
         # FIXME: JWT 검증 함수 필요
         payload = decode_jwt(token)
         user = get_object_or_404(User, pk=payload.get("id"))
-        # 유저와 친구 상태인 유저 모델들을 모두 가져옴
 
         # 유저와 친구 상태인 유저 모델들을 모두 가져옴
         friends_as_user1 = Friend.objects.filter(user_id1=user)
@@ -167,6 +165,7 @@ def get_user(request, pk):
     user = get_object_or_404(User, user_id=pk)
     serializer = UserSerializer(user)
     return JsonResponse(serializer.data)
+
 
 @api_view(["GET"])
 def get_user_list(request):
