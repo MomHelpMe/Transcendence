@@ -28,20 +28,32 @@ class Command(BaseCommand):
         # Create friends
         for i in range(15):
             user1, user2 = random.sample(users, 2)
-            Friend.objects.create(user_id1=user1, user_id2=user2)
+            Friend.objects.create(user1=user1, user2=user2)
 
         # Create games
         for i in range(20):
             user1, user2 = random.sample(users, 2)
+            user1_score = random.randint(0, 100)
+            user2_score = random.randint(0, 100)
+            while user1_score == user2_score:
+                user2_score = random.randint(0, 100)
+            if (user1_score > user2_score):
+                user1.win += 1
+                user2.lose += 1
+            else:
+                user1.lose += 1
+                user2.win += 1
             Game.objects.create(
-                game_type=random.choice(["Ai", "PvP", "Tournament"]),
-                user_id1=user1,
-                user_id2=user2,
-                score1=random.randint(0, 100),
-                score2=random.randint(0, 100),
+                game_type="PvP",
+                user1=user1,
+                user2=user2,
+                score1=user1_score,
+                score2=user2_score,
                 start_timestamp=timezone.now(),
                 end_timestamp=timezone.now() + timezone.timedelta(minutes=10),
             )
+            user1.save()
+            user2.save()
 
         # Create tournaments
         games = list(Game.objects.all())

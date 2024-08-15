@@ -83,17 +83,22 @@ class FriendDetailView(APIView):
         payload = decode_jwt(token)
         user = get_object_or_404(User, pk=payload.get("id"))
 
+
         # 유저와 친구 상태인 유저 모델들을 모두 가져옴
-        friends_as_user1 = Friend.objects.filter(user_id1=user)
-        friends_as_user2 = Friend.objects.filter(user_id2=user)
+        friends_as_user1 = Friend.objects.filter(user1=user)
+        friends_as_user2 = Friend.objects.filter(user2=user)
+
 
         # 친구 유저 ID 수집
-        friend_ids = set(friends_as_user1.values_list("user_id2", flat=True)) | set(
-            friends_as_user2.values_list("user_id1", flat=True)
+        friend_ids = set(friends_as_user1.values_list("user2", flat=True)) | set(
+            friends_as_user2.values_list("user1", flat=True)
         )
 
         # 친구 ID를 통해 친구 유저 정보 가져오기
-        friends = User.objects.filter(pk__in=friend_ids)
+        try:
+            friends = User.objects.filter(pk__in=friend_ids)
+        except User.DoesNotExist:
+            return Response({"[]"}, status=status.HTTP_200_OK)
 
         # 직렬화하여 JSON 응답으로 반환
         serializer = UserSerializer(friends, many=True)
@@ -123,13 +128,13 @@ class FriendDetailView(APIView):
 
         # 이미 존재하는 친구 관계 확인
         if (
-            Friend.objects.filter(user_id1=user, user_id2=friend_user).exists()
-            or Friend.objects.filter(user_id1=friend_user, user_id2=user).exists()
+            Friend.objects.filter(user1=user, user2=friend_user).exists()
+            or Friend.objects.filter(user1=friend_user, user2=user).exists()
         ):
             return Response({"error": "Friendship already exists"}, status=status.HTTP_400_BAD_REQUEST)
 
         # 새로운 친구 관계 생성
-        friend = Friend(user_id1=user, user_id2=friend_user)
+        friend = Friend(user1=user, user2=friend_user)
         friend.save()
 
         response_serializer = FriendSerializer(friend)
@@ -152,7 +157,7 @@ class FriendDetailView(APIView):
         friend_user = get_object_or_404(User, pk=friend_user_id)
 
         # 이미 존재하는 친구 관계 확인
-        friend = Friend.objects.filter(user_id1=user, user_id2=friend_user)
+        friend = Friend.objects.filter(user1=user, user2=friend_user)
         if not friend.exists():
             return Response({"error": "Friendship does not exist"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -163,8 +168,45 @@ class FriendDetailView(APIView):
 @api_view(["GET"])
 def get_user(request, pk):
     user = get_object_or_404(User, user_id=pk)
-    serializer = UserSerializer(user)
-    return JsonResponse(serializer.data)
+    user_serializer = UserSerializer(user)
+
+    games_as_user1 = Game.objects.filter(user1=user)
+    games_as_user2 = Game.objects.filter(user2=user)
+
+    all_games = games_as_user1.union(games_as_user2)
+
+    # 게임 정보 가공 및 직렬화
+    games_data = []
+    for game in all_games:
+        if game.user1 == user and game.game_type == "PvP":
+            op_user_id = game.user2.user_id
+            my_score = game.score1
+            op_score = game.score2
+        elif game.user2 == user and game.game_type == "PvP":
+            op_user_id = game.user1.user_id
+            my_score = game.score2
+            op_score = game.score1
+        else:
+            continue
+        opponent = User.objects.get(user_id=op_user_id)
+        games_data.append({
+            "op_user": {
+                "user_id": opponent.user_id,
+                "nickname": opponent.nickname,
+                "img_url": opponent.img_url,
+            },
+            "my_score": my_score,
+            "op_score": op_score,
+            "is_win": my_score > op_score,
+            "start_timestamp": game.start_timestamp,
+            "playtime": (game.end_timestamp - game.start_timestamp).total_seconds() // 60  # playtime in minutes
+        })
+
+    # 유저 정보와 게임 정보를 하나의 JSON으로 합치기
+    response_data = user_serializer.data
+    response_data['games'] = games_data
+
+    return JsonResponse(response_data)
 
 
 @api_view(["GET"])
