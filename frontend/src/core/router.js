@@ -5,6 +5,7 @@ import { Friends } from "../components/Friends.js";
 import { Profile } from "../components/Profile.js";
 import { TwoFA } from "../components/2FA.js";
 import { Edit } from "../components/Edit.js";
+import { GameLocal } from "../components/Game-Local.js";
 
 export const routes = {
     "/": {
@@ -30,7 +31,11 @@ export const routes = {
 	"/main/profile/:nickname/edit": {
 		component: (props) => new Edit(root.app, props),
 		props: { nickname: "" }
-	}
+	},
+    "/game/local/:uid": {
+		component: (props) => new GameLocal(root.app, props),
+        props: { uid: "" }
+	},
 };
 
 export const changeUrl = async (requestedUrl, usePushState = true) => {

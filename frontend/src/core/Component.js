@@ -7,9 +7,9 @@ export class Component {
   constructor ($el, props) {
     this.$el = $el;
     this.props = props;
-	this.children = [];
+	  this.children = [];
     this.setup();
-	this.mounted();
+	  this.mounted();
     this.setEvent();
   }
 
