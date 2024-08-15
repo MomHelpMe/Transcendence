@@ -13,13 +13,12 @@ class Command(BaseCommand):
         # Create users
         users = []
         for i in range(10):
-            rand = random.randint(1, 100)
             user, created = User.objects.update_or_create(
                 user_id=i,
                 defaults={
-                    "nickname": f"User{rand}",
-                    "email": f"user{rand}@example.com",
-                    "img_url": f"https://example.com/user{rand}.png",
+                    "nickname": f"User{i}",
+                    "email": f"user{i}@example.com",
+                    "img_url": "https://picsum.photos/200",
                     "is_2FA": random.choice([True, False]),
                     "is_online": random.choice([True, False]),
                 },

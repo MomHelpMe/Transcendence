@@ -54,7 +54,7 @@ export class FriendsList extends Component {
 			this.friends = data; // 응답에서 friends list 꺼내기
 		
 			// 친구 목록에서 닉네임 리스트를 추출합니다.
-			const friendNicknameList = this.friends.map(friend => `${friend.nickname}#${friend.uid}`);
+			const friendNicknameList = this.friends.map(friend => `${friend.nickname}#${friend.user_id}`);
 		
 			// 친구 닉네임 리스트를 이용해 친구 목록 생성
 			const ulElement = document.querySelector("ul#friendsLists");
@@ -79,11 +79,11 @@ export class FriendsList extends Component {
 			}
 
 			const part = event.target.id.split('#');
-			const uid = part[1];
-			const friend = this.friends.find(user => user.uid === uid);
+			const uid = parseInt(part[1]);
+			const friend = this.friends.find(user => user.user_id === uid);
 
 			// 새로운 FriendsInfo 인스턴스를 생성하고, this.children에 추가
-			this.info = new FriendsInfo(ulElement, {is_online: friend.is_online, nickname: `${friend.nickname}#${friend.uid}`, img_url: friend.img_url});
+			this.info = new FriendsInfo(ulElement, {is_online: friend.is_online, nickname: `${friend.nickname}#${friend.user_id}`, img_url: friend.img_url});
 			this.children.push(this.info);
 		});
 
@@ -109,7 +109,7 @@ export class FriendsList extends Component {
 		});
 
 		function addInput(){
-			const searchInput = document.querySelector("input#addInput");
+			const searchInput = document.querySelector("input#searchInput");
 			const part = searchInput.value.trim().split('#');
 			if (part.length !== 2)
 			{
@@ -118,10 +118,10 @@ export class FriendsList extends Component {
 				return ;
 			} 
 			const nickname = part[0];
-			const uid = part[1];
+            const uid = parseInt(part[1]);
 
-			const isFriend = this.friends.find(friend => friend.uid === uid);
-			const isUser = this.users.find(user => user.uid === uid);
+			const isFriend = this.friends.find(friend => friend.user_id === uid);
+			const isUser = this.users.find(user => user.user_id === uid);
 			if (isFriend || !isUser || isUser.nickname !== nickname)
 			{
 				console.log("invalid input!");
@@ -166,7 +166,6 @@ export class FriendsList extends Component {
 				return response.json();
 			})
 			.then(data => {
-				console.log(data);
 				this.users = data; // 응답에서 user list 꺼내기
 			})
 			.catch(error => console.error('Error:', error));
@@ -190,7 +189,7 @@ export class FriendsList extends Component {
 			filteredUsers.forEach(user => {
 				const div = document.createElement('div');
 				div.className = 'search-result-item';
-				div.textContent = `${user.nickname}#${user.uid}`;
+				div.textContent = `${user.nickname}#${user.user_id}`;
 				searchResults.appendChild(div);
 			});
 		})
