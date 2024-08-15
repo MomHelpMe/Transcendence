@@ -130,17 +130,17 @@ class GameConsumer(AsyncWebsocketConsumer):
         # Leave room group
         if self.authenticated:
             await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+            # Decrease the client count for this room
+            if self.room_group_name in GameConsumer.client_counts:
+                GameConsumer.client_counts[self.room_group_name] -= 1
+                if GameConsumer.client_counts[self.room_group_name] <= 0:
+                    GameConsumer.game_tasks[self.room_group_name].cancel()
+                    del GameConsumer.game_tasks[self.room_group_name]
+                    del GameConsumer.game_states[self.room_group_name]
+                    del GameConsumer.client_counts[self.room_group_name]
+            else:
+                GameConsumer.client_counts[self.room_group_name] = 0
 
-        # Decrease the client count for this room
-        if self.room_group_name in GameConsumer.client_counts:
-            GameConsumer.client_counts[self.room_group_name] -= 1
-            if GameConsumer.client_counts[self.room_group_name] <= 0:
-                GameConsumer.game_tasks[self.room_group_name].cancel()
-                del GameConsumer.game_tasks[self.room_group_name]
-                del GameConsumer.game_states[self.room_group_name]
-                del GameConsumer.client_counts[self.room_group_name]
-        else:
-            GameConsumer.client_counts[self.room_group_name] = 0
 
     async def send_initialize_game(self):
         state = GameConsumer.game_states[self.room_group_name]
@@ -168,29 +168,33 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
 
     async def game_loop(self):
-        count = 0
-        while True:
-            state = GameConsumer.game_states[self.room_group_name]
-            state.left_bar.update()
-            state.right_bar.update()
+        try:
+            count = 0
+            while True:
+                state = GameConsumer.game_states[self.room_group_name]
+                state.left_bar.update()
+                state.right_bar.update()
 
-            state.left_ball.move(state.left_bar)
-            state.left_ball.check_bar_collision(state.left_bar)
-            state.left_ball.check_bar_collision(state.right_bar)
-            state.left_ball.check_collision(state.map)
+                state.left_ball.move(state.left_bar)
+                state.left_ball.check_bar_collision(state.left_bar)
+                state.left_ball.check_bar_collision(state.right_bar)
+                state.left_ball.check_collision(state.map)
 
-            state.right_ball.move(state.right_bar)
-            state.right_ball.check_bar_collision(state.left_bar)
-            state.right_ball.check_bar_collision(state.right_bar)
-            state.right_ball.check_collision(state.map)
+                state.right_ball.move(state.right_bar)
+                state.right_ball.check_bar_collision(state.left_bar)
+                state.right_ball.check_bar_collision(state.right_bar)
+                state.right_ball.check_collision(state.map)
 
-            if count % 3 == 0:
-                await self.send_game_state()
-                await asyncio.sleep(0.01)
-                await state.map.init()
-            else:
-                await asyncio.sleep(0.01)
-            count += 1
+                if count % 3 == 0:
+                    await self.send_game_state()
+                    await asyncio.sleep(0.01)
+                    await state.map.init()
+                else:
+                    await asyncio.sleep(0.01)
+                count += 1
+        except asyncio.CancelledError:
+            # Handle the game loop cancellation
+            print("Game loop cancelled for", self.room_group_name)
 
     async def send_game_state(self):
         state = GameConsumer.game_states[self.room_group_name]
