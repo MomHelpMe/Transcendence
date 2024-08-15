@@ -130,7 +130,7 @@ export const initializeRouter = () => {
 async function checkAuth() {
 	try {
 		let valid;
-		const response = await fetch('http://localhost:8000/api/validate', {
+		const response = await fetch('http://localhost:8000/api/validate/', {
 			method: 'GET',
 			credentials: 'include', // 쿠키를 포함하여 요청
 		})

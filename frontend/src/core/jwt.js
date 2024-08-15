@@ -5,7 +5,7 @@ function getCookie(name) {
 	else return null;
 }
 
-function parseJWT()
+export function parseJWT()
 {
 	const token = getCookie("jwt");
 	if (!token) return null;

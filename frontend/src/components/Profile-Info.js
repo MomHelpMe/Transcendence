@@ -1,13 +1,14 @@
 import { Component } from "../core/Component.js";
 import { changeUrl } from "../core/router.js";
 import { MatchList } from "./Profile-List.js";
+import { parseJWT } from "../core/jwt.js";
 
 export class ProfileInfo extends Component {
 
 	template () {
 		const payload = parseJWT();
 		if (!payload) this.uid = null;
-		else this.uid = payload.uid;
+		else this.uid = payload.id;
 
 		const url = `주소?nickname=${encodeURIComponent(this.props.uid)}`;
 		fetch(url, {
@@ -46,7 +47,6 @@ export class ProfileInfo extends Component {
 		})
 		.catch(error => console.error('Fetch error:', error));
 		
-		// api로 win, lose, rate 호출
 		return `
 			<div id="profileBox">
 				<img src="../../back.png" id="goBack"></img>

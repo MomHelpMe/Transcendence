@@ -38,8 +38,8 @@ export class FriendsList extends Component {
 	}
 
 	mounted() {
-		// API 페이지 로드시 user List, friends List 요청
-		fetch('주소', {
+		// API !!! Friends GET
+		fetch("http://localhost:8000/api/friends/", {
 			method: 'GET',
 			credentials: 'include', // 쿠키를 포함하여 요청
 		})
@@ -50,9 +50,8 @@ export class FriendsList extends Component {
 			}
 			return response.json();
 		})
-		.then(lists => {
-			this.friends = lists.friends; // 응답에서 friends list 꺼내기
-			this.users = lists.users; // 응답에서 user list 꺼내기
+		.then(data => {
+			this.friends = data; // 응답에서 friends list 꺼내기
 		
 			// 친구 목록에서 닉네임 리스트를 추출합니다.
 			const friendNicknameList = this.friends.map(friend => `${friend.nickname}#${friend.uid}`);
@@ -129,14 +128,14 @@ export class FriendsList extends Component {
 			}
 			else
 			{
-				// API 친구 추가 요청!!
-				fetch("주소", {
+				// API !!! Friends POST
+				fetch("http://localhost:8000/api/friends/", {
 					method: 'POST',
 					credentials: 'include', // 쿠키를 포함하여 요청
 					headers: {
 					  'Content-Type': 'application/json'
 					},
-					body: JSON.stringify({ uid: uid })
+					body: JSON.stringify({ user_id: uid })
 				})
 				.then(response => {
 					if (!response.ok) {
@@ -158,6 +157,20 @@ export class FriendsList extends Component {
 			const part = event.target.value.split('#');
 			const nickname = part[0];
 
+			//API !!! userList
+			fetch("http://localhost:8000/api/user/", {
+				method: 'GET',
+			})
+			.then(response => {
+				if (!response.ok) throw new Error('Network response was not ok');
+				return response.json();
+			})
+			.then(data => {
+				console.log(data);
+				this.users = data; // 응답에서 user list 꺼내기
+			})
+			.catch(error => console.error('Error:', error));
+
 			const query = nickname.toLowerCase();
 			searchResults.innerHTML = ''; // 기존 결과 초기화
 
@@ -166,7 +179,7 @@ export class FriendsList extends Component {
 				return;
 			}
 
-			const filteredUsers = this.friends.filter(user => user.nickname.toLowerCase().startsWith(query));
+			const filteredUsers = this.users.filter(user => user.nickname.toLowerCase().startsWith(query));
 
 			if (filteredUsers.length > 0) {
 				searchResults.style.display = 'block'; // 결과가 있으면 결과 표시
@@ -195,14 +208,14 @@ export class FriendsList extends Component {
 			const part = event.target.id.split('#');
 			const uid = part[1];
 
-			// API 친구 삭제 요청!!
-			fetch("주소", {
+			// API !!! Friends DELETE
+			fetch("http://localhost:8000/api/friends/", {
 				method: 'DELETE',
 				credentials: 'include', // 쿠키를 포함하여 요청
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ uid: uid })
+				body: JSON.stringify({ user_id: uid })
 			})
 			.then(response => {
 				if (!response.ok) {

@@ -4,8 +4,8 @@ import { changeUrl } from "../core/router.js";
 export class EditProfile extends Component {
 
 	template () {
-		//API!!
-		fetch(url, {
+		//API!! ME GET
+		fetch("http://localhost:8000/api/me/", {
 			method: 'GET',
 			credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
 		})
@@ -16,9 +16,9 @@ export class EditProfile extends Component {
 			return response.json();
 		})
 		.then(data => {
-			this.nickname = data.user.nickname;
-			this.img_url = data.user.img_url;
-			this.twoFA = data.user.twoFA;
+			this.nickname = data.nickname;
+			this.img_url = data.img_url;
+			this.is_2FA = data.is_2FA;
 		})
 		.catch(error => console.error('Fetch error:', error));
 		return `
@@ -50,7 +50,7 @@ export class EditProfile extends Component {
 						</div>
 						<div id="edit-2FA">
 							<label for="2fa-toggle">Enable 2FA:</label>
-							${this.twoFA ? `<input type="checkbox" id="2fa-toggle" checked disabled>` : `<input type="checkbox" id="2fa-toggle" disabled>`}
+							${this.is_2FA ? `<input type="checkbox" id="2fa-toggle" checked disabled>` : `<input type="checkbox" id="2fa-toggle" disabled>`}
 						</div>
 					</div>
 					<div id="Arrow">
@@ -76,7 +76,7 @@ export class EditProfile extends Component {
 						</div>
 						<div id="edit-2FA">
 							<label for="2fa-toggle">Enable 2FA:</label>
-							${this.twoFA ? `<input type="checkbox" id="2fa-toggle" checked>` : `<input type="checkbox" id="2fa-toggle">`}
+							${this.is_2FA ? `<input type="checkbox" id="2fa-toggle" checked>` : `<input type="checkbox" id="2fa-toggle">`}
 						</div>
 						<button id="profileChange" type="submit">Save Changes</button>
 					</div>
@@ -110,15 +110,14 @@ export class EditProfile extends Component {
 		});
 
 		this.addEvent('click', '#deleteYesButton', (event) => {
-			fetch(url, {
+			//API!! ME DELETE
+			fetch("http://localhost:8000/api/me/", {
 				method: 'DELETE',
 				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
 			})
 			.then(response => {
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-				changeUrl(`/`);
+				if (response.ok) changeUrl(`/`);
+				else throw new Error('Network response was not ok');
 			})
 			.catch(error => console.error('Fetch error:', error));
 		});
@@ -133,18 +132,18 @@ export class EditProfile extends Component {
 			// Fetch the values
 			const nickname = document.getElementById('nickname').value;
 			const imgFile = document.getElementById('file-upload').files[0];
-			const twoFA = document.getElementById('2fa-toggle').checked;
+			const is_2FA = document.getElementById('2fa-toggle').checked;
 
 			// Create FormData object to send file and other data
 			const formData = new FormData();
 			formData.append('nickname', nickname);
-			formData.append('twoFA', twoFA);
+			formData.append('is_2FA', is_2FA);
 			if (imgFile) {
-				formData.append('profileImage', imgFile);
+				formData.append('image', imgFile);
 			}
 
-			// API!!
-			fetch('주소', {
+			// API!! ME PUT
+			fetch('http://localhost:8000/api/me/', {
 				method: 'PUT',
 				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
 				body: formData
@@ -159,17 +158,17 @@ export class EditProfile extends Component {
 			})
 			.then(result => {
 				// nickname이 유효하지 않으면 경고문 띄움
-				if (!result.isValidNick) {
+				if (!result.is_valid_nick) {
 					document.getElementById('nickname-error').textContent = "nickname is invalid!";
 				}
 			
 				// image가 유효하지 않으면 경고문 띄움
-				if (!result.isValidImg) {
+				if (!result.is_valid_img) {
 					document.getElementById('image-error').textContent = "image is invalid!";
 				}
 			
-				if (result.isValidNick && result.isValidImg) {
-					changeUrl(`/main/profile/${this.props.nickname}/edit`);
+				if (result.is_valid_nick && result.is_valid_img) {
+					changeUrl(`/main/profile/${this.props.uid}/edit`);
 				}
 			})
 			.catch(error => {
