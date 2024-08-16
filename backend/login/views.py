@@ -15,7 +15,6 @@ from rest_framework.response import Response
 
 import pprint
 
-
 @api_view(["GET"])
 def login(request):
     oauth_url = settings.OAUTH_URL
