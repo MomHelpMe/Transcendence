@@ -19,8 +19,8 @@ export class Menu extends Component {
 	}
 
 	mounted(){
-		this.children.push(new List(document.querySelector("ul#gameMenu"), { className: "gameMode", contents: ["Local Game", "Multi Game", "AI", "Tournament"]}));
-		this.children.push(new List(document.querySelector("ul#userMenu"), { className: "showInfo", contents: ["Friends", "Profile", "Logout"]}));
+		new List(document.querySelector("ul#gameMenu"), { className: "gameMode", contents: ["Local Game", "Multi Game", "AI", "Tournament"]});
+		new List(document.querySelector("ul#userMenu"), { className: "showInfo", contents: ["Friends", "Profile", "Logout"]});
 	}
 
 	setEvent () {

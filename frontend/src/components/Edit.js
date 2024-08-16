@@ -3,6 +3,6 @@ import { EditProfile } from "./Edit-Profile.js";
 
 export class Edit extends Default {
 	mounted() {
-		this.children.push(new EditProfile(document.querySelector("div#contents"), this.props));
+		new EditProfile(document.querySelector("div#contents"), this.props);
 	}
 }

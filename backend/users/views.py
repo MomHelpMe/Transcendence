@@ -203,7 +203,8 @@ def get_user(request, pk):
         })
 
     # 유저 정보와 게임 정보를 하나의 JSON으로 합치기
-    response_data = user_serializer.data
+    response_data = {}
+    response_data['user'] = user_serializer.data
     response_data['games'] = games_data
 
     return JsonResponse(response_data)

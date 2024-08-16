@@ -9,18 +9,18 @@ export class Component {
 		this.props = props;
 		this.children = [];
 		this.setup();
-		this.mounted();
 		this.setEvent();
 	}
-
+	
 	setup() {
 		this.state = observable(this.initState());
 		observe(() => {
 			this.render();
+			this.mounted();
 			this.children.forEach(child => child.render());
 		});
 	}
-
+	
 	initState() { return {} }
 	template () { return ''; }
 	render () { this.$el.innerHTML = this.template(); }

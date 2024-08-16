@@ -5,18 +5,17 @@ import { parseJWT } from "../core/jwt.js";
 
 export class ProfileInfo extends Component {
 
-	template () {
+	initState() {
 		const payload = parseJWT();
 		if (!payload) this.uid = null;
 		else this.uid = payload.id;
 
-		const url = `주소?nickname=${encodeURIComponent(this.props.uid)}`;
-		fetch(url, {
+		this.user = {win: null, lose: null, img_url: null, nickname: null, uid: null};
+		this.rate = null;
+		this.games = null;
+		fetch(`http://localhost:8000/api/user/${this.props.uid}`, {
 			method: 'GET',
 			credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
-			headers: {
-				'Content-Type': 'application/json'
-			}
 		})
 		.then(response => {
 			if (!response.ok) {
@@ -25,28 +24,17 @@ export class ProfileInfo extends Component {
 			return response.json();
 		})
 		.then(data => {
-			this.user = data.user;
-			this.win = data.win;
-			this.lose = data.lose;
-			this.rate = Math.round((this.win / this.lose) * 100);
-			this.matches = data.matches;
-			// this.user = { nickname: "seonjo", img_url: "../../소년명수.png"};
-			// this.win = 35;
-			// this.lose = 20;
-			// this.rate = (this.win / this.lose) * 100;
-			// this.matches = [
-			// 	{startTime: "7/5 18:05", playTime: "30 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 3, opNick: "michang" },
-			// 	{startTime: "7/3 18:25", playTime: "22 min", img_url: "../../소년명수.png", type: "lose", myScore: 3, opScore: 5, opNick: "jiko" },
-			// 	{startTime: "7/1 21:15", playTime: "18 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 2, opNick: "jaehejun" },
-			// 	{startTime: "6/25 10:34", playTime: "22 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 3, opNick: "seunan" },
-			// 	{startTime: "6/18 22:53", playTime: "17 min", img_url: "../../소년명수.png", type: "lose", myScore: 1, opScore: 5, opNick: "michang" },
-			// 	{startTime: "6/17 12:14", playTime: "50 min", img_url: "../../소년명수.png", type: "lose", myScore: 0, opScore: 5, opNick: "jaehejun" },
-			// 	{startTime: "6/5 18:21", playTime: "43 min", img_url: "../../소년명수.png", type: "lose", myScore: 2, opScore: 5, opNick: "jiko" },
-			// 	{startTime: "6/2 11:42", playTime: "23 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 3, opNick: "seunan" },
-			// ];
+			console.log(data);
+			console.log(this.user);
+			this.state.games = data.games;
+			this.state.user = data.user;
+			this.state.rate = Math.round((this.user.win / this.user.lose) * 100);
 		})
 		.catch(error => console.error('Fetch error:', error));
-		
+		return { user: this.user, rate: this.rate, games: this.games };
+	}
+
+	template () {
 		return `
 			<div id="profileBox">
 				<img src="../../back.png" id="goBack"></img>
@@ -57,15 +45,15 @@ export class ProfileInfo extends Component {
 						</div>
 						<div id="userInfo">
 							<div id="profile-edit">
-								${this.props.uid === this.uid ? `<div id="profile-edit-button">edit</div>` : ""}
+								${this.props.uid === this.state.user.user_id ? `<div id="profile-edit-button">edit</div>` : ""}
 							</div>
 							<div id="profileUserName">
-								<span id="profileNick">${this.user.nickname}#${this.user.uid}</span>
+								<span id="profileNick">${this.state.user.nickname}#${this.state.user.user_id}</span>
 							</div>
 							<div id="profileImgBox">
-								${this.user.img_url === "" ?
+								${this.state.user.img_url === "" ?
 									`<img id="profileImg" src="../../friends.png"></img>` :
-									`<img id="profileImg" src="${this.user.img_url}"></img>`}
+									`<img id="profileImg" src="${this.state.user.img_url}"></img>`}
 							</div>
 						</div>
 					</div>
@@ -78,9 +66,9 @@ export class ProfileInfo extends Component {
 									<div id="percentage"></div>
 								</div>
 								<div id="winStat">
-									<span id="win">Win </span><span id="winNum">${this.win}</span>
-									<span id="lose">Lose </span><span id="loseNum">${this.lose}</span>
-									<span id="rate">(${this.rate}%)</span>
+									<span id="win">Win </span><span id="winNum">${this.state.user.win}</span>
+									<span id="lose">Lose </span><span id="loseNum">${this.state.user.lose}</span>
+									<span id="rate">(${this.state.rate}%)</span>
 								</div>
 							</div>
 							<div id="matchHistory">
@@ -98,7 +86,7 @@ export class ProfileInfo extends Component {
 	}
 
 	mounted() {
-		this.children.push(new MatchList(document.querySelector("ul#matches"), {matches: this.matches}));
+		new MatchList(document.querySelector("ul#matches"), {matches: this.state.games});
 	}
 
 	setEvent() {
@@ -135,7 +123,7 @@ export class ProfileInfo extends Component {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		const startAngle = 1.5 * Math.PI;
-		const endAngle = startAngle + (2 * Math.PI * (this.rate / 100));
+		const endAngle = startAngle + (2 * Math.PI * (rate / 100));
 
 		ctx.beginPath();
 		ctx.arc(100, 100, 90, startAngle, endAngle);
@@ -145,6 +133,6 @@ export class ProfileInfo extends Component {
 	}
 
 	updatePercentage() {
-		document.getElementById('percentage').innerText = `${this.rate}%`;
+		document.getElementById('percentage').innerText = `${this.state.rate}%`;
 	}
 }
