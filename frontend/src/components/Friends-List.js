@@ -120,6 +120,11 @@ export class FriendsList extends Component {
 			const nickname = part[0];
             const uid = parseInt(part[1]);
 
+			if (!this.users)
+			{
+				console.log("user is not loaded!");
+				return ;
+			}
 			const isFriend = this.friends.find(friend => friend.user_id === uid);
 			const isUser = this.users.find(user => user.user_id === uid);
 			if (isFriend || !isUser || isUser.nickname !== nickname)
@@ -167,31 +172,30 @@ export class FriendsList extends Component {
 			})
 			.then(data => {
 				this.users = data; // 응답에서 user list 꺼내기
+				const query = nickname.toLowerCase();
+				searchResults.innerHTML = ''; // 기존 결과 초기화
+	
+				if (query.length === 0) {
+					searchResults.style.display = 'none'; // 입력값이 없으면 결과 숨김
+					return;
+				}
+	
+				const filteredUsers = this.users.filter(user => user.nickname.toLowerCase().startsWith(query));
+	
+				if (filteredUsers.length > 0) {
+					searchResults.style.display = 'block'; // 결과가 있으면 결과 표시
+				} else {
+					searchResults.style.display = 'none'; // 결과가 없으면 결과 숨김
+				}
+	
+				filteredUsers.forEach(user => {
+					const div = document.createElement('div');
+					div.className = 'search-result-item';
+					div.textContent = `${user.nickname}#${user.user_id}`;
+					searchResults.appendChild(div);
+				});
 			})
 			.catch(error => console.error('Error:', error));
-
-			const query = nickname.toLowerCase();
-			searchResults.innerHTML = ''; // 기존 결과 초기화
-
-			if (query.length === 0) {
-				searchResults.style.display = 'none'; // 입력값이 없으면 결과 숨김
-				return;
-			}
-
-			const filteredUsers = this.users.filter(user => user.nickname.toLowerCase().startsWith(query));
-
-			if (filteredUsers.length > 0) {
-				searchResults.style.display = 'block'; // 결과가 있으면 결과 표시
-			} else {
-				searchResults.style.display = 'none'; // 결과가 없으면 결과 숨김
-			}
-
-			filteredUsers.forEach(user => {
-				const div = document.createElement('div');
-				div.className = 'search-result-item';
-				div.textContent = `${user.nickname}#${user.user_id}`;
-				searchResults.appendChild(div);
-			});
 		})
 
 		this.addEvent('click', '#searchResults', (event) => {
