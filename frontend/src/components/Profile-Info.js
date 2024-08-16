@@ -24,11 +24,11 @@ export class ProfileInfo extends Component {
 			return response.json();
 		})
 		.then(data => {
-			console.log(data);
-			console.log(this.user);
 			this.state.games = data.games;
 			this.state.user = data.user;
-			this.state.rate = Math.round((this.user.win / this.user.lose) * 100);
+
+			this.state.rate = data.user.lose == 0 ? (data.user.win == 0 ? 0 : 100) :
+							Math.round((data.user.win / (data.user.lose + data.user.win)) * 100);
 		})
 		.catch(error => console.error('Fetch error:', error));
 		return { user: this.user, rate: this.rate, games: this.games };
@@ -45,10 +45,10 @@ export class ProfileInfo extends Component {
 						</div>
 						<div id="userInfo">
 							<div id="profile-edit">
-								${this.props.uid === this.state.user.user_id ? `<div id="profile-edit-button">edit</div>` : ""}
+								${parseInt(this.props.uid) === this.uid ? `<div id="profile-edit-button">edit</div>` : ""}
 							</div>
 							<div id="profileUserName">
-								<span id="profileNick">${this.state.user.nickname}#${this.state.user.user_id}</span>
+								<span id="profileNick">${this.state.user.nickname}</span>
 							</div>
 							<div id="profileImgBox">
 								${this.state.user.img_url === "" ?
@@ -87,6 +87,9 @@ export class ProfileInfo extends Component {
 
 	mounted() {
 		new MatchList(document.querySelector("ul#matches"), {matches: this.state.games});
+		this.drawBackgroundCircle();
+		this.drawProgressCircle();
+		this.updatePercentage();
 	}
 
 	setEvent() {
@@ -99,9 +102,6 @@ export class ProfileInfo extends Component {
 		});
 
 		// 컴포넌트가 렌더링된 후 원형 진행 막대를 그립니다.
-		this.drawBackgroundCircle();
-		this.drawProgressCircle();
-		this.updatePercentage();
 	}
 
 	drawBackgroundCircle() {
@@ -123,7 +123,7 @@ export class ProfileInfo extends Component {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		const startAngle = 1.5 * Math.PI;
-		const endAngle = startAngle + (2 * Math.PI * (rate / 100));
+		const endAngle = startAngle + (2 * Math.PI * (this.state.rate / 100));
 
 		ctx.beginPath();
 		ctx.arc(100, 100, 90, startAngle, endAngle);

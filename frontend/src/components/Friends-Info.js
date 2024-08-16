@@ -10,7 +10,7 @@ export class FriendsInfo extends Component {
 				<div id="friendNick">${nickname}</div>
 			</div>
 			<div id="friendImage">
-				<img id="friendImage" src="../../소년명수.png"></img>
+				<img id="friendImage" src="${img_url}"></img>
 			</div>
 			<div id="friendBottom">
 				<div class="goProfile" id="${nickname}">View Profile</div>

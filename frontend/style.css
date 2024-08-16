@@ -971,25 +971,10 @@ div#playTime {
 	font-weight: 700;
 }
 
-div#opImg {
-	width: 20%;
-	height: 80%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-
-img#opImg {
-	border-radius: 10px;
-	width: 80%;
-	height: 100%;
-}
-
 
 div#matchOp {
 	padding-left: 5%;
-	width: 20%;
+	width: 10%;
 	height: 80%;
 	display: flex;
 	align-items: center;
@@ -1002,13 +987,29 @@ span#vs{
 	margin-right: 20px;
 }
 
+div#opImg {
+	padding: 0;
+	width: 35%;
+	height: 80%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+
+img#opImg {
+	border-radius: 10px;
+	width: 45%;
+	height: 100%;
+}
+
 span#opNick{
+	margin-right: 20px;
 	font-size: 20px;
 	font-weight: 700;
 }
 
 div#matchScore {
-	margin-left: 3%;
 	width: 20%;
 	height: 80%;
 	display: flex;
@@ -1017,14 +1018,12 @@ div#matchScore {
 }
 
 span#myScorewin {
-	margin-left: 30px;
 	font-size: 30px;
 	font-weight: 700;
 	color:rgb(20, 74, 188);
 }
 
 span#myScorelose {
-	margin-left: 30px;
 	font-size: 30px;
 	font-weight: 700;
 	color:rgb(187, 23, 23)
@@ -1096,7 +1095,7 @@ div#deleteDoubleCheck {
 	width: 500px;
 	height: 200px;
 	border-radius: 10px;
-	display: flex;
+	display: none;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
