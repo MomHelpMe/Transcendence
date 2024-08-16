@@ -6,7 +6,7 @@ import requests
 import jwt
 from datetime import datetime, timedelta
 
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 import smtplib
 import secrets
 import string
