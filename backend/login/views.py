@@ -6,7 +6,7 @@ import requests
 import jwt
 from datetime import datetime, timedelta
 
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import send_mail
 import smtplib
 import secrets
 import string
@@ -14,7 +14,6 @@ from django.core.cache import cache
 from rest_framework.response import Response
 
 import pprint
-
 
 @api_view(["GET"])
 def login(request):
