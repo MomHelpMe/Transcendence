@@ -57,12 +57,12 @@ export class EditProfile extends Component {
 							</div>
 							<div id="url-upload-wrapper">
 								<label for="image-url">Present Image URL</label>
-								<input type="text" id="image-url" value="${this.state.img_url}" placeholder="Enter image URL" readonly>
+								<input type="text" class="profile-image-url" value="${this.state.img_url}" placeholder="Enter image URL" readonly>
 							</div>
 						</div>
 						<div id="edit-2FA">
 							<label for="2fa-toggle">Enable 2FA:</label>
-							${this.state.is_2FA ? `<input type="checkbox" id="2fa-toggle" checked disabled>` : `<input type="checkbox" id="2fa-toggle" disabled>`}
+							${this.state.is_2FA ? `<input type="checkbox" checked disabled>` : `<input type="checkbox" disabled>`}
 						</div>
 					</div>
 					<div id="Arrow">
@@ -72,7 +72,6 @@ export class EditProfile extends Component {
 						<div class="edit" id="edit-nick">
 							<label for="nickname">Nickname:</label>
 							<input type="text" id="nickname" value="${this.state.nickname}" autocomplete="off" maxlength="10">
-							<div id="nickname-error" class="error-message"></div>
 						</div>
 						<div class="edit" id="edit-img">
 							<div id="image-preview">
@@ -80,9 +79,8 @@ export class EditProfile extends Component {
 							</div>
 							<div id="url-upload-wrapper">
 								<label for="image-url">Enter Image URL</label>
-								<input type="text" id="image-url" value="${this.state.img_url}" placeholder="Enter image URL">
+								<input type="text" class="profile-image-url" id="image-url" value="${this.state.img_url}" placeholder="Enter image URL">
 							</div>
-							<div id="image-error" class="error-message"></div>
 						</div>
 						<div id="edit-2FA">
 							<label for="2fa-toggle">Enable 2FA:</label>
@@ -131,14 +129,14 @@ export class EditProfile extends Component {
 		this.addEvent('click', '#profileChange', async (event) => {
 			event.preventDefault();
 			
-			// Clear any previous error messages
-			document.getElementById('nickname-error').textContent = '';
-			document.getElementById('image-error').textContent = '';
-
 			// Fetch the values
 			const nickname = document.getElementById('nickname').value;
 			const imageUrl = document.getElementById('image-url').value;
 			const is_2FA = document.getElementById('2fa-toggle').checked;	
+
+			console.log(nickname);
+			console.log(imageUrl);
+			console.log(is_2FA);
 
 			// Create FormData object to send file and other data
 			const formData = new FormData();
@@ -161,19 +159,7 @@ export class EditProfile extends Component {
 				}
 			})
 			.then(result => {
-				// nickname이 유효하지 않으면 경고문 띄움
-				if (!result.is_valid_nick) {
-					document.getElementById('nickname-error').textContent = "nickname is invalid!";
-				}
-			
-				// image가 유효하지 않으면 경고문 띄움
-				if (!result.is_valid_img) {
-					document.getElementById('image-error').textContent = "image is invalid!";
-				}
-			
-				if (result.is_valid_nick && result.is_valid_img) {
-					changeUrl(`/main/profile/${this.props.uid}/edit`);
-				}
+				changeUrl(`/main/profile/${this.props.uid}/edit`);
 			})
 			.catch(error => {
 				console.error('Error updating profile:', error);
