@@ -47,7 +47,7 @@ export class TwoFA extends Component {
 
 		this.addEvent('click', '#resendButton', () => {
 			// resend msg 전송
-			fetch('http://localhost:8000/api/send-mail/',{
+			fetch('http://localhost:80/api/send-mail/',{
 				method: 'GET',
 				credentials: 'include', // 쿠키를 포함하여 요청
 			})
@@ -68,7 +68,7 @@ export class TwoFA extends Component {
 			}
 			
 			// API code 일치 확인 요청
-			fetch('http://localhost:8000/api/verify-otp/', {
+			fetch('http://localhost:80/api/verify-otp/', {
 				method: 'POST',
 				credentials: 'include', // 쿠키를 포함하여 요청
 				headers: {
