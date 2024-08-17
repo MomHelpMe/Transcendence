@@ -641,6 +641,7 @@ img#friendDefaultImg {
 }
 
 img#goBack{
+	z-index: 1;
 	cursor: pointer;
 	position:absolute;
 	bottom: 30px;
@@ -970,25 +971,10 @@ div#playTime {
 	font-weight: 700;
 }
 
-div#opImg {
-	width: 20%;
-	height: 80%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-
-img#opImg {
-	border-radius: 10px;
-	width: 80%;
-	height: 100%;
-}
-
 
 div#matchOp {
 	padding-left: 5%;
-	width: 20%;
+	width: 10%;
 	height: 80%;
 	display: flex;
 	align-items: center;
@@ -1001,13 +987,29 @@ span#vs{
 	margin-right: 20px;
 }
 
+div#opImg {
+	padding: 0;
+	width: 35%;
+	height: 80%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+
+img#opImg {
+	border-radius: 10px;
+	width: 45%;
+	height: 100%;
+}
+
 span#opNick{
+	margin-right: 20px;
 	font-size: 20px;
 	font-weight: 700;
 }
 
 div#matchScore {
-	margin-left: 3%;
 	width: 20%;
 	height: 80%;
 	display: flex;
@@ -1016,14 +1018,12 @@ div#matchScore {
 }
 
 span#myScorewin {
-	margin-left: 30px;
 	font-size: 30px;
 	font-weight: 700;
 	color:rgb(20, 74, 188);
 }
 
 span#myScorelose {
-	margin-left: 30px;
 	font-size: 30px;
 	font-weight: 700;
 	color:rgb(187, 23, 23)
@@ -1065,7 +1065,97 @@ div#editTitle {
 	justify-content: center;
 }
 
+
+div#deleteButton {
+	position: absolute;
+	right: 30px;
+	top: 30px;
+	width: 150px;
+	height: 50px;
+	border-radius: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: 700;
+	background-color: rgb(220, 53, 69); /* 약간 어두운 빨간색 */
+	color: white;
+	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s;
+}
+
+div#deleteButton:hover {
+	background-color: rgb(128, 0, 0); /* 더 어두운 빨간색 */
+	color: rgb(255, 204, 204); /* 약간의 핑크빛 흰색 */
+}
+
+div#deleteDoubleCheck {
+	position: absolute;
+	left: 50% - 250px;
+	top: 300px; /* deleteButton 아래에 위치하도록 */
+	width: 500px;
+	height: 200px;
+	border-radius: 10px;
+	display: none;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(255, 245, 245); /* 연한 배경색 */
+	border: 2px solid rgb(220, 53, 69); /* 테두리를 약간 진한 빨간색으로 */
+	z-index: 1;
+}
+
+div#deleteAlertMsg {
+	margin-top: 20px;
+	width: 80%;
+	height: 20%;
+	color: black;
+	font-weight: 700;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+div#deleteChoiceBox{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 60%;
+	height: 50%;
+}
+
+div#deleteYesButton, div#deleteNoButton {
+	width: 80px;
+	height: 40px;
+	border-radius: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s;
+}
+
+div#deleteYesButton {
+	background-color: rgb(220, 53, 69);
+	color: white;
+}
+
+div#deleteYesButton:hover {
+	background-color: rgb(128, 0, 0);
+	color: rgb(255, 204, 204);
+}
+
+div#deleteNoButton {
+	background-color: rgb(200, 200, 200);
+	color: black;
+}
+
+div#deleteNoButton:hover {
+	background-color: rgb(128, 128, 128);
+	color: white;
+}
+
 div#editContents{
+	z-index: 0;
 	width: 100%;
 	height: 90%;
 	display: flex;
@@ -1106,6 +1196,7 @@ div#changedProfile {
 div#presentNick {
 	font-weight: 500;
     width: 30%;
+	height: 15px;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
@@ -1125,20 +1216,6 @@ div#edit-nick{
 	justify-content: center;
 }
 
-div.edit{
-	position: relative;
-}
-
-div#nickname-error {
-	position: absolute;
-	bottom: 3px;
-}
-
-div#image-error {
-	position: absolute;
-	bottom: 10px;
-}
-
 #edit-nick label {
     display: block;
 	margin-right: 20px;
@@ -1147,7 +1224,6 @@ div#image-error {
     margin-bottom: 5px;
     color: #333;
 }
-
 
 #edit-nick input[type="text"] {
     width: 30%;
@@ -1178,42 +1254,34 @@ div#edit-img {
 	margin-top: 30px;
 }
 
-#file-upload-wrapper {
-	position: relative;
-	width: 300px;
-	height: 50px;
-}
-
-#custom-file-upload {
-	width: 100%;
-	height: 100%;
-	background-color: #4A90E2;
-	color: white;
-	text-align: center;
-	line-height: 50px;
-	font-size: 16px;
-	border-radius: 8px;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
-}
-
-#custom-file-upload:hover {
-	background-color: #357ABD;
-}
-
-#file-upload {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	opacity: 0;
-	cursor: pointer;
-}
-
 #image-preview {
 	margin-bottom: 10px;
 	text-align: center;
+}
+
+#url-upload-wrapper {
+	margin-top: 10px;
+	width: 300px;
+	height: 50px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+#url-upload-wrapper label {
+	position: relative;
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.profile-image-url {
+	margin-top: 10px;
+	width: 80%;
+	height: 80%;
+	cursor: pointer;
 }
 
 #presentImage {
@@ -1271,10 +1339,4 @@ button#profileChange {
 
 button#profileChange:hover {
     background-color: #357ABD;
-}
-
-.error-message {
-	color: red;
-	font-size: 12px;
-	margin-top: 5px;
 }

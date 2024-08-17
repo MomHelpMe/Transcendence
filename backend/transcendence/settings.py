@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'drf_yasg',
     'rest_framework_simplejwt',
-    "users.apps.UsersConfig",
+    "users",
     "login.apps.LoginConfig",
 ]
 
@@ -76,6 +76,10 @@ CORS_ORIGIN_ALLOW_ALL = True  # TEST: 모든 도메인 허용 (보안 취약)
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
+]
+
+ALLOWED_HOSTS = [
+    "*"
 ]
 
 CORS_ALLOWED_ORIGINS = [
