@@ -4,10 +4,6 @@ import { changeUrl } from "../core/router.js";
 export class EditProfile extends Component {
 
 	initState() {
-		// const payload = parseJWT();
-		// if (!payload) this.uid = null;
-		// else this.uid = payload.id;
-
 		this.nickname = "";
 		this.img_url = "";
 		this.is_2FA = true;
@@ -24,9 +20,9 @@ export class EditProfile extends Component {
 			return response.json();
 		})
 		.then(data => {
-			this.nickname = data.nickname;
-			this.img_url = data.img_url;
-			this.is_2FA = data.is_2FA;
+			this.state.nickname = data.nickname;
+			this.state.img_url = data.img_url;
+			this.state.is_2FA = data.is_2FA;
 		})
 		.catch(error => console.error('Fetch error:', error));
 		return { nickname: this.nickname, img_url: this.img_url, is_2FA: this.is_2FA };
@@ -79,7 +75,7 @@ export class EditProfile extends Component {
 								<img id="profile-image" src="${this.state.img_url}" alt="Profile Image"></img>
 							</div>
 							<div id="url-upload-wrapper">
-								<label for="image-url">Enter Image URL:</label>
+								<label for="image-url">Enter Image URL</label>
 								<input type="text" id="image-url" value="${this.state.img_url}" placeholder="Enter image URL">
 							</div>
 							<div id="image-error" class="error-message"></div>
