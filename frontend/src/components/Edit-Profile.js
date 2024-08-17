@@ -55,6 +55,10 @@ export class EditProfile extends Component {
 							<div id="image-preview">
 								<img id="presentImage" src="${this.state.img_url}" alt="Profile Image"></img>
 							</div>
+							<div id="url-upload-wrapper">
+								<label for="image-url">Present Image URL</label>
+								<input type="text" id="image-url" value="${this.state.img_url}" placeholder="Enter image URL" readonly>
+							</div>
 						</div>
 						<div id="edit-2FA">
 							<label for="2fa-toggle">Enable 2FA:</label>
@@ -67,10 +71,10 @@ export class EditProfile extends Component {
 					<div id="changedProfile">
 						<div class="edit" id="edit-nick">
 							<label for="nickname">Nickname:</label>
-							<input type="text" id="nickname" value="${this.state.nickname}" autocomplete="off">
+							<input type="text" id="nickname" value="${this.state.nickname}" autocomplete="off" maxlength="10">
 							<div id="nickname-error" class="error-message"></div>
 						</div>
-						<div  class="edit" id="edit-img">
+						<div class="edit" id="edit-img">
 							<div id="image-preview">
 								<img id="profile-image" src="${this.state.img_url}" alt="Profile Image"></img>
 							</div>
