@@ -3,11 +3,25 @@ import { changeUrl } from "../core/router.js";
 import { getCookie } from "../core/jwt.js";
 
 export class GameCore extends Component {
+	constructor($el, props) {
+		super($el, props);
+	}
+
+	initState() {
+		this.keysPressed = {};
+		this.gameSocket = this.gameSocket = new WebSocket(
+			'ws://'
+			+ "localhost:8000"
+			+ '/ws/game/'
+			+  this.props.uid
+			+ '/'
+		);
+		return {};
+	}
+
 	gameStart() {
 		const COLOR = ["#f5f6fa", "#2f3640", "#f5f6fa"];
-		const roomName = this.props.uid;
 		const canvas = document.getElementById('game-canvas');
-		console.log(canvas);
 		const ctx = canvas.getContext('2d');
 		const sounds = {
 			'collision': new Audio('../../key.mp3'),
@@ -21,8 +35,7 @@ export class GameCore extends Component {
 		function playSound(soundName) {
 			var sound = sounds[soundName];
 			if (sound) {
-				console.log(sound);
-				sound.currentTime = 0; // 재생 위치를 처음으로
+				sound.currentTime = 0;
 				sound.play().catch(function (error) {
 					console.log('Autoplay was prevented:', error);
 				});
@@ -255,21 +268,15 @@ export class GameCore extends Component {
 			}
 		}
 
-		const gameSocket = new WebSocket(
-			'ws://'
-			+ "localhost:8000"
-			+ '/ws/game/'
-			+ roomName
-			+ '/'
-		);
+		console.log("new socket!: ", this.gameSocket);
+		canvas.setAttribute('tabindex', '0');
 
-		gameSocket.onopen = function () {
+		this.gameSocket.onopen = () => {
 			const token = getCookie("jwt");
-			gameSocket.send(JSON.stringify({ 'action': 'authenticate', 'token': token }));
+			this.gameSocket.send(JSON.stringify({ 'action': 'authenticate', 'token': token }));
 		};
-		
 
-		gameSocket.onmessage = function (e) {
+		this.gameSocket.onmessage = (e) => {
 			const data = JSON.parse(e.data);
 			if (data.type === 'initialize_game') {
 				initializeGame(data);
@@ -287,51 +294,37 @@ export class GameCore extends Component {
 			}
 		};
 
-		gameSocket.onclose = function (e) {
-			console.error('Game socket closed unexpectedly');
-		};
-
-		const keysPressed = {};
-
-		document.addEventListener('keydown', function (e) {
-			keysPressed[e.key] = true;
-		});
-
-		document.addEventListener('keyup', function (e) {
-			keysPressed[e.key] = false;
-		});
-
 		let isPoolingLeft = false, isPoolingRight = false;
-		function handleKeyPresses() {
-			if (keysPressed['w']) {
-				gameSocket.send(JSON.stringify({ 'action': 'move_up', 'bar': 'left' }));
+		const handleKeyPresses = () => {
+			if (this.keysPressed['w']) {
+				this.gameSocket.send(JSON.stringify({ 'action': 'move_up', 'bar': 'left' }));
 				leftBar.targetY -= 5;
 			}
-			if (keysPressed['s']) {
-				gameSocket.send(JSON.stringify({ 'action': 'move_down', 'bar': 'left' }));
+			if (this.keysPressed['s']) {
+				this.gameSocket.send(JSON.stringify({ 'action': 'move_down', 'bar': 'left' }));
 				leftBar.targetY += 5;
 			}
-			if (keysPressed['a']) {
-				gameSocket.send(JSON.stringify({ 'action': 'pull', 'bar': 'left' }));
+			if (this.keysPressed['a']) {
+				this.gameSocket.send(JSON.stringify({ 'action': 'pull', 'bar': 'left' }));
 				isPoolingLeft = true;
 			} else if (isPoolingLeft) {
-				gameSocket.send(JSON.stringify({ 'action': 'release', 'bar': 'left' }));
+				this.gameSocket.send(JSON.stringify({ 'action': 'release', 'bar': 'left' }));
 				isPoolingLeft = false;
 			}
 
-			if (keysPressed['ArrowUp']) {
-				gameSocket.send(JSON.stringify({ 'action': 'move_up', 'bar': 'right' }));
+			if (this.keysPressed['ArrowUp']) {
+				this.gameSocket.send(JSON.stringify({ 'action': 'move_up', 'bar': 'right' }));
 				rightBar.targetY -= 5;
 			}
-			if (keysPressed['ArrowDown']) {
-				gameSocket.send(JSON.stringify({ 'action': 'move_down', 'bar': 'right' }));
+			if (this.keysPressed['ArrowDown']) {
+				this.gameSocket.send(JSON.stringify({ 'action': 'move_down', 'bar': 'right' }));
 				rightBar.targetY += 5;
 			}
-			if (keysPressed['ArrowRight']) {
-				gameSocket.send(JSON.stringify({ 'action': 'pull', 'bar': 'right' }));
+			if (this.keysPressed['ArrowRight']) {
+				this.gameSocket.send(JSON.stringify({ 'action': 'pull', 'bar': 'right' }));
 				isPoolingRight = true;
 			} else if (isPoolingRight) {
-				gameSocket.send(JSON.stringify({ 'action': 'release', 'bar': 'right' }));
+				this.gameSocket.send(JSON.stringify({ 'action': 'release', 'bar': 'right' }));
 				isPoolingRight = false;
 			}
 		}
@@ -390,15 +383,25 @@ export class GameCore extends Component {
 	template() {
 		return `
 		<canvas id="game-canvas"></canvas>
-		<script src="./src/components/Game-tmp.js" />
-    `;
+	`;
 	}
 
 	setEvent() {
-		this.addEvent('click', '#login', () => {
-			// 로그인 요청
-			window.location.href = 'http://localhost:8000/api/login';
+		this.addEvent('keydown', '#game-canvas', (e) => {
+			this.keysPressed[e.key] = true;
+			console.log("keyspressed: ", this.keysPressed);
 		});
+
+		this.addEvent('keyup', '#game-canvas', (e) => {
+			this.keysPressed[e.key] = false;
+		});
+
+		const handleSocketClose = (e) => {
+			this.gameSocket.close();
+			window.removeEventListener('popstate', handleSocketClose);
+		}
+
+		window.addEventListener('popstate', handleSocketClose);
 	}
 
 	mounted() {
