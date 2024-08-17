@@ -4,6 +4,11 @@ import { changeUrl } from "../core/router.js";
 
 export class Menu extends Component {
 
+  online()
+  {
+
+  }
+
   template () {
     return `
 		<div id="menuBox">
