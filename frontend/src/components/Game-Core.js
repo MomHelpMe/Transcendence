@@ -21,8 +21,12 @@ export class GameCore extends Component {
 
 	gameStart() {
 		const COLOR = ["#f5f6fa", "#2f3640", "#f5f6fa"];
+		const BALL_COLOR = ["#FF4C4C", "#FFF078"];
 		const canvas = document.getElementById('game-canvas');
+		const scoreCanvas = document.getElementById('game-score');
+		canvas.setAttribute('tabindex', '0');
 		const ctx = canvas.getContext('2d');
+		const scoreCtx = scoreCanvas.getContext('2d');
 		const sounds = {
 			'collision': new Audio('../../key.mp3'),
 		};
@@ -57,11 +61,12 @@ export class GameCore extends Component {
 
 			draw() {
 				ctx.fillStyle = COLOR[this.id + 1];
-				Map.strokeRoundedRect(ctx, this.x, this.y, this.width, this.height, 6);
+				Map.strokeRoundedRect(ctx, this.x, this.y, this.width, this.height, this.width / 2);
 				ctx.fill();
 				ctx.strokeStyle = COLOR[this.id];
-				ctx.setLineDash([0]);
-				ctx.strokeRect(this.x, this.y, this.width, this.height);
+				ctx.lineWidth = 2;
+				Map.strokeRoundedRect(ctx, this.x, this.y, this.width, this.height, this.width / 2);
+				ctx.stroke();
 			}
 
 			update() {
@@ -74,16 +79,6 @@ export class GameCore extends Component {
 						this.y -= this.speed;
 					}
 				}
-
-				// if (Math.abs(this.targetX - this.x) < this.speed) {
-				// 	this.x = this.targetX;
-				// } else {
-				// 	if (this.targetX > this.x) {
-				// 		this.x += this.speed;
-				// 	} else {
-				// 		this.x -= this.speed;
-				// 	}
-				// }
 				this.x = this.targetX;
 			}
 		}
@@ -95,7 +90,6 @@ export class GameCore extends Component {
 				this.targetX = x;
 				this.targetY = y;
 				this.radius = radius;
-				this.speed = 5;
 				this.color = color;
 			}
 
@@ -106,27 +100,8 @@ export class GameCore extends Component {
 			}
 
 			update() {
-				let directionX = this.targetX - this.x;
-				let directionY = this.targetY - this.y;
-				let length = Math.sqrt(directionX * directionX + directionY * directionY);
-
-				if (Math.abs(this.targetX - this.x) > this.speed * 10 || Math.abs(this.targetY - this.y) > this.speed * 10) {
-					this.x = this.targetX;
-					this.y = this.targetY;
-					console.log('Ball position reset');
-				}
-
-				if (length < this.speed) {
-					this.x = this.targetX;
-					this.y = this.targetY;
-					return;
-				}
-
-				let unitDirectionX = directionX / length;
-				let unitDirectionY = directionY / length;
-
-				this.x += unitDirectionX * this.speed;
-				this.y += unitDirectionY * this.speed;
+				this.x = this.targetX;
+				this.y = this.targetY;
 			}
 		}
 
@@ -153,10 +128,10 @@ export class GameCore extends Component {
 						ctx.fillStyle = COLOR[this.map[i][j]];
 						Map.strokeRoundedRect(
 							ctx,
-							j * CELL_WIDTH + 1,
-							i * CELL_HEIGHT + 1,
-							CELL_WIDTH - 2,
-							CELL_HEIGHT - 2,
+							j * CELL_WIDTH + 2,
+							i * CELL_HEIGHT + 2,
+							CELL_WIDTH - 4,
+							CELL_HEIGHT - 4,
 							5
 						);
 					}
@@ -268,9 +243,6 @@ export class GameCore extends Component {
 			}
 		}
 
-		console.log("new socket!: ", this.gameSocket);
-		canvas.setAttribute('tabindex', '0');
-
 		this.gameSocket.onopen = () => {
 			const token = getCookie("jwt");
 			this.gameSocket.send(JSON.stringify({ 'action': 'authenticate', 'token': token }));
@@ -354,17 +326,28 @@ export class GameCore extends Component {
 			BALL_RADIUS = data.ball_radius;
 			canvas.width = SCREEN_WIDTH;
 			canvas.height = SCREEN_HEIGHT;
+			scoreCanvas.width = 500;
+			scoreCanvas.height = 150;
+			var text = "2 : 3"
+			// var blur = 10;
+			// var width = scoreCtx.measureText(text).width + blur * 2;
+			// scoreCtx.textBaseline = "top"
+			// scoreCtx.shadowColor = "#000"
+			// scoreCtx.shadowOffsetX = width;
+			// scoreCtx.shadowOffsetY = 0;
+			// scoreCtx.shadowBlur = blur;
+			scoreCtx.fillText(text, -10, 0);
 			CELL_WIDTH = canvas.width / data.map[0].length;
 			CELL_HEIGHT = canvas.height / data.map.length;
 
 			map = new Map(data.map, COLOR[0], COLOR[1]);
 			leftBar = new Bar(LEFT_BAR_X, LEFT_BAR_Y, BAR_WIDTH, BAR_HEIGHT, SCREEN_HEIGHT, 0);
 			rightBar = new Bar(RIGHT_BAR_X, RIGHT_BAR_Y, BAR_WIDTH, BAR_HEIGHT, SCREEN_HEIGHT, 1);
-			leftBall = new Ball(data.left_ball_x, data.left_ball_y, BALL_RADIUS, "#FFC312");
-			rightBall = new Ball(data.right_ball_x, data.right_ball_y, BALL_RADIUS, "#FFC312");
+			leftBall = new Ball(data.left_ball_x, data.left_ball_y, BALL_RADIUS, BALL_COLOR[0]);
+			rightBall = new Ball(data.right_ball_x, data.right_ball_y, BALL_RADIUS, BALL_COLOR[1]);
 
 			console.log(SCREEN_HEIGHT, SCREEN_WIDTH, BAR_HEIGHT, BAR_WIDTH, BALL_RADIUS);
-			setInterval(interpolate, 5);
+			setInterval(interpolate, 3);
 		}
 
 		function interpolate() {
@@ -382,26 +365,39 @@ export class GameCore extends Component {
 
 	template() {
 		return `
+		<style>
+		</style>
+		<canvas id="game-score"></canvas>
 		<canvas id="game-canvas"></canvas>
 	`;
 	}
 
 	setEvent() {
-		this.addEvent('keydown', '#game-canvas', (e) => {
+		const handleKeyDown = (e) => {
 			this.keysPressed[e.key] = true;
-			console.log("keyspressed: ", this.keysPressed);
-		});
-
-		this.addEvent('keyup', '#game-canvas', (e) => {
+		}
+		const handleKeyUp = (e) => {
 			this.keysPressed[e.key] = false;
-		});
+		}
+
+		// this.addEvent('keydown', '#game-canvas', (e) => {
+		// 	this.keysPressed[e.key] = true;
+		// });
+
+		// this.addEvent('keyup', '#game-canvas', (e) => {
+		// 	this.keysPressed[e.key] = false;
+		// });
 
 		const handleSocketClose = (e) => {
 			this.gameSocket.close();
 			window.removeEventListener('popstate', handleSocketClose);
+			document.removeEventListener('keydown', handleKeyDown);
+			document.removeEventListener('keyup', handleKeyUp);
 		}
 
 		window.addEventListener('popstate', handleSocketClose);
+		document.addEventListener('keydown', handleKeyDown);
+		document.addEventListener('keyup', handleKeyUp);
 	}
 
 	mounted() {

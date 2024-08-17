@@ -24,7 +24,6 @@ export class Menu extends Component {
     });
 
 	this.addEvent('click', '#LocalGame', () => {
-		console.log("여기있어요 ㅠㅠ");
 		const uid = "145058";
 		changeUrl(`/game/local/${uid}`);
 	});

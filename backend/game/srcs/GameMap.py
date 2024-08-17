@@ -1,6 +1,6 @@
 class GameMap:
     HEIGHT = 6
-    WIDTH = 8
+    WIDTH = 10
 
     def __init__(self):
         self.map = [[0 for _ in range(self.WIDTH)] for _ in range(self.HEIGHT)]

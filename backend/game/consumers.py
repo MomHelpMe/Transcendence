@@ -8,8 +8,8 @@ import jwt
 from django.conf import settings
 from channels.exceptions import DenyConnection
 
-SCREEN_HEIGHT = 600
-SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 750
+SCREEN_WIDTH = 1250
 
 
 class GameState:
@@ -187,10 +187,10 @@ class GameConsumer(AsyncWebsocketConsumer):
 
                 if count % 3 == 0:
                     await self.send_game_state()
-                    await asyncio.sleep(0.01)
+                    await asyncio.sleep(0.005)
                     await state.map.init()
                 else:
-                    await asyncio.sleep(0.01)
+                    await asyncio.sleep(0.005)
                 count += 1
         except asyncio.CancelledError:
             # Handle the game loop cancellation
