@@ -3,7 +3,15 @@ import { changeUrl } from "../core/router.js";
 
 export class EditProfile extends Component {
 
-	template () {
+	initState() {
+		// const payload = parseJWT();
+		// if (!payload) this.uid = null;
+		// else this.uid = payload.id;
+
+		this.nickname = "";
+		this.img_url = "";
+		this.is_2FA = true;
+
 		//API!! ME GET
 		fetch("http://localhost:8000/api/me/", {
 			method: 'GET',
@@ -21,6 +29,10 @@ export class EditProfile extends Component {
 			this.is_2FA = data.is_2FA;
 		})
 		.catch(error => console.error('Fetch error:', error));
+		return { nickname: this.nickname, img_url: this.img_url, is_2FA: this.is_2FA };
+	}
+	
+	template () {
 		return `
 			<div id="edit-box">
 				<div id="deleteButton">Delete Account</div>
@@ -41,16 +53,16 @@ export class EditProfile extends Component {
 					<div id="prevProfile">
 						<div id="edit-nick">
 							<label for="nickname">Nickname:</label>
-							<div id="presentNick">${this.nickname}</div>
+							<div id="presentNick">${this.state.nickname}</div>
 						</div>
 						<div id="edit-img">
 							<div id="image-preview">
-								<img id="presentImage" src="${this.img_url}" alt="Profile Image"></img>
+								<img id="presentImage" src="${this.state.img_url}" alt="Profile Image"></img>
 							</div>
 						</div>
 						<div id="edit-2FA">
 							<label for="2fa-toggle">Enable 2FA:</label>
-							${this.is_2FA ? `<input type="checkbox" id="2fa-toggle" checked disabled>` : `<input type="checkbox" id="2fa-toggle" disabled>`}
+							${this.state.is_2FA ? `<input type="checkbox" id="2fa-toggle" checked disabled>` : `<input type="checkbox" id="2fa-toggle" disabled>`}
 						</div>
 					</div>
 					<div id="Arrow">
@@ -59,24 +71,22 @@ export class EditProfile extends Component {
 					<div id="changedProfile">
 						<div class="edit" id="edit-nick">
 							<label for="nickname">Nickname:</label>
-							<input type="text" id="nickname" value="${this.nickname}" autocomplete="off">
+							<input type="text" id="nickname" value="${this.state.nickname}" autocomplete="off">
 							<div id="nickname-error" class="error-message"></div>
 						</div>
 						<div  class="edit" id="edit-img">
 							<div id="image-preview">
-								<img id="profile-image" src="${this.img_url}" alt="Profile Image"></img>
+								<img id="profile-image" src="${this.state.img_url}" alt="Profile Image"></img>
 							</div>
-							<div id="file-upload-wrapper">
-								<div id="custom-file-upload">
-									<span>Click to choose a file</span>
-								</div>
-								<input type="file" id="file-upload" accept="image/*">
+							<div id="url-upload-wrapper">
+								<label for="image-url">Enter Image URL:</label>
+								<input type="text" id="image-url" value="${this.state.img_url}" placeholder="Enter image URL">
 							</div>
 							<div id="image-error" class="error-message"></div>
 						</div>
 						<div id="edit-2FA">
 							<label for="2fa-toggle">Enable 2FA:</label>
-							${this.is_2FA ? `<input type="checkbox" id="2fa-toggle" checked>` : `<input type="checkbox" id="2fa-toggle">`}
+							${this.state.is_2FA ? `<input type="checkbox" id="2fa-toggle" checked>` : `<input type="checkbox" id="2fa-toggle">`}
 						</div>
 						<button id="profileChange" type="submit">Save Changes</button>
 					</div>
@@ -90,14 +100,10 @@ export class EditProfile extends Component {
 			window.history.back();
 		});
 		
-		this.addEvent('change', '#file-upload', (event) => { // ID를 #file-upload로 수정
-			const file = event.target.files[0];
-			if (file) {
-				const reader = new FileReader();
-				reader.onload = function(e) {
-					document.getElementById('profile-image').src = e.target.result;
-				};
-				reader.readAsDataURL(file);
+		this.addEvent('change', '#image-url', (event) => {
+			const imageUrl = event.target.value;
+			if (imageUrl) {
+				document.getElementById('profile-image').src = imageUrl;
 			}
 		});
 
@@ -131,16 +137,14 @@ export class EditProfile extends Component {
 
 			// Fetch the values
 			const nickname = document.getElementById('nickname').value;
-			const imgFile = document.getElementById('file-upload').files[0];
-			const is_2FA = document.getElementById('2fa-toggle').checked;
+			const imageUrl = document.getElementById('image-url').value;
+			const is_2FA = document.getElementById('2fa-toggle').checked;	
 
 			// Create FormData object to send file and other data
 			const formData = new FormData();
 			formData.append('nickname', nickname);
 			formData.append('is_2FA', is_2FA);
-			if (imgFile) {
-				formData.append('image', imgFile);
-			}
+			formData.append('img_url', imageUrl);
 
 			// API!! ME PUT
 			fetch('http://localhost:8000/api/me/', {
