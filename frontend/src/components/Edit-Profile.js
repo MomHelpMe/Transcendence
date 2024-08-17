@@ -5,7 +5,7 @@ export class EditProfile extends Component {
 
 	template () {
 		//API!! ME GET
-		fetch("http://localhost:8000/api/me/", {
+		fetch("http://localhost:80/api/me/", {
 			method: 'GET',
 			credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
 		})
@@ -111,7 +111,7 @@ export class EditProfile extends Component {
 
 		this.addEvent('click', '#deleteYesButton', (event) => {
 			//API!! ME DELETE
-			fetch("http://localhost:8000/api/me/", {
+			fetch("http://localhost:80/api/me/", {
 				method: 'DELETE',
 				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
 			})
@@ -143,7 +143,7 @@ export class EditProfile extends Component {
 			}
 
 			// API!! ME PUT
-			fetch('http://localhost:8000/api/me/', {
+			fetch('http://localhost:80/api/me/', {
 				method: 'PUT',
 				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
 				body: formData

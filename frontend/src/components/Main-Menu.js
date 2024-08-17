@@ -35,7 +35,7 @@ export class Menu extends Component {
 
 		this.addEvent('click', '#Logout', () => {
 			// API !! ME POST
-			fetch("http://localhost:8000/api/me/", {
+			fetch("http://localhost:80/api/me/", {
 				method: 'POST',
 				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
 			})

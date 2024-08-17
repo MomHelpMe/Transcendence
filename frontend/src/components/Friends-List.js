@@ -39,7 +39,7 @@ export class FriendsList extends Component {
 
 	mounted() {
 		// API !!! Friends GET
-		fetch("http://localhost:8000/api/friends/", {
+		fetch("http://localhost:80/api/friends/", {
 			method: 'GET',
 			credentials: 'include', // 쿠키를 포함하여 요청
 		})
@@ -134,7 +134,7 @@ export class FriendsList extends Component {
 			else
 			{
 				// API !!! Friends POST
-				fetch("http://localhost:8000/api/friends/", {
+				fetch("http://localhost:80/api/friends/", {
 					method: 'POST',
 					credentials: 'include', // 쿠키를 포함하여 요청
 					headers: {
@@ -163,7 +163,7 @@ export class FriendsList extends Component {
 			const nickname = part[0];
 
 			//API !!! userList
-			fetch("http://localhost:8000/api/user/", {
+			fetch("http://localhost:80/api/user/", {
 				method: 'GET',
 			})
 			.then(response => {
@@ -212,7 +212,7 @@ export class FriendsList extends Component {
 			const uid = part[1];
 
 			// API !!! Friends DELETE
-			fetch("http://localhost:8000/api/friends/", {
+			fetch("http://localhost:80/api/friends/", {
 				method: 'DELETE',
 				credentials: 'include', // 쿠키를 포함하여 요청
 				headers: {

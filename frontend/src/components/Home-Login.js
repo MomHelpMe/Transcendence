@@ -14,7 +14,7 @@ export class Login extends Component {
 	setEvent () {
 		this.addEvent('click', '#login', () => {
 			// 로그인 요청
-			window.location.href = 'http://localhost:8000/api/login/';
+			window.location.href = 'http://localhost:80/api/login/';
 		});
 	}
 }
