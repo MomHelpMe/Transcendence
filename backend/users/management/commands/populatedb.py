@@ -11,8 +11,9 @@ class Command(BaseCommand):
         self.stdout.write("Populating database...")
 
         # Create users
-        users = []
-        for i in range(10):
+        users = list(User.objects.all())
+        
+        for i in range(5):
             user, created = User.objects.update_or_create(
                 user_id=i,
                 defaults={
@@ -25,18 +26,19 @@ class Command(BaseCommand):
             )
             users.append(user)
 
+
         # Create friends
-        for i in range(15):
+        for i in range(20):
             user1, user2 = random.sample(users, 2)
             Friend.objects.create(user1=user1, user2=user2)
 
         # Create games
-        for i in range(20):
+        for i in range(50):
             user1, user2 = random.sample(users, 2)
-            user1_score = random.randint(0, 100)
-            user2_score = random.randint(0, 100)
+            user1_score = random.randint(0, 5)
+            user2_score = random.randint(0, 5)
             while user1_score == user2_score:
-                user2_score = random.randint(0, 100)
+                user2_score = random.randint(0, 5)
             if (user1_score > user2_score):
                 user1.win += 1
                 user2.lose += 1
