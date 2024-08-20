@@ -3,12 +3,12 @@ import { Component } from "../core/Component.js";
 export class List extends Component {
 
 	template () {
-		const { className, contents } = this.props;
+		const { className, ids, contents } = this.props;
 		return `
-			${contents.map(element => {
+			${contents.map((element, index) => {
 				const part = element.split('#');
 				const nickname = part[0];
-				return `<li class="${className}" id="${element}">${nickname}</li>`
+				return `<li class="${className}" id="${ids[index]}">${nickname}</li>`
 			}).join('')}
 		`;
 	}

@@ -6,9 +6,33 @@ import { Input } from "./Input.js";
 
 export class FriendsList extends Component {
 
+	translate() {
+		const languages = {
+			0: {
+				gameMenuTexts: ["Local Game", "Multi Game", "AI", "Tournament"],
+				userMenuTexts: ["Friends", "Profile", "Logout"],
+				lanText: "Change Language"
+			},
+			1: {
+				gameMenuTexts: ["로컬 게임", "멀티 게임", "AI", "토너먼트"],
+				userMenuTexts: ["친구", "프로필", "로그아웃"],
+				lanText: "언어 변경"
+			},
+			2: {
+				gameMenuTexts: ["Jeu local", "Jeu multi", "IA", "Tournoi"],
+				userMenuTexts: ["Amis", "Profil", "Déconnexion"],
+				lanText: "Changer de langue"
+			}
+		};
+	
+		this.translations = languages[this.props.lan.value];
+	
+	}
+
 	template () {
 		this.info = null;  // friend의 정보
 		this.search = null; // add 버튼 눌렀을때 나오는 검색창 객체 (Input)
+		const translations = this.translations;
 		return `
 			<div id="friendsBox">
 				<img src="/img/back.png" id="goBack"></img>
@@ -54,12 +78,12 @@ export class FriendsList extends Component {
 			this.friends = data; // 응답에서 friends list 꺼내기
 		
 			// 친구 목록에서 닉네임 리스트를 추출합니다.
-			const friendNicknameList = this.friends.map(friend => `${friend.nickname}#${friend.user_id}`);
-		
+			const friendNicknameList = this.friends.map(friend => `${friend.nickname}`);
+			const friendIdList = this.friends.map(friend => `${friend.user_id}`);
 			// 친구 닉네임 리스트를 이용해 친구 목록 생성
 			const ulElement = document.querySelector("ul#friendsLists");
 			this.children.push(new List(ulElement, 
-				{ className: "fList", contents: friendNicknameList }));
+				{ className: "fList", ids: friendIdList, contents: friendNicknameList }));
 		})
 		.catch(error => {
 			console.error('Fetch operation failed:', error);
@@ -77,11 +101,9 @@ export class FriendsList extends Component {
 					this.children.splice(index, 1);
 				}
 			}
-
-			const part = event.target.id.split('#');
-			const uid = parseInt(part[1]);
+			
+			const uid = parseInt(event.target.id);
 			const friend = this.friends.find(user => user.user_id === uid);
-
 			// 새로운 FriendsInfo 인스턴스를 생성하고, this.children에 추가
 			this.info = new FriendsInfo(ulElement, {is_online: friend.is_online, nickname: `${friend.nickname}#${friend.user_id}`, img_url: friend.img_url});
 			this.children.push(this.info);

@@ -6,6 +6,7 @@ import { parseJWT } from "../core/jwt.js";
 export class ProfileInfo extends Component {
 
 	initState() {
+		console.log(this.props.lan.value);
 		const payload = parseJWT();
 		if (!payload) this.uid = null;
 		else this.uid = payload.id;

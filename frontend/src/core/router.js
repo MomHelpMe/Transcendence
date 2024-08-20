@@ -1,36 +1,32 @@
 import { Home } from "../components/Home.js";
-import { root } from "../app.js";
+import { root, routes } from "../app.js";
 import { Main } from "../components/Main.js";
 import { Friends } from "../components/Friends.js";
 import { Profile } from "../components/Profile.js";
 import { TwoFA } from "../components/2FA.js";
 import { Edit } from "../components/Edit.js";
 
-export const routes = {
-	"/": {
-		component: () => new Home(root.app),
-		props: {}
-	},
-	"/main": {
-		component: () => new Main(root.app),
-		props: {}
-	},
-	"/main/friends": {
-		component: () => new Friends(root.app),
-		props: {}
-	},
-	"/main/profile/:uid": {
-		component: (props) => new Profile(root.app, props),
-		props: { uid: "" }
-	},
-	"/2FA": {
-		component: () => new TwoFA(root.app),
-		props: {}
-	},
-	"/main/profile/:uid/edit": {
-		component: (props) => new Edit(root.app, props),
-		props: { uid: "" }
-	}
+export const createRoutes = (root) => {
+	return {
+		"/": {
+			component: (props) => new Home(root.app, props),
+		},
+		"/main": {
+			component: (props) => new Main(root.app, props),
+		},
+		"/main/friends": {
+			component: (props) => new Friends(root.app, props),
+		},
+		"/main/profile/:uid": {
+			component: (props) => new Profile(root.app, props),
+		},
+		"/2FA": {
+			component: (props) => new TwoFA(root.app, props),
+		},
+		"/main/profile/:uid/edit": {
+			component: (props) => new Edit(root.app, props),
+		}
+	};
 };
 
 export const changeUrl = async (requestedUrl, usePushState = true) => {
@@ -107,12 +103,13 @@ export async function parsePath(path) {
 		const regex = new RegExp('^' + key.replace(/:\w+/g, '([\\w-]+)') + '$');
 		const match = path.match(regex);
 		if (match) {
-			const props = { ...route.props };
+			const props = { lan: root.lan, ...route.props };
 			const values = match.slice(1);
 			const keys = key.match(/:\w+/g) || [];
 			keys.forEach((key, index) => {
 				props[key.substring(1)] = values[index];
 			});
+			console.log(props);
 			route.component(props);
 			return;
 		}

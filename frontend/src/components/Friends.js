@@ -4,6 +4,6 @@ import { FriendsList } from "./Friends-List.js";
 export class Friends extends Default {
 
 	mounted(){
-		new FriendsList(document.querySelector("div#contents"));
+		new FriendsList(document.querySelector("div#contents"), this.props);
 	}
 }
