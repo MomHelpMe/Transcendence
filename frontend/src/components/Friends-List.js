@@ -9,19 +9,25 @@ export class FriendsList extends Component {
 	translate() {
 		const languages = {
 			0: {
-				gameMenuTexts: ["Local Game", "Multi Game", "AI", "Tournament"],
-				userMenuTexts: ["Friends", "Profile", "Logout"],
-				lanText: "Change Language"
+				headText: "Friends List",
+				addText: "Add",
+				profileText: "View Profile",
+				removeText: "Remove",
+				searchText: "Search for friends..."
 			},
 			1: {
-				gameMenuTexts: ["로컬 게임", "멀티 게임", "AI", "토너먼트"],
-				userMenuTexts: ["친구", "프로필", "로그아웃"],
-				lanText: "언어 변경"
+				headText: "친구 목록",
+				addText: "추가",
+				profileText: "프로필 보기",
+				removeText: "제거",
+				searchText: "친구 검색..."
 			},
 			2: {
-				gameMenuTexts: ["Jeu local", "Jeu multi", "IA", "Tournoi"],
-				userMenuTexts: ["Amis", "Profil", "Déconnexion"],
-				lanText: "Changer de langue"
+				headText: "友達リスト",
+				addText: "追加",
+				profileText: "プロフィール",
+				removeText: "削除",
+				searchText: "友達を探す..."
 			}
 		};
 	
@@ -38,7 +44,7 @@ export class FriendsList extends Component {
 				<img src="/img/back.png" id="goBack"></img>
 				<div id="friendsWindow">
 					<div id="friendsMenu">
-						<p id="friendsMenu">Friends List</p>
+						<p id="friendsMenu">${translations.headText}</p>
 					</div>
 					<div id="friendsBody">
 						<div id="friendsList">
@@ -52,7 +58,7 @@ export class FriendsList extends Component {
 					</div>
 					<div id="friendsEdit">
 						<div id="addDiv">
-							<div class="friendsEdit" id="addFriend">Add</div>
+							<div class="friendsEdit" id="addFriend">${translations.addText}</div>
 						</div>
 						<div id="search"></div>
 					</div>
@@ -105,7 +111,8 @@ export class FriendsList extends Component {
 			const uid = parseInt(event.target.id);
 			const friend = this.friends.find(user => user.user_id === uid);
 			// 새로운 FriendsInfo 인스턴스를 생성하고, this.children에 추가
-			this.info = new FriendsInfo(ulElement, {is_online: friend.is_online, nickname: `${friend.nickname}#${friend.user_id}`, img_url: friend.img_url});
+			this.info = new FriendsInfo(ulElement, {is_online: friend.is_online, nickname: `${friend.nickname}#${friend.user_id}`,
+								 img_url: friend.img_url, profileText: this.translations.profileText, removeText: this.translations.removeText});
 			this.children.push(this.info);
 		});
 
@@ -126,7 +133,7 @@ export class FriendsList extends Component {
 				const index = this.children.indexOf(this.search);
 				if (index !== -1) this.children.splice(index, 1);
 			}
-			this.search = new Input(ulElement, {inputId: "searchInput", imageId: "addInputImage", img: "/img/plus.jpeg"});
+			this.search = new Input(ulElement, {inputId: "searchInput", imageId: "addInputImage", img: "/img/plus.jpeg", searchText: this.translations.searchText});
 			this.children.push(this.search);
 		});
 
