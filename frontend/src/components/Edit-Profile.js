@@ -3,6 +3,45 @@ import { changeUrl } from "../core/router.js";
 
 export class EditProfile extends Component {
 
+	translate() {
+		const languages = {
+			0: {
+				headText: "Edit Profile",
+				nickText: "Nickname",
+				urlText: "Image URL",
+				twofaText: "Enable 2FA",
+				saveText: "Save Changes",
+				deleteText: "Delete Account",
+				deleteMsgText: "Are you sure you want to delete your account?",
+				yesText: "Yes",
+				noText: "No"
+			},
+			1: {
+				headText: "프로필 수정",
+				nickText: "닉네임",
+				urlText: "이미지 URL",
+				twofaText: "2단계 인증 활성화",
+				saveText: "변경 사항 저장",
+				deleteText: "계정 삭제",
+				deleteMsgText: "계정을 정말 삭제하시겠습니까?",
+				yesText: "예",
+				noText: "아니요"
+			},
+			2: {
+				headText: "プロフィール編集",
+				nickText: "ニックネーム",
+				urlText: "画像URL",
+				twofaText: "2FAを有効にする",
+				saveText: "変更を保存",
+				deleteText: "アカウント削除",
+				deleteMsgText: "本当にアカウントを削除しますか？",
+				yesText: "はい",
+				noText: "いいえ"
+			}
+		};
+		this.translations = languages[this.props.lan.value];
+	}
+
 	initState() {
 		this.nickname = "";
 		this.img_url = "";
@@ -29,26 +68,27 @@ export class EditProfile extends Component {
 	}
 	
 	template () {
+		const translations = this.translations;
 		return `
 			<div id="edit-box">
-				<div id="deleteButton">Delete Account</div>
+				<div id="deleteButton">${translations.deleteText}</div>
 				<div id="deleteDoubleCheck">
 					<div id="deleteAlertMsg">
-						Are you sure you want to delete your account?
+						${translations.deleteMsgText}
 					</div>
 					<div id="deleteChoiceBox">
-						<div id="deleteYesButton">Yes</div>
-						<div id="deleteNoButton">No</div>
+						<div id="deleteYesButton">${translations.yesText}</div>
+						<div id="deleteNoButton">${translations.noText}</div>
 					</div>
 				</div>
 				<img src="/img/back.png" id="goBack"></img>
 				<div id="editTitle">
-					Edit Profile
+					${translations.headText}
 				</div>
 				<div id="editContents">
 					<div id="prevProfile">
 						<div id="edit-nick">
-							<label for="nickname">Nickname:</label>
+							<label for="nickname">${translations.nickText}:</label>
 							<div id="presentNick">${this.state.nickname}</div>
 						</div>
 						<div id="edit-img">
@@ -56,12 +96,12 @@ export class EditProfile extends Component {
 								<img id="presentImage" src="${this.state.img_url}" alt="Profile Image"></img>
 							</div>
 							<div id="url-upload-wrapper">
-								<label for="image-url">Present Image URL</label>
+								<label for="image-url">${translations.urlText}</label>
 								<input type="text" class="profile-image-url" value="${this.state.img_url}" placeholder="Enter image URL" readonly>
 							</div>
 						</div>
 						<div id="edit-2FA">
-							<label for="2fa-toggle">Enable 2FA:</label>
+							<label for="2fa-toggle">${translations.twofaText}:</label>
 							${this.state.is_2FA ? `<input type="checkbox" checked disabled>` : `<input type="checkbox" disabled>`}
 						</div>
 					</div>
@@ -70,7 +110,7 @@ export class EditProfile extends Component {
 					</div>
 					<div id="changedProfile">
 						<div class="edit" id="edit-nick">
-							<label for="nickname">Nickname:</label>
+							<label for="nickname">${translations.nickText}:</label>
 							<input type="text" id="nickname" value="${this.state.nickname}" autocomplete="off" maxlength="10">
 						</div>
 						<div class="edit" id="edit-img">
@@ -78,15 +118,15 @@ export class EditProfile extends Component {
 								<img id="profile-image" src="${this.state.img_url}" alt="Profile Image"></img>
 							</div>
 							<div id="url-upload-wrapper">
-								<label for="image-url">Enter Image URL</label>
+								<label for="image-url">${translations.urlText}</label>
 								<input type="text" class="profile-image-url" id="image-url" value="${this.state.img_url}" placeholder="Enter image URL">
 							</div>
 						</div>
 						<div id="edit-2FA">
-							<label for="2fa-toggle">Enable 2FA:</label>
+							<label for="2fa-toggle">${translations.twofaText}:</label>
 							${this.state.is_2FA ? `<input type="checkbox" id="2fa-toggle" checked>` : `<input type="checkbox" id="2fa-toggle">`}
 						</div>
-						<button id="profileChange" type="submit">Save Changes</button>
+						<button id="profileChange" type="submit">${translations.saveText}</button>
 					</div>
 				</div>
 			</div>

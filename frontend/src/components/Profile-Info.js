@@ -12,18 +12,21 @@ export class ProfileInfo extends Component {
 				winText: "Win",
 				loseText: "Lose",
 				minText: "min",
+				editText: "edit"
 			},
 			1: {
 				headText: "프로필",
 				winText: "승리",
 				loseText: "패배",
 				minText: "분",
+				editText: "수정"
 			},
 			2: {
 				headText: "プロフィール",
 				winText: "勝ち",
 				loseText: "負け",
 				minText: "分",
+				editText: "編集"
 			}
 		};
 		this.translations = languages[this.props.lan.value];
@@ -71,7 +74,7 @@ export class ProfileInfo extends Component {
 						</div>
 						<div id="userInfo">
 							<div id="profile-edit">
-								${parseInt(this.props.uid) === this.uid ? `<div id="profile-edit-button">edit</div>` : ""}
+								${parseInt(this.props.uid) === this.uid ? `<div id="profile-edit-button">${translations.editText}</div>` : ""}
 							</div>
 							<div id="profileUserName">
 								<span id="profileNick">${this.state.user.nickname}</span>
