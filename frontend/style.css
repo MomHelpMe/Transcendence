@@ -654,7 +654,7 @@ div#profileHeaderBox {
 	font-weight: 900;
 	color:#31363F;
     font-size: 3.0rem;
-    width: 200px;
+    width: 300px;
     height: 100%;
 	text-align: center;
 	display: flex;
@@ -898,21 +898,20 @@ span#date {
 }
 
 div#startTime {
-	width: 60%;
-	height: 40%;
+	width: 80%;
+	height: 45%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: flex-end;
 	padding-bottom: 5px;
-	font-size: 18px;
+	font-size: 16px;
 	color:#31363F;
 	font-weight: 700;
-	border-bottom: 0.5px solid #31363F;
 }
 
 div#playTime {
-	width: 100%;
+	width: 60%;
 	height: 40%;
 	display: flex;
 	flex-direction: column;
@@ -921,6 +920,7 @@ div#playTime {
 	color:#656262;
 	padding-top: 5px;
 	font-weight: 700;
+	border-top: 0.5px solid #31363F;
 }
 
 

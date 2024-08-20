@@ -4,7 +4,31 @@ import { MatchList } from "./Profile-List.js";
 import { parseJWT } from "../core/jwt.js";
 
 export class ProfileInfo extends Component {
-
+	
+	translate() {
+		const languages = {
+			0: {
+				headText: "Profile",
+				winText: "Win",
+				loseText: "Lose",
+				minText: "min",
+			},
+			1: {
+				headText: "프로필",
+				winText: "승리",
+				loseText: "패배",
+				minText: "분",
+			},
+			2: {
+				headText: "プロフィール",
+				winText: "勝ち",
+				loseText: "負け",
+				minText: "分",
+			}
+		};
+		this.translations = languages[this.props.lan.value];
+	}
+	
 	initState() {
 		console.log(this.props.lan.value);
 		const payload = parseJWT();
@@ -36,13 +60,14 @@ export class ProfileInfo extends Component {
 	}
 
 	template () {
+		const translations = this.translations;
 		return `
 			<div id="profileBox">
 				<img src="/img/back.png" id="goBack"></img>
 				<div id="profile">
 					<div id="profile-left">
 						<div id="profileHeaderBox">
-							<span id="profileHeader">Profile</span>
+							<span id="profileHeader">${translations.headText}</span>
 						</div>
 						<div id="userInfo">
 							<div id="profile-edit">
@@ -67,14 +92,13 @@ export class ProfileInfo extends Component {
 									<div id="percentage"></div>
 								</div>
 								<div id="winStat">
-									<span id="win">Win </span><span id="winNum">${this.state.user.win}</span>
-									<span id="lose">Lose </span><span id="loseNum">${this.state.user.lose}</span>
+									<span id="win">${translations.winText} </span><span id="winNum">${this.state.user.win}</span>
+									<span id="lose">${translations.loseText} </span><span id="loseNum">${this.state.user.lose}</span>
 									<span id="rate">(${this.state.rate}%)</span>
 								</div>
 							</div>
 							<div id="matchHistory">
 								<ul id="matches">
-
 								</ul>
 							</div>
 						</div>
@@ -87,7 +111,7 @@ export class ProfileInfo extends Component {
 	}
 
 	mounted() {
-		new MatchList(document.querySelector("ul#matches"), {matches: this.state.games});
+		new MatchList(document.querySelector("ul#matches"), { matches: this.state.games, minText: this.translations.minText });
 		this.drawBackgroundCircle();
 		this.drawProgressCircle();
 		this.updatePercentage();
