@@ -41,7 +41,7 @@ export class EditProfile extends Component {
 						<div id="deleteNoButton">No</div>
 					</div>
 				</div>
-				<img src="/back.png" id="goBack"></img>
+				<img src="/img/back.png" id="goBack"></img>
 				<div id="editTitle">
 					Edit Profile
 				</div>
@@ -66,7 +66,7 @@ export class EditProfile extends Component {
 						</div>
 					</div>
 					<div id="Arrow">
-						<img id="arrowImg" src="/arrow.png"></img>
+						<img id="arrowImg" src="/img/arrow.png"></img>
 					</div>
 					<div id="changedProfile">
 						<div class="edit" id="edit-nick">

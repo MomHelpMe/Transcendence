@@ -37,7 +37,7 @@ export class ProfileInfo extends Component {
 	template () {
 		return `
 			<div id="profileBox">
-				<img src="../../back.png" id="goBack"></img>
+				<img src="/img/back.png" id="goBack"></img>
 				<div id="profile">
 					<div id="profile-left">
 						<div id="profileHeaderBox">
@@ -52,7 +52,7 @@ export class ProfileInfo extends Component {
 							</div>
 							<div id="profileImgBox">
 								${this.state.user.img_url === "" ?
-									`<img id="profileImg" src="../../friends.png"></img>` :
+									`<img id="profileImg" src="/img/friends.png"></img>` :
 									`<img id="profileImg" src="${this.state.user.img_url}"></img>`}
 							</div>
 						</div>

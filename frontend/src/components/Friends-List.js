@@ -11,7 +11,7 @@ export class FriendsList extends Component {
 		this.search = null; // add 버튼 눌렀을때 나오는 검색창 객체 (Input)
 		return `
 			<div id="friendsBox">
-				<img src="../../back.png" id="goBack"></img>
+				<img src="/img/back.png" id="goBack"></img>
 				<div id="friendsWindow">
 					<div id="friendsMenu">
 						<p id="friendsMenu">Friends List</p>
@@ -22,7 +22,7 @@ export class FriendsList extends Component {
 						</div>
 						<div id="friendsInfo">
 							<div id="defaultImgBox">
-								<img id="friendDefaultImg" src="../../friends.png"></img>
+								<img id="friendDefaultImg" src="/img/friends.png"></img>
 							</div>
 						</div>
 					</div>
@@ -104,7 +104,7 @@ export class FriendsList extends Component {
 				const index = this.children.indexOf(this.search);
 				if (index !== -1) this.children.splice(index, 1);
 			}
-			this.search = new Input(ulElement, {inputId: "searchInput", imageId: "addInputImage", img: "../../plus.jpeg"});
+			this.search = new Input(ulElement, {inputId: "searchInput", imageId: "addInputImage", img: "/img/plus.jpeg"});
 			this.children.push(this.search);
 		});
 
