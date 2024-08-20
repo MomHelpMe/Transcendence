@@ -6,15 +6,45 @@ import { Input } from "./Input.js";
 
 export class FriendsList extends Component {
 
+	translate() {
+		const languages = {
+			0: {
+				headText: "Friends List",
+				addText: "Add",
+				profileText: "View Profile",
+				removeText: "Remove",
+				searchText: "Search for friends..."
+			},
+			1: {
+				headText: "친구 목록",
+				addText: "추가",
+				profileText: "프로필 보기",
+				removeText: "제거",
+				searchText: "친구 검색..."
+			},
+			2: {
+				headText: "友達リスト",
+				addText: "追加",
+				profileText: "プロフィール",
+				removeText: "削除",
+				searchText: "友達を探す..."
+			}
+		};
+	
+		this.translations = languages[this.props.lan.value];
+	
+	}
+
 	template () {
 		this.info = null;  // friend의 정보
 		this.search = null; // add 버튼 눌렀을때 나오는 검색창 객체 (Input)
+		const translations = this.translations;
 		return `
 			<div id="friendsBox">
 				<img src="/img/back.png" id="goBack"></img>
 				<div id="friendsWindow">
 					<div id="friendsMenu">
-						<p id="friendsMenu">Friends List</p>
+						<p id="friendsMenu">${translations.headText}</p>
 					</div>
 					<div id="friendsBody">
 						<div id="friendsList">
@@ -28,7 +58,7 @@ export class FriendsList extends Component {
 					</div>
 					<div id="friendsEdit">
 						<div id="addDiv">
-							<div class="friendsEdit" id="addFriend">Add</div>
+							<div class="friendsEdit" id="addFriend">${translations.addText}</div>
 						</div>
 						<div id="search"></div>
 					</div>
@@ -54,12 +84,12 @@ export class FriendsList extends Component {
 			this.friends = data; // 응답에서 friends list 꺼내기
 		
 			// 친구 목록에서 닉네임 리스트를 추출합니다.
-			const friendNicknameList = this.friends.map(friend => `${friend.nickname}#${friend.user_id}`);
-		
+			const friendNicknameList = this.friends.map(friend => `${friend.nickname}`);
+			const friendIdList = this.friends.map(friend => `${friend.user_id}`);
 			// 친구 닉네임 리스트를 이용해 친구 목록 생성
 			const ulElement = document.querySelector("ul#friendsLists");
 			this.children.push(new List(ulElement, 
-				{ className: "fList", contents: friendNicknameList }));
+				{ className: "fList", ids: friendIdList, contents: friendNicknameList }));
 		})
 		.catch(error => {
 			console.error('Fetch operation failed:', error);
@@ -77,13 +107,12 @@ export class FriendsList extends Component {
 					this.children.splice(index, 1);
 				}
 			}
-
-			const part = event.target.id.split('#');
-			const uid = parseInt(part[1]);
+			
+			const uid = parseInt(event.target.id);
 			const friend = this.friends.find(user => user.user_id === uid);
-
 			// 새로운 FriendsInfo 인스턴스를 생성하고, this.children에 추가
-			this.info = new FriendsInfo(ulElement, {is_online: friend.is_online, nickname: `${friend.nickname}#${friend.user_id}`, img_url: friend.img_url});
+			this.info = new FriendsInfo(ulElement, {is_online: friend.is_online, nickname: `${friend.nickname}#${friend.user_id}`,
+								 img_url: friend.img_url, profileText: this.translations.profileText, removeText: this.translations.removeText});
 			this.children.push(this.info);
 		});
 
@@ -104,7 +133,7 @@ export class FriendsList extends Component {
 				const index = this.children.indexOf(this.search);
 				if (index !== -1) this.children.splice(index, 1);
 			}
-			this.search = new Input(ulElement, {inputId: "searchInput", imageId: "addInputImage", img: "/img/plus.jpeg"});
+			this.search = new Input(ulElement, {inputId: "searchInput", imageId: "addInputImage", img: "/img/plus.jpeg", searchText: this.translations.searchText});
 			this.children.push(this.search);
 		});
 

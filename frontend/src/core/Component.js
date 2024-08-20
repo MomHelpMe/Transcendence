@@ -2,7 +2,7 @@ import { observable, observe } from './observer.js';
 
 export class Component {
 
-	state; props; $el; children;
+	state; props; $el; children; translations;
 	
 	constructor ($el, props) {
 		this.$el = $el;
@@ -13,6 +13,7 @@ export class Component {
 	}
 	
 	setup() {
+		this.translate();
 		this.state = observable(this.initState());
 		observe(() => {
 			this.render();
@@ -25,6 +26,7 @@ export class Component {
 	template () { return ''; }
 	render () { this.$el.innerHTML = this.template(); }
 	setEvent () {}
+	translate() {}
 	mounted () {}
 
 	addEvent (eventType, selector, callback) {

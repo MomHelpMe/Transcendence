@@ -7,12 +7,21 @@ export class MatchList extends Component {
 		if (!matches) return "";
 		return `
 		  ${matches.map(element => {
+			// Date 객체로 변환
+			const date = new Date(element.start_timestamp);
+			
+			// 월, 일, 시, 분 추출
+			const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더해줍니다.
+			const day = date.getDate();
+			const hours = date.getHours();
+			const minutes = date.getMinutes();
+
 			return `
 				<li class="matchComponent" id="${element.is_win ?"win":"lose"}Type">
 					<div id="matchTime">
 						<span id="date">Date</span>
-						<div id="startTime">${element.start_timestamp}</div>
-						<div id="playTime">${element.playtime}min</div>
+						<div id="startTime">${month}/${day} ${hours}:${minutes}</div>
+						<div id="playTime">${element.playtime}${this.props.minText}</div>
 					</div>
 					<div id="matchOp">
 						<span id="vs">VS</span>

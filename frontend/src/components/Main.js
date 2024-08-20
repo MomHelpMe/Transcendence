@@ -3,6 +3,7 @@ import { Menu } from "./Main-Menu.js";
 
 export class Main extends Default {
 	mounted(){
-		new Menu(document.querySelector("div#contents"));
+		new Menu(document.querySelector("div#contents"), this.props);
+		console.log(this.props.lan.value);
 	}
 }
