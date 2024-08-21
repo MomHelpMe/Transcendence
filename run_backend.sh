@@ -4,7 +4,7 @@
 
 # Initialize the environment (arg 1 to clear everything)
 if [ "$1" == "1" ]; then
-    ./clear.sh
+    ./clean.sh
 fi
 
 # Run the web server

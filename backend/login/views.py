@@ -1,19 +1,15 @@
 from django.conf import settings
-from users.models import User
-from rest_framework.decorators import api_view
+from django.core.mail import EmailMultiAlternatives
+from django.core.cache import cache
 from django.shortcuts import redirect
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from users.models import User
+from datetime import datetime, timedelta
 import requests
 import jwt
-from datetime import datetime, timedelta
-
-from django.core.mail import EmailMultiAlternatives
-import smtplib
 import secrets
-import string
-from django.core.cache import cache
-from rest_framework.response import Response
 
-import pprint
 
 @api_view(["GET"])
 def login(request):
@@ -66,10 +62,13 @@ def get_acccess_token(code):
         "client_secret": client_secret,
         "redirect_uri": redirect_uri,
     }
-    response = requests.post(token_url, data=data)
-    if response.status_code == 200:
+    try:
+        response = requests.post(token_url, data=data)
+        response.raise_for_status()  # 200 OK를 받지 못하면 에러를 발생시킴
         return response.json().get("access_token")
-    return None
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to get access token: {e}")
+        return None
 
 
 def get_user_info(access_token):
@@ -129,8 +128,15 @@ def decode_jwt(request):
     token = request.COOKIES.get("jwt")
     if not token:
         return None
-    payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-    return payload
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        return payload
+    except jwt.ExpiredSignatureError:
+        print("JWT EXPIRED")
+        return None
+    except jwt.InvalidTokenError:
+        print("JWT INVALID")
+        return None
 
 
 @api_view(["GET"])
@@ -217,10 +223,6 @@ def verify_otp(request):
 
 @api_view(["GET"])
 def verify_jwt(request):
-    # token = request.COOKIES.get('jwt')
-    # if not token:
-    #    return Response(status=401)
-
     payload = decode_jwt(request)
     if not payload:
         return Response(status=401)
