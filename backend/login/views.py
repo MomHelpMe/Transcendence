@@ -14,7 +14,7 @@ import secrets
 @api_view(["GET"])
 def login(request):
     oauth_url = settings.OAUTH_URL
-    redirect_uri = settings.REDIRECT_FRONT_URI
+    redirect_uri = settings.OAUTH_REDIRECT_URI
     client_id = settings.OAUTH_CLIENT_ID
     state = settings.OAUTH_STATE  # CSRF 방지용 랜덤 문자열
     return redirect(f"{oauth_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code&state={state}")
@@ -51,7 +51,7 @@ def callback(request):
 
 def get_acccess_token(code):
     token_url = settings.OAUTH_TOKEN_URL
-    redirect_uri = settings.REDIRECT_FRONT_URI
+    redirect_uri = settings.OAUTH_REDIRECT_URI
     client_id = settings.OAUTH_CLIENT_ID
     client_secret = settings.OAUTH_CLIENT_SECRET
 

@@ -17,3 +17,5 @@ for d in backend/*/; do
     mkdir $d/migrations
     touch $d/migrations/__init__.py
 done
+
+docker ps -a && docker images -a && docker volume ls
