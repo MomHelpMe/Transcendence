@@ -12,7 +12,10 @@ export class EditProfile extends Component {
 				twofaText: "Enable 2FA",
 				saveText: "Save Changes",
 				deleteText: "Delete Account",
-				deleteMsgText: "Are you sure you want to delete your account?",
+				deleteMsgText1: "Are you sure you want to delete your account?",
+				deleteMsgText2: "If you delete your account, all your information and related data will be permanently removed.",
+				deleteMsgText3: "This action cannot be undone, and the deleted data cannot be recovered.",
+				deleteMsgText4: "If you agree to delete your account and all related data, please select the checkbox below and click the 'Yes' button.",
 				yesText: "Yes",
 				noText: "No"
 			},
@@ -23,7 +26,10 @@ export class EditProfile extends Component {
 				twofaText: "2단계 인증 활성화",
 				saveText: "변경 사항 저장",
 				deleteText: "계정 삭제",
-				deleteMsgText: "계정을 정말 삭제하시겠습니까?",
+				deleteMsgText1: "계정을 삭제하시겠습니까?",
+				deleteMsgText2: "회원 탈퇴를 진행하시면, 귀하의 모든 계정 정보와 관련된 데이터가 영구적으로 삭제됩니다.",
+				deleteMsgText3: "이 작업은 되돌릴 수 없으며, 삭제된 데이터는 복구할 수 없습니다.",
+				deleteMsgText4: "회원 탈퇴와 데이터 삭제에 동의하시면 아래의 확인란을 선택하고 '예' 버튼을 눌러 주십시오.",
 				yesText: "예",
 				noText: "아니요"
 			},
@@ -34,10 +40,14 @@ export class EditProfile extends Component {
 				twofaText: "2FAを有効にする",
 				saveText: "変更を保存",
 				deleteText: "アカウント削除",
-				deleteMsgText: "本当にアカウントを削除しますか？",
+				deleteMsgText1: "本当にアカウントを削除しますか？",
+				deleteMsgText2: "アカウントを削除すると、すべてのアカウント情報と関連データが永久に削除されます。",
+				deleteMsgText3: "この操作は元に戻すことができず、削除されたデータは復元できません。",
+				deleteMsgText4: "アカウントと関連データの削除に同意する場合は、以下のチェックボックスを選択し、「はい」ボタンをクリックしてください。",
 				yesText: "はい",
 				noText: "いいえ"
-			}
+			},
+			
 		};
 		this.translations = languages[this.props.lan.value];
 	}
@@ -74,7 +84,10 @@ export class EditProfile extends Component {
 				<div id="deleteButton">${translations.deleteText}</div>
 				<div id="deleteDoubleCheck">
 					<div id="deleteAlertMsg">
-						${translations.deleteMsgText}
+						<p id="deleteMsgTitle">${translations.deleteMsgText1}</p>
+						<p id="deleteMsgBody">${translations.deleteMsgText2}</p>
+						<p id="deleteMsgBody">${translations.deleteMsgText3}</p>
+						<p id="deleteMsgFooter" >${translations.deleteMsgText4}</p>
 					</div>
 					<div id="deleteChoiceBox">
 						<div id="deleteYesButton">${translations.yesText}</div>
