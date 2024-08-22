@@ -5,7 +5,7 @@ import { Friends } from "../components/Friends.js";
 import { Profile } from "../components/Profile.js";
 import { TwoFA } from "../components/2FA.js";
 import { Edit } from "../components/Edit.js";
-import { Error404 } from "../components/Error.js";
+import { Error } from "../components/Error.js";
 
 export const createRoutes = (root) => {
 	return {
