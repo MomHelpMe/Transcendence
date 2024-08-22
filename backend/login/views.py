@@ -34,7 +34,7 @@ def callback(request):
     if not user_data:
         return Response(status=401)
 
-    user, created = save_or_update_user(user_data)
+    user, created = get_or_save_user(user_data)
     # Test 위해서 True로 설정
     # user.is_2FA = True
     if created:
@@ -78,14 +78,14 @@ def get_user_info(access_token):
     return None
 
 
-def save_or_update_user(user_data):
+def get_or_save_user(user_data):
 
     user_uid = user_data.get("id")
     nickname = user_data.get("login")
     email = user_data.get("email")
     img_url = user_data.get("image", {}).get("link")
 
-    user, created = User.objects.update_or_create(
+    user, created = User.objects.get_or_create(
         user_id=user_uid,
         defaults={
             "user_id": user_uid,
