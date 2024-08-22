@@ -5,33 +5,36 @@ import { Friends } from "../components/Friends.js";
 import { Profile } from "../components/Profile.js";
 import { TwoFA } from "../components/2FA.js";
 import { Edit } from "../components/Edit.js";
+import { Error } from "../components/Error.js";
 
 export const createRoutes = (root) => {
 	return {
 		"/": {
-			component: (props) => new Home(root.app, props),
+			component: (props) => new Home(root.app, props)
 		},
 		"/main": {
-			component: (props) => new Main(root.app, props),
+			component: (props) => new Main(root.app, props)
 		},
 		"/main/friends": {
-			component: (props) => new Friends(root.app, props),
+			component: (props) => new Friends(root.app, props)
 		},
 		"/main/profile/:uid": {
-			component: (props) => new Profile(root.app, props),
+			component: (props) => new Profile(root.app, props)
 		},
 		"/2FA": {
-			component: (props) => new TwoFA(root.app, props),
+			component: (props) => new TwoFA(root.app, props)
 		},
 		"/main/profile/:uid/edit": {
-			component: (props) => new Edit(root.app, props),
+			component: (props) => new Edit(root.app, props)
+		},
+		"/404": {
+			component: (props) => new Error(root.app, props)
 		}
 	};
 };
 
 export const changeUrl = async (requestedUrl, usePushState = true) => {
 	if (window.location.pathname !== requestedUrl) {
-		console.log(`${usePushState ? 'pushState' : 'replaceState'} : ${requestedUrl}`);
 		if (usePushState) {
 			history.pushState(null, null, requestedUrl);
 		} else {
@@ -114,7 +117,7 @@ export async function parsePath(path) {
 			return;
 		}
 	}
-	console.error(`No route found for ${path}`);
+	changeUrl("/404", false);
 }
 
 export const initializeRouter = () => {
