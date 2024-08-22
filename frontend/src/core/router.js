@@ -6,6 +6,7 @@ import { Profile } from "../components/Profile.js";
 import { TwoFA } from "../components/2FA.js";
 import { Edit } from "../components/Edit.js";
 import { Error } from "../components/Error.js";
+import { Match } from "../components/Match.js";
 
 export const createRoutes = (root) => {
 	return {
@@ -29,6 +30,9 @@ export const createRoutes = (root) => {
 		},
 		"/404": {
 			component: (props) => new Error(root.app, props)
+		},
+		"/main/matching": {
+			component: (props) => new Match(root.app, props)
 		}
 	};
 };

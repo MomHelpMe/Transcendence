@@ -45,13 +45,18 @@ export class Menu extends Component {
 	}
 
 	mounted(){
-		new List(document.querySelector("ul#gameMenu"), { className: "gameMode", ids: ["Local Game", "Multi Game", "AI", "Tournament"], contents: this.translations.gameMenuTexts});
+		new List(document.querySelector("ul#gameMenu"), { className: "gameMode", ids: ["LocalGame", "MultiGame", "AI", "Tournament"], contents: this.translations.gameMenuTexts});
 		new List(document.querySelector("ul#userMenu"), { className: "showInfo", ids: ["Friends", "Profile", "Logout"], contents: this.translations.userMenuTexts});
 	}
 
 	setEvent () {
 		this.addEvent('click', '#Friends', () => {
 			changeUrl("/main/friends");
+		});
+
+		this.addEvent('click', "#MultiGame", () => {
+			console.log("click!!");
+			changeUrl("/main/matching");
 		});
 
 		this.addEvent('click', '#lanButton', () => {
