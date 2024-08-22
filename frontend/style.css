@@ -1391,17 +1391,29 @@ div#match-box {
 	position: relative;
 	display: flex;
 	justify-content: center;
+}
+
+div#match-title {
+	width: 100%;
+	height: 10%;
+	display: flex;
 	align-items: center;
+	justify-content: center;
+	margin-top: 30px;
+	font-weight: 900;
+	color:#31363F;
+    font-size: 3.0rem;
+	text-align: center;
 }
 
 div#matchingRotate {
 	border-radius: 50%;
 	background-color: #5b5775;
-    width: 700px;
-    height: 700px;
+    width: 670px;
+    height: 670px;
     position: absolute;
-    top: calc(50% - 350px);
-    left: calc(50% - 350px);
+    top: calc(50% - 285px);
+    left: calc(50% - 335px);
     border-radius: 50%;
     animation: rotate 2s linear infinite;
 }
@@ -1469,11 +1481,11 @@ svg#whiteBall {
 
 div#matchingText {
 	border-radius: 50%;
-	width: 300px;
-	height: 300px;
+	width: 275px;
+	height: 275px;
 	position: absolute;
-	top: 50% - 250px;
-	left: 50% - 250px;
+	top: calc(50% - 85px);
+	left: calc(50% - 135px);
 	display: flex;
 	justify-content: center;
 	align-items: center;

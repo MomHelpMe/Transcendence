@@ -6,6 +6,7 @@ export class WaitForMatch extends Component {
 	template () {
 		return `
 			<div id="match-box">
+				<div id="match-title">Finding Your Match...</div>
 				<img src="/img/back.png" id="goBack"></img>
 				<div id="matchingRotate">
 					<svg id="blackParticle" xmlns="http://www.w3.org/2000/svg" width="100" height="110" viewBox="0 0 140 150" fill="none">
