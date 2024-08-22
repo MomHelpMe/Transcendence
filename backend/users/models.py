@@ -35,8 +35,9 @@ class Game(models.Model):
     end_timestamp = models.DateTimeField()
 
     def __str__(self):
-        return f"Game {self.game_id}: {self.user1.nickname} vs {self.user2.nickname}"
-
+        user1_name = self.user1.nickname if self.user1 else "Unknown"
+        user2_name = self.user2.nickname if self.user2 else "Unknown"
+        return f"Game {self.game_id}: {user1_name} vs {user2_name}"
 
 class Tournament(models.Model):
     tournament_id = models.AutoField(primary_key=True)

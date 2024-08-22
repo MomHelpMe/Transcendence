@@ -47,7 +47,7 @@ export async function parsePath(path) {
 		const code = urlParams.get('code');
 		
 		// code 보내고 2FA 여부 확인!! (추가 부분!!)
-		fetch('http://localhost:80/api/callback/', {
+		fetch('https://localhost:443/api/callback/', {
 			method: 'POST',
 			credentials: 'include', // 쿠키를 포함하여 요청
 			headers: {
@@ -65,7 +65,7 @@ export async function parsePath(path) {
 			if (data){
 				if (data.is_2FA) {
 					// email 전송 요청
-					fetch('http://localhost:80/api/send-mail/',{
+					fetch('https://localhost:443/api/send-mail/',{
 						method: 'GET',
 						credentials: 'include', // 쿠키를 포함하여 요청
 						headers: {
@@ -127,7 +127,7 @@ export const initializeRouter = () => {
 async function checkAuth() {
 	try {
 		let valid;
-		const response = await fetch('http://localhost:80/api/validate/', {
+		const response = await fetch('https://localhost:443/api/validate/', {
 			method: 'GET',
 			credentials: 'include', // 쿠키를 포함하여 요청
 		})

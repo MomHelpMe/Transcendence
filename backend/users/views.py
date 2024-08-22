@@ -6,26 +6,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User, Friend, Game, Tournament
 from .serializers import UserSerializer, FriendSerializer, FriendRequestSerializer, GameSerializer, TournamentSerializer
+from login.views import decode_jwt
 from drf_yasg.utils import swagger_auto_schema
-from django.conf import settings
-import jwt
-
-
-# NOTE: JWT 토큰 검증 함수 필요 (재사용을 위해서 login/views.py에 있는 함수를 가져와서 사용하거나 app을 분리해서 사용하기)
-# 근데 ImportError: attempted relative import beyond top-level package 에러가 발생해서 그냥 복붙함
-def decode_jwt(token):
-    payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-    return payload
 
 
 class UserDetailView(APIView):
     def get(self, request):
-        token = request.COOKIES.get("jwt")
-        if not token:
+        payload = decode_jwt(request)
+        if not payload:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-        # FIXME: JWT 검증 함수 필요
-        payload = decode_jwt(token)
 
         user = get_object_or_404(User, pk=payload.get("id"))
         serializer = UserSerializer(user)
@@ -33,12 +22,9 @@ class UserDetailView(APIView):
 
     @swagger_auto_schema(request_body=UserSerializer, responses={200: UserSerializer()})
     def put(self, request):
-        token = request.COOKIES.get("jwt")
-        if not token:
+        payload = decode_jwt(request)
+        if not payload:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-        # FIXME: JWT 검증 함수 필요
-        payload = decode_jwt(token)
 
         user = get_object_or_404(User, pk=payload.get("id"))
         # FIXME: is_online도 변경이 가능함 수정 필요
@@ -59,12 +45,9 @@ class UserDetailView(APIView):
         return response
 
     def delete(self, request):
-        token = request.COOKIES.get("jwt")
-        if not token:
+        payload = decode_jwt(request)
+        if not payload:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-        # FIXME: JWT 검증 함수 필요
-        payload = decode_jwt(token)
 
         user = get_object_or_404(User, pk=payload.get("id"))
         user.delete()
@@ -75,19 +58,14 @@ class UserDetailView(APIView):
 
 class FriendDetailView(APIView):
     def get(self, request):
-        token = request.COOKIES.get("jwt")
-        if not token:
+        payload = decode_jwt(request)
+        if not payload:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-        # FIXME: JWT 검증 함수 필요
-        payload = decode_jwt(token)
         user = get_object_or_404(User, pk=payload.get("id"))
-
 
         # 유저와 친구 상태인 유저 모델들을 모두 가져옴
         friends_as_user1 = Friend.objects.filter(user1=user)
         friends_as_user2 = Friend.objects.filter(user2=user)
-
 
         # 친구 유저 ID 수집
         friend_ids = set(friends_as_user1.values_list("user2", flat=True)) | set(
@@ -109,12 +87,9 @@ class FriendDetailView(APIView):
         responses={201: FriendSerializer()},
     )
     def post(self, request):
-        token = request.COOKIES.get("jwt")
-        if not token:
+        payload = decode_jwt(request)
+        if not payload:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-        # FIXME: JWT 검증 함수 필요
-        payload = decode_jwt(token)
         user = get_object_or_404(User, pk=payload.get("id"))
 
         serializer = FriendRequestSerializer(data=request.data)
@@ -145,12 +120,9 @@ class FriendDetailView(APIView):
         responses={204: "No Content"},
     )
     def delete(self, request):
-        token = request.COOKIES.get("jwt")
-        if not token:
+        payload = decode_jwt(request)
+        if not payload:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-        # FIXME: JWT 검증 함수 필요
-        payload = decode_jwt(token)
         user = get_object_or_404(User, pk=payload.get("id"))
 
         friend_user_id = request.data.get("user_id")
@@ -189,23 +161,25 @@ def get_user(request, pk):
         else:
             continue
         opponent = User.objects.get(user_id=op_user_id)
-        games_data.append({
-            "op_user": {
-                "user_id": opponent.user_id,
-                "nickname": opponent.nickname,
-                "img_url": opponent.img_url,
-            },
-            "my_score": my_score,
-            "op_score": op_score,
-            "is_win": my_score > op_score,
-            "start_timestamp": game.start_timestamp,
-            "playtime": (game.end_timestamp - game.start_timestamp).total_seconds() // 60  # playtime in minutes
-        })
+        games_data.append(
+            {
+                "op_user": {
+                    "user_id": opponent.user_id,
+                    "nickname": opponent.nickname,
+                    "img_url": opponent.img_url,
+                },
+                "my_score": my_score,
+                "op_score": op_score,
+                "is_win": my_score > op_score,
+                "start_timestamp": game.start_timestamp,
+                "playtime": (game.end_timestamp - game.start_timestamp).total_seconds() // 60,  # playtime in minutes
+            }
+        )
 
     # 유저 정보와 게임 정보를 하나의 JSON으로 합치기
     response_data = {}
-    response_data['user'] = user_serializer.data
-    response_data['games'] = games_data
+    response_data["user"] = user_serializer.data
+    response_data["games"] = games_data
 
     return JsonResponse(response_data)
 
