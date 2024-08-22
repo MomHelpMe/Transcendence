@@ -55,8 +55,11 @@ export class Menu extends Component {
 		});
 
 		this.addEvent('click', "#MultiGame", () => {
-			console.log("click!!");
 			changeUrl("/main/matching");
+		});
+
+		this.addEvent('click', "#Tournament", () => {
+			changeUrl("/main/tournament");
 		});
 
 		this.addEvent('click', '#lanButton', () => {
