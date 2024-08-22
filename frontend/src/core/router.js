@@ -7,6 +7,7 @@ import { TwoFA } from "../components/2FA.js";
 import { Edit } from "../components/Edit.js";
 import { Error } from "../components/Error.js";
 import { Match } from "../components/Match.js";
+import { Tournament } from "../components/Tournament.js";
 
 export const createRoutes = (root) => {
 	return {
@@ -33,6 +34,9 @@ export const createRoutes = (root) => {
 		},
 		"/main/matching": {
 			component: (props) => new Match(root.app, props)
+		},
+		"/main/tournament": {
+			component: (props) => new Tournament(root.app, props)
 		}
 	};
 };
