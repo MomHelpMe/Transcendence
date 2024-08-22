@@ -1547,6 +1547,14 @@ div#tournament-start-button {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+	transition: box-shadow 0.3s ease, transform 0.3s ease;
+	cursor: pointer;
+}
+
+div#tournament-start-button:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* 호버 시 더 깊은 그림자 */
+    transform: translateY(-2px); /* 살짝 위로 이동 */
 }
 
 div#tournament-players {
