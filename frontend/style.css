@@ -1330,7 +1330,6 @@ div#error-msg-box {
 	padding-left: 50px;
 	flex-direction: column;
 	justify-content: center;
-	padding-bottom: 100px;
 }
 
 h1#error-title {
@@ -1362,4 +1361,26 @@ div#error-img-box {
 img#notFound {
 	width: 700px;
 	height: 700px;
+}
+
+div#goMainMenu {
+	width: 200px;
+	height: 70px;
+	margin-top: 50px;
+	border-radius: 10px;
+	background-color: #31363F;
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: 500;
+	font-size: 30px;
+	box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* 기본 상태에서 그림자 없음 */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+	cursor: pointer;
+}
+
+div#goMainMenu:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* 호버 시 더 깊은 그림자 */
+    transform: translateY(-2px); /* 살짝 위로 이동 */
 }
