@@ -8,6 +8,7 @@ import { Edit } from "../components/Edit.js";
 import { Error } from "../components/Error.js";
 import { Match } from "../components/Match.js";
 import { Tournament } from "../components/Tournament.js";
+import { GameLocal } from "../components/Game-Local.js";
 
 export const createRoutes = (root) => {
 	return {

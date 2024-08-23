@@ -15,21 +15,22 @@ class App {
 export const root = new App();
 export const routes = createRoutes(root);
 
-initializeRouter(routes);
 const online = () => {
     const onlineSocket = new WebSocket(
         'ws://'
         + "localhost:8000"
         + '/ws/online/'
-    );
-    console.log(onlineSocket);
-    onlineSocket.onopen = () => {
-        const token = getCookie("jwt");
-        onlineSocket.send(JSON.stringify({ 'action': 'authenticate', 'token': token }));
-    };
-    onlineSocket.onclose = () => {
-        console.log("close");
-        // 로그아웃
-    };
-}
+        );
+        console.log(onlineSocket);
+        onlineSocket.onopen = () => {
+            const token = getCookie("jwt");
+            onlineSocket.send(JSON.stringify({ 'action': 'authenticate', 'token': token }));
+        };
+        onlineSocket.onclose = () => {
+            console.log("close");
+            // 로그아웃
+        };
+    }
+    
+initializeRouter(routes);
 online();

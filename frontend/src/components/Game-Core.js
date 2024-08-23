@@ -28,14 +28,15 @@ export class GameCore extends Component {
 		const ctx = canvas.getContext('2d');
 		const scoreCtx = scoreCanvas.getContext('2d');
 		const sounds = {
-			'collision': new Audio('../../key.mp3'),
+			'collision': new Audio('../../img/key.mp3'),
 		};
 		let SCREEN_HEIGHT, SCREEN_WIDTH, BAR_HEIGHT, BAR_WIDTH, BAR_X_GAP,
-			BALL_RADIUS, LEFT_BAR_X, LEFT_BAR_Y, RIGHT_BAR_X, RIGHT_BAR_Y,
-			CELL_WIDTH, CELL_HEIGHT;
+		BALL_RADIUS, LEFT_BAR_X, LEFT_BAR_Y, RIGHT_BAR_X, RIGHT_BAR_Y,
+		CELL_WIDTH, CELL_HEIGHT;
 		let counter = 0;
 		let leftBar, rightBar, leftBall, rightBall, map;
-
+		
+		console.log(canvas)
 		function playSound(soundName) {
 			var sound = sounds[soundName];
 			if (sound) {
@@ -366,6 +367,7 @@ export class GameCore extends Component {
 	template() {
 		return `
 		<style>
+
 		</style>
 		<canvas id="game-score"></canvas>
 		<canvas id="game-canvas"></canvas>
@@ -379,14 +381,6 @@ export class GameCore extends Component {
 		const handleKeyUp = (e) => {
 			this.keysPressed[e.key] = false;
 		}
-
-		// this.addEvent('keydown', '#game-canvas', (e) => {
-		// 	this.keysPressed[e.key] = true;
-		// });
-
-		// this.addEvent('keyup', '#game-canvas', (e) => {
-		// 	this.keysPressed[e.key] = false;
-		// });
 
 		const handleSocketClose = (e) => {
 			this.gameSocket.close();
