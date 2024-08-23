@@ -1,133 +1,222 @@
 import { Component } from "../core/Component.js";
+import { changeUrl } from "../core/router.js";
 
 export class EditProfile extends Component {
 
-  template () {
-	this.nickname = "seonjo";
-	this.img_url = "/friends.png";
-	this.TwoFA = false;
-    return `
-		<div id="edit-box">
-			<img src="/back.png" id="goBack"></img>
-			<div id="editTitle">
-				Edit Profile
-			</div>
-			<div id="editContents">
-				<div id="prevProfile">
-					<div id="edit-nick">
-						<label for="nickname">Nickname:</label>
-						<div id="presentNick">${this.nickname}</div>
+	translate() {
+		const languages = {
+			0: {
+				headText: "Edit Profile",
+				nickText: "Nickname",
+				urlText: "Image URL",
+				twofaText: "Enable 2FA",
+				saveText: "Save Changes",
+				deleteText: "Delete Account",
+				deleteMsgText1: "Are you sure you want to delete your account?",
+				deleteMsgText2: "If you delete your account, all your information and related data will be permanently removed.",
+				deleteMsgText3: "This action cannot be undone, and the deleted data cannot be recovered.",
+				deleteMsgText4: "If you agree to delete your account and all related data, please select the checkbox below and click the 'Yes' button.",
+				yesText: "Yes",
+				noText: "No"
+			},
+			1: {
+				headText: "프로필 수정",
+				nickText: "닉네임",
+				urlText: "이미지 URL",
+				twofaText: "2단계 인증 활성화",
+				saveText: "변경 사항 저장",
+				deleteText: "계정 삭제",
+				deleteMsgText1: "계정을 삭제하시겠습니까?",
+				deleteMsgText2: "회원 탈퇴를 진행하시면, 귀하의 모든 계정 정보와 관련된 데이터가 영구적으로 삭제됩니다.",
+				deleteMsgText3: "이 작업은 되돌릴 수 없으며, 삭제된 데이터는 복구할 수 없습니다.",
+				deleteMsgText4: "회원 탈퇴와 데이터 삭제에 동의하시면 아래의 확인란을 선택하고 '예' 버튼을 눌러 주십시오.",
+				yesText: "예",
+				noText: "아니요"
+			},
+			2: {
+				headText: "プロフィール編集",
+				nickText: "ニックネーム",
+				urlText: "画像URL",
+				twofaText: "2FAを有効にする",
+				saveText: "変更を保存",
+				deleteText: "アカウント削除",
+				deleteMsgText1: "本当にアカウントを削除しますか？",
+				deleteMsgText2: "アカウントを削除すると、すべてのアカウント情報と関連データが永久に削除されます。",
+				deleteMsgText3: "この操作は元に戻すことができず、削除されたデータは復元できません。",
+				deleteMsgText4: "アカウントと関連データの削除に同意する場合は、以下のチェックボックスを選択し、「はい」ボタンをクリックしてください。",
+				yesText: "はい",
+				noText: "いいえ"
+			},
+			
+		};
+		this.translations = languages[this.props.lan.value];
+	}
+
+	initState() {
+		this.nickname = "";
+		this.img_url = "";
+		this.is_2FA = true;
+
+		//API!! ME GET
+		fetch("https://localhost:443/api/me/", {
+			method: 'GET',
+			credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.json();
+		})
+		.then(data => {
+			this.state.nickname = data.nickname;
+			this.state.img_url = data.img_url;
+			this.state.is_2FA = data.is_2FA;
+		})
+		.catch(error => console.error('Fetch error:', error));
+		return { nickname: this.nickname, img_url: this.img_url, is_2FA: this.is_2FA };
+	}
+	
+	template () {
+		const translations = this.translations;
+		return `
+			<div id="edit-box">
+				<div id="deleteButton">${translations.deleteText}</div>
+				<div id="deleteDoubleCheck">
+					<div id="deleteAlertMsg">
+						<p id="deleteMsgTitle">${translations.deleteMsgText1}</p>
+						<p id="deleteMsgBody">${translations.deleteMsgText2}</p>
+						<p id="deleteMsgBody">${translations.deleteMsgText3}</p>
+						<p id="deleteMsgFooter" >${translations.deleteMsgText4}</p>
 					</div>
-					<div id="edit-img">
-						<div id="image-preview">
-							<img id="presentImage" src="${this.img_url}" alt="Profile Image"></img>
-						</div>
-					</div>
-					<div id="edit-2FA">
-						<label for="2fa-toggle">Enable 2FA:</label>
-						${this.TwoFA ? `<input type="checkbox" id="2fa-toggle" checked disabled>` : `<input type="checkbox" id="2fa-toggle" disabled>`}
+					<div id="deleteChoiceBox">
+						<div id="deleteYesButton">${translations.yesText}</div>
+						<div id="deleteNoButton">${translations.noText}</div>
 					</div>
 				</div>
-				<div id="Arrow">
-					<img id="arrowImg" src="/arrow.png"></img>
+				<img src="/img/back.png" id="goBack"></img>
+				<div id="editTitle">
+					${translations.headText}
 				</div>
-				<div id="changedProfile">
-					<div class="edit" id="edit-nick">
-						<label for="nickname">Nickname:</label>
-						<input type="text" id="nickname" value="${this.nickname}">
-						<div id="nickname-error" class="error-message"></div>
-					</div>
-					<div  class="edit" id="edit-img">
-						<div id="image-preview">
-							<img id="profile-image" src="${this.img_url}" alt="Profile Image"></img>
+				<div id="editContents">
+					<div id="prevProfile">
+						<div id="edit-nick">
+							<label for="nickname">${translations.nickText}:</label>
+							<div id="presentNick">${this.state.nickname}</div>
 						</div>
-						<div id="file-upload-wrapper">
-							<div id="custom-file-upload">
-								<span>Click to choose a file</span>
+						<div id="edit-img">
+							<div id="image-preview">
+								<img id="presentImage" src="${this.state.img_url}" alt="Profile Image"></img>
 							</div>
-							<input type="file" id="file-upload" accept="image/*">
+							<div id="url-upload-wrapper">
+								<label for="image-url">${translations.urlText}</label>
+								<input type="text" class="profile-image-url" value="${this.state.img_url}" placeholder="Enter image URL" readonly>
+							</div>
 						</div>
-						<div id="image-error" class="error-message"></div>
+						<div id="edit-2FA">
+							<label for="2fa-toggle">${translations.twofaText}:</label>
+							${this.state.is_2FA ? `<input type="checkbox" checked disabled>` : `<input type="checkbox" disabled>`}
+						</div>
 					</div>
-					<div id="edit-2FA">
-						<label for="2fa-toggle">Enable 2FA:</label>
-						${this.TwoFA ? `<input type="checkbox" id="2fa-toggle" checked>` : `<input type="checkbox" id="2fa-toggle">`}
+					<div id="Arrow">
+						<img id="arrowImg" src="/img/arrow.png"></img>
 					</div>
-					<button id="profileChange" type="submit">Save Changes</button>
+					<div id="changedProfile">
+						<div class="edit" id="edit-nick">
+							<label for="nickname">${translations.nickText}:</label>
+							<input type="text" id="nickname" value="${this.state.nickname}" autocomplete="off" maxlength="10">
+						</div>
+						<div class="edit" id="edit-img">
+							<div id="image-preview">
+								<img id="profile-image" src="${this.state.img_url}" alt="Profile Image"></img>
+							</div>
+							<div id="url-upload-wrapper">
+								<label for="image-url">${translations.urlText}</label>
+								<input type="text" class="profile-image-url" id="image-url" value="${this.state.img_url}" placeholder="Enter image URL">
+							</div>
+						</div>
+						<div id="edit-2FA">
+							<label for="2fa-toggle">${translations.twofaText}:</label>
+							${this.state.is_2FA ? `<input type="checkbox" id="2fa-toggle" checked>` : `<input type="checkbox" id="2fa-toggle">`}
+						</div>
+						<button id="profileChange" type="submit">${translations.saveText}</button>
+					</div>
 				</div>
 			</div>
-		</div>
-    `;
-  }
+		`;
+	}
 
 	setEvent() {
 		this.addEvent('click', '#goBack', (event) => {
 			window.history.back();
 		});
 		
-		this.addEvent('change', '#file-upload', (event) => { // ID를 #file-upload로 수정
-			const file = event.target.files[0];
-			if (file) {
-				const reader = new FileReader();
-				reader.onload = function(e) {
-					document.getElementById('profile-image').src = e.target.result;
-				};
-				reader.readAsDataURL(file);
+		this.addEvent('change', '#image-url', (event) => {
+			const imageUrl = event.target.value;
+			if (imageUrl) {
+				document.getElementById('profile-image').src = imageUrl;
 			}
 		});
 
+		this.addEvent('click', '#deleteButton', (event) => {
+			document.getElementById('deleteDoubleCheck').style.display = 'flex';
+		});
+
+		this.addEvent('click', '#deleteNoButton', (event) => {
+			document.getElementById('deleteDoubleCheck').style.display = 'none';
+		});
+
+		this.addEvent('click', '#deleteYesButton', (event) => {
+			//API!! ME DELETE
+			fetch("https://localhost:443/api/me/", {
+				method: 'DELETE',
+				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+			})
+			.then(response => {
+				if (response.ok) changeUrl(`/`);
+				else throw new Error('Network response was not ok');
+			})
+			.catch(error => console.error('Fetch error:', error));
+		});
+		
 		this.addEvent('click', '#profileChange', async (event) => {
 			event.preventDefault();
 			
-			// Clear any previous error messages
-			document.getElementById('nickname-error').textContent = '';
-			document.getElementById('image-error').textContent = '';
-
 			// Fetch the values
 			const nickname = document.getElementById('nickname').value;
-			const imgFile = document.getElementById('file-upload').files[0];
-			const twoFA = document.getElementById('2fa-toggle').checked;
+			const imageUrl = document.getElementById('image-url').value;
+			const is_2FA = document.getElementById('2fa-toggle').checked;	
+
+			console.log(nickname);
+			console.log(imageUrl);
+			console.log(is_2FA);
 
 			// Create FormData object to send file and other data
 			const formData = new FormData();
 			formData.append('nickname', nickname);
-			formData.append('twoFA', twoFA);
-			if (imgFile) {
-				formData.append('profileImage', imgFile);
-			}
+			formData.append('is_2FA', is_2FA);
+			formData.append('img_url', imageUrl);
 
-			document.getElementById('nickname-error').textContent = "nickname is invalid!";
-			document.getElementById('image-error').textContent = "image is invalid!"
-
-		// 	try {
-		// 		const response = await fetch('https://your-backend-api.com/api/update-profile', {
-		// 		  method: 'POST',
-		// 		  body: formData
-		// 		});
-		
-		// 		if (response.ok) {
-		// 		  const result = await response.json();
-		
-		// 		  // Handle validation results
-		// 		  if (!result.nicknameValid) {
-		// 			document.getElementById('nickname-error').textContent = result.message.nickname;
-		// 		  }
-		
-		// 		  if (!result.imageValid) {
-		// 			document.getElementById('image-error').textContent = result.message.image;
-		// 		  }
-		
-		// 		  if (result.nicknameValid && result.imageValid) {
-		// 			console.log('Profile updated successfully:', result);
-		// 			// 성공적인 업데이트 후의 추가 작업 (예: 메시지 표시, 리다이렉트 등)
-		// 		  }
-		
-		// 		} else {
-		// 		  console.error('Failed to update profile. Status:', response.status);
-		// 		}
-		// 	  } catch (error) {
-		// 		console.error('Error updating profile:', error);
-		// 	  }
-		  });
+			// API!! ME PUT
+			fetch('https://localhost:443/api/me/', {
+				method: 'PUT',
+				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+				body: formData
+			})
+			.then(response => {
+				if (response.ok) {
+					return response.json();
+				} else {
+					console.error('Failed to update profile. Status:', response.status);
+					throw new Error('Failed to update profile');
+				}
+			})
+			.then(result => {
+				changeUrl(`/main/profile/${this.props.uid}/edit`);
+			})
+			.catch(error => {
+				console.error('Error updating profile:', error);
+			});
+		});
 	}
 }

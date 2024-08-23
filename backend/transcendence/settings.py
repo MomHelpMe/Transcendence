@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
-REDIRECT_FRONT_URI = os.getenv('REDIRECT_FRONT_URI')
+OAUTH_REDIRECT_URI = os.getenv('OAUTH_REDIRECT_URI')
 
 OAUTH_URL = os.getenv('OAUTH_URL')
 OAUTH_TOKEN_URL = os.getenv('OAUTH_TOKEN_URL')
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'drf_yasg',
     'rest_framework_simplejwt',
-    "users.apps.UsersConfig",
+    "users",
     "login.apps.LoginConfig",
     "game",
 ]
@@ -80,11 +80,17 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
 ]
 
+ALLOWED_HOSTS = [
+    "*"
+]
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
-CORS_ALLOW_CREDENTIALS = True  # <- 쿠키 허용
+CORS_ALLOW_CREDENTIALS = True  # 쿠키 허용
+
+SESSION_COOKIE_HTTPONLY = True # 쿠키를 HTTP로만 전송
 
 ROOT_URLCONF = 'transcendence.urls'
 

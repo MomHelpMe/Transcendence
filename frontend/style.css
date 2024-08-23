@@ -6,81 +6,6 @@ html, body, #app {
     overflow: hidden;
 }
 
-#TwoFAbody {
-	font-family: Arial, sans-serif;
-	background-color: #f7f7f7;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-	margin: 0;
-}
-
-#TwoFAcontainer {
-	background-color: white;
-	padding: 40px;
-	border-radius: 12px;
-	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-	text-align: center;
-	width: 400px;
-}
-
-h1#TwoFA{
-	font-size: 36px;
-	margin-bottom: 30px;
-}
-
-p#TwoFA{
-	font-size: 18px;
-	margin-bottom: 20px;
-}
-
-.code-inputs {
-	display: flex;
-	justify-content: space-between;
-	margin-bottom: 20px;
-}
-
-.code-inputs input {
-	width: 50px;
-	height: 50px;
-	font-size: 24px;
-	text-align: center;
-	border: 1px solid #ccc;
-	border-radius: 8px;
-}
-
-button.Button2FA {
-	width: 50%;
-	padding: 15px;
-	background-color: #007bff;
-	border: none;
-	border-radius: 8px;
-	color: white;
-	font-size: 20px;
-	cursor: pointer;
-}
-
-button.Button2FA:hover {
-	background-color: #0056b3;
-}
-
-
-#resendButton {
-	margin-top: 10px;
-	background-color: #28a745;
-}
-
-#resendButton:hover {
-	background-color: #218838;
-}
-
-#message2FA {
-	margin-top: 30px;
-	font-size: 18px;
-	color: red;
-}
-
 div#BG {
 	height: 100%;
     width: 100%;
@@ -240,12 +165,38 @@ p#login:hover {
 
 
 div#menuBox {
+	position: relative;
 	width: 100%;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+}
+
+div#lanButton {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: 400;
+	border-radius: 10px;
+	width: 160px;
+	height: 50px;
+	bottom: 30px;
+	right: 30px;
+	font-size: 17px;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+	background: #357ABD;
+	box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* 기본 상태에서 그림자 없음 */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+div#lanButton:hover {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* 호버 시 더 깊은 그림자 */
+    transform: translateY(-2px); /* 살짝 위로 이동 */
 }
 
 ul#gameMenu{
@@ -263,7 +214,7 @@ ul#gameMenu{
 li.gameMode{
 	margin-left: 1%;
 	margin-right: 1%;
-    width: 250px;
+    width: 280px;
     height: 230px;
     font-size: 2.7rem;
     border-radius: 50px;
@@ -299,10 +250,10 @@ ul#userMenu{
 li.showInfo{
 	margin-left: 1%;
 	margin-right: 1%;
-    width: 120px;
-    height: 120px;
+    width: 160px;
+    height: 150px;
 	border-radius: 50%;
-    font-size: 2rem;
+    font-size: 1.8rem;
     color: #31363F;
     cursor: pointer;
 	text-align: center;
@@ -430,6 +381,7 @@ div#friendsInfo{
 }
 
 ul#friendsLists{
+	margin-top: 10px;
 	width: 90%;
 	height: 90%;
 	max-height: 90%; /* 최대 높이를 설정하여 스크롤을 활성화 */
@@ -641,6 +593,7 @@ img#friendDefaultImg {
 }
 
 img#goBack{
+	z-index: 1;
 	cursor: pointer;
 	position:absolute;
 	bottom: 30px;
@@ -701,7 +654,7 @@ div#profileHeaderBox {
 	font-weight: 900;
 	color:#31363F;
     font-size: 3.0rem;
-    width: 200px;
+    width: 300px;
     height: 100%;
 	text-align: center;
 	display: flex;
@@ -710,7 +663,7 @@ div#profileHeaderBox {
 }
 
 div#profile-edit {
-	margin-top: 30px;
+	margin-top: 20px;
 	height: 10%;
 	width: 100%;
 }
@@ -945,21 +898,20 @@ span#date {
 }
 
 div#startTime {
-	width: 60%;
-	height: 40%;
+	width: 80%;
+	height: 45%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: flex-end;
 	padding-bottom: 5px;
-	font-size: 18px;
+	font-size: 16px;
 	color:#31363F;
 	font-weight: 700;
-	border-bottom: 0.5px solid #31363F;
 }
 
 div#playTime {
-	width: 100%;
+	width: 60%;
 	height: 40%;
 	display: flex;
 	flex-direction: column;
@@ -968,27 +920,14 @@ div#playTime {
 	color:#656262;
 	padding-top: 5px;
 	font-weight: 700;
-}
-
-div#opImg {
-	width: 20%;
-	height: 80%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-
-img#opImg {
-	border-radius: 10px;
-	width: 80%;
-	height: 100%;
+	border-top: 0.5px solid #31363F;
 }
 
 
 div#matchOp {
+	margin-right: 30px;
 	padding-left: 5%;
-	width: 20%;
+	width: 10%;
 	height: 80%;
 	display: flex;
 	align-items: center;
@@ -1001,13 +940,29 @@ span#vs{
 	margin-right: 20px;
 }
 
+div#opImg {
+	padding: 0;
+	width: 35%;
+	height: 80%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+
+img#opImg {
+	border-radius: 10px;
+	width: 45%;
+	height: 100%;
+}
+
 span#opNick{
+	margin-right: 30px;
 	font-size: 20px;
 	font-weight: 700;
 }
 
 div#matchScore {
-	margin-left: 3%;
 	width: 20%;
 	height: 80%;
 	display: flex;
@@ -1016,14 +971,12 @@ div#matchScore {
 }
 
 span#myScorewin {
-	margin-left: 30px;
 	font-size: 30px;
 	font-weight: 700;
 	color:rgb(20, 74, 188);
 }
 
 span#myScorelose {
-	margin-left: 30px;
 	font-size: 30px;
 	font-weight: 700;
 	color:rgb(187, 23, 23)
@@ -1065,7 +1018,115 @@ div#editTitle {
 	justify-content: center;
 }
 
+
+div#deleteButton {
+	position: absolute;
+	right: 30px;
+	top: 30px;
+	width: 150px;
+	height: 50px;
+	border-radius: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: 700;
+	background-color: rgb(220, 53, 69); /* 약간 어두운 빨간색 */
+	color: white;
+	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s;
+}
+
+div#deleteButton:hover {
+	background-color: rgb(128, 0, 0); /* 더 어두운 빨간색 */
+	color: rgb(255, 204, 204); /* 약간의 핑크빛 흰색 */
+}
+
+div#deleteDoubleCheck {
+	position: absolute;
+	left: 50% - 250px;
+	top: 200px; /* deleteButton 아래에 위치하도록 */
+	width: 1100px;
+	height: 400px;
+	border-radius: 10px;
+	display: none;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background-color: rgb(255, 245, 245); /* 연한 배경색 */
+	border: 2px solid rgb(220, 53, 69); /* 테두리를 약간 진한 빨간색으로 */
+	z-index: 1;
+}
+
+div#deleteAlertMsg {
+	margin-top: 20px;
+	width: 80%;
+	height: 50%;
+	color: black;
+	font-weight: 700;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+div#deleteChoiceBox{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 30%;
+	height: 30%;
+}
+
+#deleteMsgTitle {
+	font-weight: bold;
+	font-size: 30px;
+	margin-bottom: 30px;
+}
+
+#deleteMsgBody {
+	font-size: 20px;
+	margin-bottom: 0;
+}
+
+#deleteMsgFooter {
+	font-size: 14px;
+	color: #856404;
+	margin-top: 40px;
+}
+
+div#deleteYesButton, div#deleteNoButton {
+	width: 80px;
+	height: 40px;
+	border-radius: 5px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s;
+}
+
+div#deleteYesButton {
+	background-color: rgb(220, 53, 69);
+	color: white;
+}
+
+div#deleteYesButton:hover {
+	background-color: rgb(128, 0, 0);
+	color: rgb(255, 204, 204);
+}
+
+div#deleteNoButton {
+	background-color: rgb(200, 200, 200);
+	color: black;
+}
+
+div#deleteNoButton:hover {
+	background-color: rgb(128, 128, 128);
+	color: white;
+}
+
 div#editContents{
+	z-index: 0;
 	width: 100%;
 	height: 90%;
 	display: flex;
@@ -1106,12 +1167,15 @@ div#changedProfile {
 div#presentNick {
 	font-weight: 500;
     width: 30%;
+	height: 45px;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 16px;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s ease;
+	display: flex;
+	align-items: center;
 }
 
 div#edit-nick{
@@ -1125,20 +1189,6 @@ div#edit-nick{
 	justify-content: center;
 }
 
-div.edit{
-	position: relative;
-}
-
-div#nickname-error {
-	position: absolute;
-	bottom: 3px;
-}
-
-div#image-error {
-	position: absolute;
-	bottom: 10px;
-}
-
 #edit-nick label {
     display: block;
 	margin-right: 20px;
@@ -1147,7 +1197,6 @@ div#image-error {
     margin-bottom: 5px;
     color: #333;
 }
-
 
 #edit-nick input[type="text"] {
     width: 30%;
@@ -1178,42 +1227,34 @@ div#edit-img {
 	margin-top: 30px;
 }
 
-#file-upload-wrapper {
-	position: relative;
-	width: 300px;
-	height: 50px;
-}
-
-#custom-file-upload {
-	width: 100%;
-	height: 100%;
-	background-color: #4A90E2;
-	color: white;
-	text-align: center;
-	line-height: 50px;
-	font-size: 16px;
-	border-radius: 8px;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
-}
-
-#custom-file-upload:hover {
-	background-color: #357ABD;
-}
-
-#file-upload {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	opacity: 0;
-	cursor: pointer;
-}
-
 #image-preview {
 	margin-bottom: 10px;
 	text-align: center;
+}
+
+#url-upload-wrapper {
+	margin-top: 10px;
+	width: 300px;
+	height: 50px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+#url-upload-wrapper label {
+	position: relative;
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.profile-image-url {
+	margin-top: 10px;
+	width: 80%;
+	height: 80%;
+	cursor: pointer;
 }
 
 #presentImage {
@@ -1250,6 +1291,7 @@ div#edit-2FA{
 }
 
 #edit-2FA input[type="checkbox"] {
+	margin-left: 5px;
     width: 20px;
     height: 20px;
     cursor: pointer;
@@ -1273,8 +1315,322 @@ button#profileChange:hover {
     background-color: #357ABD;
 }
 
-.error-message {
-	color: red;
-	font-size: 12px;
-	margin-top: 5px;
+div#error-box {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+div#error-msg-box {
+	width: 550px;
+	height: 100%;
+	display: flex;
+	padding-left: 50px;
+	flex-direction: column;
+	justify-content: center;
+}
+
+h1#error-title {
+	font-weight: 700;
+	font-size: 50px;
+}
+
+h2#error-body {
+	font-weight: 600;
+	font-size: 40px;
+}
+
+p#error-code {
+	font-size: 20px;
+	font-weight: 300;
+	color: #656262;
+	margin-top: 20px;
+}
+
+div#error-img-box {
+	width: 800px;
+	height: 100%;
+	margin-right: 80px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+img#notFound {
+	width: 700px;
+	height: 700px;
+}
+
+div#goMainMenu {
+	width: 200px;
+	height: 70px;
+	margin-top: 50px;
+	border-radius: 10px;
+	background-color: #31363F;
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: 500;
+	font-size: 30px;
+	box-shadow: 0 0 0 rgba(0, 0, 0, 0); /* 기본 상태에서 그림자 없음 */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+	cursor: pointer;
+}
+
+div#goMainMenu:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* 호버 시 더 깊은 그림자 */
+    transform: translateY(-2px); /* 살짝 위로 이동 */
+}
+
+div#match-box {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	display: flex;
+	justify-content: center;
+}
+
+div#match-title {
+	width: 100%;
+	height: 10%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 30px;
+	font-weight: 900;
+	color:#31363F;
+    font-size: 3.0rem;
+	text-align: center;
+}
+
+div#matchingRotate {
+	border-radius: 50%;
+	background-color: #5b5775;
+    width: 670px;
+    height: 670px;
+    position: absolute;
+    top: calc(50% - 285px);
+    left: calc(50% - 335px);
+    border-radius: 50%;
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+svg#blackParticle {
+    position: absolute;
+    top: 70px;
+    left: 150px;
+    animation: translate1 2s linear infinite;
+}
+
+svg#whiteParticle {
+    position: absolute;
+    bottom: 70px;
+    right: 150px;
+    animation: translate2 2s linear infinite;
+}
+
+svg#blackBall {
+    position: absolute;
+    top: 70px;
+    left: 270px;
+    animation: translate1 2s linear infinite;
+}
+
+svg#whiteBall {
+    position: absolute;
+    bottom: 70px;
+    right: 280px;
+    animation: translate2 2s linear infinite;
+}
+
+@keyframes translate1 {
+    0% {
+        transform: translate(0px, -10px);
+    }
+    50% {
+        transform: translate(0px, 40px);
+    }
+    100% {
+        transform: translate(0px, -10px);
+    }
+}
+
+@keyframes translate2 {
+    0% {
+        transform: translate(0px, 10px);
+    }
+    50% {
+        transform: translate(0px, -40px);
+    }
+    100% {
+        transform: translate(0px, 10px);
+    }
+}
+
+div#matchingText {
+	border-radius: 50%;
+	width: 275px;
+	height: 275px;
+	position: absolute;
+	top: calc(50% - 85px);
+	left: calc(50% - 135px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 40px;
+	font-weight: 500;
+	color: white;
+	background-color: #31363F;
+	border: 2px solid white;
+}
+
+div#tournament-box {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+div#tournament-title {
+	width: 100%;
+	height: 10%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	font-weight: 900;
+	color:#31363F;
+    font-size: 3.0rem;
+	text-align: center;
+	
+}
+
+div#tournament-body {
+	width: 70%;
+	height: 80%;
+	background-color: rgba(90, 93, 106, 0.05);
+	border-radius: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+div#tournament-start-button-box {
+	width: 90%;
+	height: 10%;
+	margin-top: 60px;
+	display: flex;
+	justify-content: flex-end;
+	position: relative;
+	margin-bottom: 50px;
+}
+
+img#crown {
+	width: 150px;
+	height: 150px;
+	position: absolute;
+	left: calc(50% - 75px);
+	top: -30px;
+}
+
+div#tournament-start-button {
+	width: 150px;
+	height: 70px;
+	border-radius: 10px;
+	background-color: #31363F;
+	color: white;
+	font-size: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+	transition: box-shadow 0.3s ease, transform 0.3s ease;
+	cursor: pointer;
+}
+
+div#tournament-start-button:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* 호버 시 더 깊은 그림자 */
+    transform: translateY(-2px); /* 살짝 위로 이동 */
+}
+
+div#tournament-players {
+	width: 100%;
+	height: 15%;
+	display: flex;
+	justify-content: center;
+}
+
+div#tournament-nick {
+	width: 200px;
+	height: 80px;
+	background-color: rgba(90, 93, 106, 0.05);
+	border: 2px solid black;
+	border-radius: 20px;
+	color: black;
+	font-size: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-right: 160px;
+	margin-left: 160px;
+}
+
+div#tournament-lines {
+	width: 100%;
+	height: 10%;
+	display: flex;
+	justify-content: center;
+}
+
+div#tournament-line1 {
+	width: 520px;
+	height: 30px;
+	background-color: rgba(90, 93, 106, 0);
+	border-top: 2px solid black;
+	border-right: 2px solid black;
+	border-left: 2px solid black;
+}
+
+div#tournament-line2 {
+	width: 230px;
+	height: 40px;
+	background-color: rgba(90, 93, 106, 0);
+	border-top: 2px solid black;
+	border-right: 2px solid black;
+	border-left: 2px solid black;
+	margin-right: 145px;
+	margin-left: 145px;
+}
+
+input.tournament-input {
+	width: 200px;
+	height: 80px;
+	background-color: rgba(90, 93, 106, 0.05);
+	border: 2px solid black;
+	border-radius: 20px;
+	color: black;
+	font-size: 30px;
+	margin-right: 15px;
+	margin-left: 15px;
+	text-align: center;
+}
+
+div#tournament-blank {
+	width: 60px;
 }

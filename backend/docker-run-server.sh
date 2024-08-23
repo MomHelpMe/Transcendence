@@ -1,15 +1,8 @@
 #!/bin/bash
 
-pip install --upgrade pip
-
 if [ -f "requirements.txt" ]; then
-    cnt=$(pip freeze | grep -f requirements.txt | wc -l)
-    if [ $cnt -lt $(cat requirements.txt | wc -l) ]; then
-            pip install -r requirements.txt
-            echo "Installed packages from requirements.txt."
-    else
-        echo "Packages from requirements.txt are already installed."
-    fi
+    pip install --upgrade pip && pip install -r requirements.txt
+    echo "Installed packages from requirements.txt."
 else
     echo "requirements.txt not found."
     exit 1

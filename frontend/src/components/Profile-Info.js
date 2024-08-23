@@ -1,93 +1,135 @@
 import { Component } from "../core/Component.js";
 import { changeUrl } from "../core/router.js";
 import { MatchList } from "./Profile-List.js";
+import { parseJWT } from "../core/jwt.js";
 
 export class ProfileInfo extends Component {
+	
+	translate() {
+		const languages = {
+			0: {
+				headText: "Profile",
+				winText: "Win",
+				loseText: "Lose",
+				minText: "min",
+				editText: "edit"
+			},
+			1: {
+				headText: "프로필",
+				winText: "승리",
+				loseText: "패배",
+				minText: "분",
+				editText: "수정"
+			},
+			2: {
+				headText: "プロフィール",
+				winText: "勝ち",
+				loseText: "負け",
+				minText: "分",
+				editText: "編集"
+			}
+		};
+		this.translations = languages[this.props.lan.value];
+	}
+	
+	initState() {
+		console.log(this.props.lan.value);
+		const payload = parseJWT();
+		if (!payload) this.uid = null;
+		else this.uid = payload.id;
 
-  template () {
-	this.user = { nickname: "seonjo", img_url: "../../소년명수.png"};
-	// api로 win, lose, rate 호출
-	this.win = 35;
-	this.lose = 20;
-	this.rate = (35 / 55) * 100;
-	this.matches = [
-		{startTime: "7/5 18:05", playTime: "30 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 3, opNick: "michang" },
-		{startTime: "7/3 18:25", playTime: "22 min", img_url: "../../소년명수.png", type: "lose", myScore: 3, opScore: 5, opNick: "jiko" },
-		{startTime: "7/1 21:15", playTime: "18 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 2, opNick: "jaehejun" },
-		{startTime: "6/25 10:34", playTime: "22 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 3, opNick: "seunan" },
-		{startTime: "6/18 22:53", playTime: "17 min", img_url: "../../소년명수.png", type: "lose", myScore: 1, opScore: 5, opNick: "michang" },
-		{startTime: "6/17 12:14", playTime: "50 min", img_url: "../../소년명수.png", type: "lose", myScore: 0, opScore: 5, opNick: "jaehejun" },
-		{startTime: "6/5 18:21", playTime: "43 min", img_url: "../../소년명수.png", type: "lose", myScore: 2, opScore: 5, opNick: "jiko" },
-		{startTime: "6/2 11:42", playTime: "23 min", img_url: "../../소년명수.png", type: "win", myScore: 5, opScore: 3, opNick: "seunan" },
-	];
-	console.log(this.props.nickname, this.user);
-    return `
-		<div id="profileBox">
-			<img src="../../back.png" id="goBack"></img>
-			<div id="profile">
-				<div id="profile-left">
-					<div id="profileHeaderBox">
-						<span id="profileHeader">Profile</span>
-					</div>
-					<div id="userInfo">
-						<div id="profile-edit">
-							${this.props.nickname === this.user.nickname ? `<div id="profile-edit-button">edit</div>` : ""}
-						</div>
-						<div id="profileUserName">
-							<span id="profileNick">${this.user.nickname}</span>
-						</div>
-						<div id="profileImgBox">
-							${this.user.img_url === "" ?
-								`<img id="profileImg" src="../../friends.png"></img>` :
-								`<img id="profileImg" src="${this.user.img_url}"></img>`}
-						</div>
-					</div>
-				</div>
-				<div id="profile-right">
-					<div id="match">
-						<div id="matchInfo">
-							<div id="winRateCircle">
-								<canvas class="winRateCircle" id="backgroundCanvas" width="200" height="200"></canvas>
-								<canvas class="winRateCircle" id="progressCanvas" width="200" height="200"></canvas>
-								<div id="percentage"></div>
-							</div>
-							<div id="winStat">
-								<span id="win">Win </span><span id="winNum">${this.win}</span>
-								<span id="lose">Lose </span><span id="loseNum">${this.lose}</span>
-								<span id="rate">(${this.rate.toFixed()}%)</span>
-							</div>
-						</div>
-						<div id="matchHistory">
-							<ul id="matches">
+		this.user = {win: null, lose: null, img_url: null, nickname: null, uid: null};
+		this.rate = null;
+		this.games = null;
+		fetch(`https://localhost:443/api/user/${this.props.uid}`, {
+			method: 'GET',
+			credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Network response was not ok');
+			}
+			return response.json();
+		})
+		.then(data => {
+			this.state.games = data.games;
+			this.state.user = data.user;
 
-							</ul>
+			this.state.rate = data.user.lose == 0 ? (data.user.win == 0 ? 0 : 100) :
+							Math.round((data.user.win / (data.user.lose + data.user.win)) * 100);
+		})
+		.catch(error => console.error('Fetch error:', error));
+		return { user: this.user, rate: this.rate, games: this.games };
+	}
+
+	template () {
+		const translations = this.translations;
+		return `
+			<div id="profileBox">
+				<img src="/img/back.png" id="goBack"></img>
+				<div id="profile">
+					<div id="profile-left">
+						<div id="profileHeaderBox">
+							<span id="profileHeader">${translations.headText}</span>
+						</div>
+						<div id="userInfo">
+							<div id="profile-edit">
+								${parseInt(this.props.uid) === this.uid ? `<div id="profile-edit-button">${translations.editText}</div>` : ""}
+							</div>
+							<div id="profileUserName">
+								<span id="profileNick">${this.state.user.nickname}</span>
+							</div>
+							<div id="profileImgBox">
+								${this.state.user.img_url === "" ?
+									`<img id="profileImg" src="/img/friends.png"></img>` :
+									`<img id="profileImg" src="${this.state.user.img_url}"></img>`}
+							</div>
 						</div>
 					</div>
-					<div id="history">
+					<div id="profile-right">
+						<div id="match">
+							<div id="matchInfo">
+								<div id="winRateCircle">
+									<canvas class="winRateCircle" id="backgroundCanvas" width="200" height="200"></canvas>
+									<canvas class="winRateCircle" id="progressCanvas" width="200" height="200"></canvas>
+									<div id="percentage"></div>
+								</div>
+								<div id="winStat">
+									<span id="win">${translations.winText} </span><span id="winNum">${this.state.user.win}</span>
+									<span id="lose">${translations.loseText} </span><span id="loseNum">${this.state.user.lose}</span>
+									<span id="rate">(${this.state.rate}%)</span>
+								</div>
+							</div>
+							<div id="matchHistory">
+								<ul id="matches">
+								</ul>
+							</div>
+						</div>
+						<div id="history">
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-    `;
-  }
-
-  	mounted() {
-		this.children.push(new MatchList(document.querySelector("ul#matches"), {matches: this.matches}));
+		`;
 	}
 
-	setEvent() {
-		this.addEvent('click', '#goBack', (event) => {
-			window.history.back();
-		});
-
-		this.addEvent('click', '#profile-edit', (event) => {
-			changeUrl(`/main/profile/${this.nickname}/edit`);
-		});
-
-		// 컴포넌트가 렌더링된 후 원형 진행 막대를 그립니다.
+	mounted() {
+		new MatchList(document.querySelector("ul#matches"), { matches: this.state.games, minText: this.translations.minText });
 		this.drawBackgroundCircle();
 		this.drawProgressCircle();
 		this.updatePercentage();
+	}
+
+	setEvent() {
+		this.addEvent('click', '#goBack', () => {
+			window.history.back();
+		});
+
+		this.addEvent('click', '#profile-edit', () => {
+			changeUrl(`/main/profile/${this.props.uid}/edit`);
+		});
+
+		// 컴포넌트가 렌더링된 후 원형 진행 막대를 그립니다.
 	}
 
 	drawBackgroundCircle() {
@@ -109,7 +151,7 @@ export class ProfileInfo extends Component {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 		const startAngle = 1.5 * Math.PI;
-		const endAngle = startAngle + (2 * Math.PI * (this.rate / 100));
+		const endAngle = startAngle + (2 * Math.PI * (this.state.rate / 100));
 
 		ctx.beginPath();
 		ctx.arc(100, 100, 90, startAngle, endAngle);
@@ -119,6 +161,6 @@ export class ProfileInfo extends Component {
 	}
 
 	updatePercentage() {
-		document.getElementById('percentage').innerText = `${Math.round(this.rate)}%`;
+		document.getElementById('percentage').innerText = `${this.state.rate}%`;
 	}
 }

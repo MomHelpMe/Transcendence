@@ -3,18 +3,18 @@ import { changeUrl } from "../core/router.js";
 
 export class Login extends Component {
 
-  template () {
-    return `
-		<div id="loginBox">
-			<p id="login">LOGIN</p>
-		</div>
-    `;
-  }
+	template () {
+		return `
+			<div id="loginBox">
+				<p id="login">LOGIN</p>
+			</div>
+		`;
+	}
 
-  setEvent () {
-    this.addEvent('click', '#login', () => {
-      // 로그인 요청
-      window.location.href = 'http://localhost:8000/api/login';
-    });
-  }
+	setEvent () {
+		this.addEvent('click', '#login', () => {
+			// 로그인 요청
+			window.location.href = 'https://localhost:443/api/login/';
+		});
+	}
 }
