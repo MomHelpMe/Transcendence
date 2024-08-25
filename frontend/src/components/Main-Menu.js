@@ -54,8 +54,7 @@ export class Menu extends Component {
 		});
 
 		this.addEvent('click', '#LocalGame', () => {
-			const uid = "145058";
-			changeUrl(`/game/local/${uid}`);
+			changeUrl(`/game/local/${this.uid}`);
 		});
 
 		this.addEvent('click', "#MultiGame", () => {

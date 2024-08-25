@@ -10,8 +10,8 @@ export class GameCore extends Component {
 	initState() {
 		this.keysPressed = {};
 		this.gameSocket = this.gameSocket = new WebSocket(
-			'ws://'
-			+ "localhost:8000"
+			'wss://'
+			+ "localhost:443"
 			+ '/ws/game/'
 			+  this.props.uid
 			+ '/'
