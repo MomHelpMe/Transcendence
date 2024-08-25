@@ -1,6 +1,6 @@
 from pathlib import Path
 import os
-from utils import setup_logging
+from utils.logger import setup_logging
 import logging
 from rest_framework.views import exception_handler
 from rest_framework.response import Response
