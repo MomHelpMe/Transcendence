@@ -4,7 +4,6 @@ import { changeUrl } from "../core/router.js";
 import { parseJWT } from "../core/jwt.js";
 
 export class Menu extends Component {
-
 	translate() {
 		const languages = {
 			0: {
@@ -52,6 +51,10 @@ export class Menu extends Component {
 	setEvent () {
 		this.addEvent('click', '#Friends', () => {
 			changeUrl("/main/friends");
+		});
+
+		this.addEvent('click', '#LocalGame', () => {
+			changeUrl(`/game/local/${this.uid}`);
 		});
 
 		this.addEvent('click', "#MultiGame", () => {

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	{% load static %}
+	<title>Move Square</title>
+</head>
+
+<style>
+	body {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100vw;
+		height: 100vh;
+		overflow: hidden;
+		background-color: #92969D;
+		margin: 0;
+	}
+</style>
+
+<body>
+	<canvas id="game-canvas"></canvas>
+	{{ room_name|json_script:"room-name" }}
+	<script>
+		const COLOR = ["#f5f6fa", "#2f3640", "#f5f6fa"];
+		const roomName = JSON.parse(document.getElementById('room-name').textContent);
+		const canvas = document.getElementById('game-canvas');
+		const ctx = canvas.getContext('2d');
+		const sounds = {
+			'collision': new Audio('{% static "game/key.mp3" %}'),
+		};
+		let SCREEN_HEIGHT, SCREEN_WIDTH, BAR_HEIGHT, BAR_WIDTH, BAR_X_GAP,
+			BALL_RADIUS, LEFT_BAR_X, LEFT_BAR_Y, RIGHT_BAR_X, RIGHT_BAR_Y,
+			CELL_WIDTH, CELL_HEIGHT;
+		let counter = 0;
+		let leftBar, rightBar, leftBall, rightBall, map;
+
+		const gameSocket = new WebSocket(
+			'ws://'
+			+ window.location.host
+			+ '/ws/game/'
+			+ roomName
+			+ '/'
+		);
+
+		function playSound(soundName) {
+			var sound = sounds[soundName];
+			if (sound) {
+				console.log(sound);
+				sound.currentTime = 0; // 재생 위치를 처음으로
+				sound.play().catch(function (error) {
+					console.log('Autoplay was prevented:', error);
+				});
+			}
+		}
+
+		class Bar {
+			constructor(x, y, width, height, canvasHeight, id) {
+				this.x = x;
+				this.y = y;
+				this.width = width;
+				this.height = height;
+				this.targetX = x;
+				this.targetY = y;
+				this.canvasHeight = canvasHeight;
+				this.speed = 4;
+				this.id = id;
+			}
+
+			draw() {
+				ctx.fillStyle = COLOR[this.id + 1];
+				Map.strokeRoundedRect(ctx, this.x, this.y, this.width, this.height, 6);
+				ctx.fill();
+				ctx.strokeStyle = COLOR[this.id];
+				ctx.setLineDash([0]);
+				ctx.strokeRect(this.x, this.y, this.width, this.height);
+			}
+
+			update() {
+				if (Math.abs(this.targetY - this.y) < this.speed) {
+					this.y = this.targetY;
+				} else {
+					if (this.targetY > this.y) {
+						this.y += this.speed;
+					} else {
+						this.y -= this.speed;
+					}
+				}
+
+				// if (Math.abs(this.targetX - this.x) < this.speed) {
+				// 	this.x = this.targetX;
+				// } else {
+				// 	if (this.targetX > this.x) {
+				// 		this.x += this.speed;
+				// 	} else {
+				// 		this.x -= this.speed;
+				// 	}
+				// }
+				this.x = this.targetX;
+			}
+		}
+
+		class Ball {
+			constructor(x, y, radius, color) {
+				this.x = x;
+				this.y = y;
+				this.targetX = x;
+				this.targetY = y;
+				this.radius = radius;
+				this.speed = 5;
+				this.color = color;
+			}
+
+			draw() {
+				Map.strokeRoundedRect(ctx, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2, 6);
+				ctx.fillStyle = this.color;
+				ctx.fill();
+			}
+
+			update() {
+				let directionX = this.targetX - this.x;
+				let directionY = this.targetY - this.y;
+				let length = Math.sqrt(directionX * directionX + directionY * directionY);
+
+				if (Math.abs(this.targetX - this.x) > this.speed * 10 || Math.abs(this.targetY - this.y) > this.speed * 10) {
+					this.x = this.targetX;
+					this.y = this.targetY;
+					console.log('Ball position reset');
+				}
+
+				if (length < this.speed) {
+					this.x = this.targetX;
+					this.y = this.targetY;
+					return;
+				}
+
+				let unitDirectionX = directionX / length;
+				let unitDirectionY = directionY / length;
+
+				this.x += unitDirectionX * this.speed;
+				this.y += unitDirectionY * this.speed;
+			}
+		}
+
+		class Map {
+			constructor(map) {
+				this.map = map;
+				this.height = map.length;
+				this.width = map[0].length;
+				this.lintDash = [CELL_WIDTH / 5, CELL_WIDTH * 3 / 5];
+			}
+
+			update(mapDiff) {
+				mapDiff.forEach(diff => {
+					console.log(mapDiff)
+					this.map[diff[0]][diff[1]] = diff[2];
+					new Particles(diff[1], diff[0], diff[2]);
+					playSound('collision');
+				});
+			}
+
+			draw() {
+				for (let i = 0; i < this.height; i++) {
+					for (let j = 0; j < this.width; j++) {
+						ctx.fillStyle = COLOR[this.map[i][j]];
+						Map.strokeRoundedRect(
+							ctx,
+							j * CELL_WIDTH + 1,
+							i * CELL_HEIGHT + 1,
+							CELL_WIDTH - 2,
+							CELL_HEIGHT - 2,
+							5
+						);
+					}
+				}
+			}
+
+			static strokeRoundedRect(ctx, x, y, width, height, radius) {
+				ctx.beginPath();
+				ctx.moveTo(x + radius, y);
+				ctx.arcTo(x + width, y, x + width, y + height, radius);
+				ctx.arcTo(x + width, y + height, x, y + height, radius);
+				ctx.arcTo(x, y + height, x, y, radius);
+				ctx.arcTo(x, y, x + width, y, radius);
+				ctx.fill();
+				ctx.closePath();
+			}
+		}
+
+		class Particle {
+			constructor(x, y, r, vx, vy, color) {
+				this.x = x;
+				this.y = y;
+				this.r = r;
+				this.vx = vx;
+				this.vy = vy;
+				this.color = color;
+				this.opacity = 0.5;
+				this.g = 0.05;
+				this.friction = 0.99;
+			}
+
+			draw() {
+				ctx.fillStyle = this.color + `${this.opacity})`;
+				ctx.fillRect(this.x, this.y, this.r, this.r);
+			}
+
+			update() {
+				this.vx *= this.friction;
+				this.vy *= this.friction;
+				this.vy += this.g;
+				this.x += this.vx;
+				this.y += this.vy;
+				this.opacity -= 0.004;
+				this.draw();
+			}
+		}
+
+		class Particles {
+			static array = [];
+
+			constructor(x, y, blockId) {
+				this.x = x * CELL_WIDTH + CELL_WIDTH / 2;
+				this.y = y * CELL_HEIGHT + CELL_HEIGHT / 2;
+				this.blockId = blockId;
+				this.color = Particles.hexToRgba(COLOR[blockId + 1]);
+				this.particles = [];
+				const particleCount = 50;
+				const power = 20;
+				const radians = (Math.PI * 2) / particleCount;
+				this.state = 1;
+
+				for (let i = 0; i < particleCount; i++) {
+					this.particles.push(
+						new Particle(
+							this.x,
+							this.y,
+							5,
+							Math.cos(radians * i) * (Math.random() * power),
+							Math.sin(radians * i) * (Math.random() * power),
+							this.color
+						)
+					);
+				}
+				Particles.array.push(this);
+			}
+
+			draw() {
+				for (let i = this.particles.length - 1; i >= 0; i--) {
+					if (this.particles[i].opacity >= 0) {
+						this.particles[i].update();
+					} else {
+						this.particles.splice(i, 1);
+					}
+				}
+				if (this.particles.length <= 0) {
+					this.state = -1;
+				}
+			}
+
+			static hexToRgba(hex) {
+				let cleanedHex = hex.replace('#', '');
+				if (cleanedHex.length === 3)
+					cleanedHex = cleanedHex.split('').map(hex => hex + hex).join('');
+				const bigint = parseInt(cleanedHex, 16);
+				const r = (bigint >> 16) & 255;
+				const g = (bigint >> 8) & 255;
+				const b = bigint & 255;
+
+				return `rgba(${r}, ${g}, ${b},`;
+			}
+
+			static drawAll() {
+				for (let i = Particles.array.length - 1; i >= 0; i--) {
+					if (Particles.array[i].state == 1)
+						Particles.array[i].draw();
+					else
+						Particles.array.splice(i, 1);
+				}
+			}
+		}
+
+		gameSocket.onmessage = function (e) {
+			const data = JSON.parse(e.data);
+			if (data.type === 'initialize_game') {
+				initializeGame(data);
+				drawGame();
+			} else if (data.type === 'update_game_state') {
+				leftBar.targetX = data.left_bar_x;
+				leftBar.targetY = data.left_bar_y;
+				rightBar.targetX = data.right_bar_x;
+				rightBar.targetY = data.right_bar_y;
+				leftBall.targetX = data.left_ball_x;
+				leftBall.targetY = data.left_ball_y;
+				rightBall.targetX = data.right_ball_x;
+				rightBall.targetY = data.right_ball_y;
+				map.update(data.map_diff);
+			}
+		};
+
+		gameSocket.onclose = function (e) {
+			console.error('Game socket closed unexpectedly');
+		};
+
+		const keysPressed = {};
+
+		document.addEventListener('keydown', function (e) {
+			keysPressed[e.key] = true;
+		});
+
+		document.addEventListener('keyup', function (e) {
+			keysPressed[e.key] = false;
+		});
+
+		let isPoolingLeft = false, isPoolingRight = false;
+		function handleKeyPresses() {
+			if (keysPressed['w']) {
+				gameSocket.send(JSON.stringify({ 'action': 'move_up', 'bar': 'left' }));
+				leftBar.targetY -= 5;
+			}
+			if (keysPressed['s']) {
+				gameSocket.send(JSON.stringify({ 'action': 'move_down', 'bar': 'left' }));
+				leftBar.targetY += 5;
+			}
+			if (keysPressed['a']) {
+				gameSocket.send(JSON.stringify({ 'action': 'pull', 'bar': 'left' }));
+				isPoolingLeft = true;
+			} else if (isPoolingLeft) {
+				gameSocket.send(JSON.stringify({ 'action': 'release', 'bar': 'left' }));
+				isPoolingLeft = false;
+			}
+
+			if (keysPressed['ArrowUp']) {
+				gameSocket.send(JSON.stringify({ 'action': 'move_up', 'bar': 'right' }));
+				rightBar.targetY -= 5;
+			}
+			if (keysPressed['ArrowDown']) {
+				gameSocket.send(JSON.stringify({ 'action': 'move_down', 'bar': 'right' }));
+				rightBar.targetY += 5;
+			}
+			if (keysPressed['ArrowRight']) {
+				gameSocket.send(JSON.stringify({ 'action': 'pull', 'bar': 'right' }));
+				isPoolingRight = true;
+			} else if (isPoolingRight) {
+				gameSocket.send(JSON.stringify({ 'action': 'release', 'bar': 'right' }));
+				isPoolingRight = false;
+			}
+		}
+
+		function drawGame() {
+			// ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.fillStyle = "#92969D";
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+			map.draw();
+			leftBar.draw();
+			rightBar.draw();
+			leftBall.draw();
+			rightBall.draw();
+			Particles.drawAll();
+		}
+
+		function initializeGame(data) {
+			SCREEN_HEIGHT = data.screen_height;
+			SCREEN_WIDTH = data.screen_width;
+			LEFT_BAR_X = data.left_bar_x;
+			LEFT_BAR_Y = data.left_bar_y;
+			RIGHT_BAR_X = data.right_bar_x;
+			RIGHT_BAR_Y = data.right_bar_y;
+			BAR_HEIGHT = data.bar_height;
+			BAR_WIDTH = data.bar_width;
+			BAR_X_GAP = data.bar_x_gap;
+			BALL_RADIUS = data.ball_radius;
+			canvas.width = SCREEN_WIDTH;
+			canvas.height = SCREEN_HEIGHT;
+			CELL_WIDTH = canvas.width / data.map[0].length;
+			CELL_HEIGHT = canvas.height / data.map.length;
+
+			map = new Map(data.map, COLOR[0], COLOR[1]);
+			leftBar = new Bar(LEFT_BAR_X, LEFT_BAR_Y, BAR_WIDTH, BAR_HEIGHT, SCREEN_HEIGHT, 0);
+			rightBar = new Bar(RIGHT_BAR_X, RIGHT_BAR_Y, BAR_WIDTH, BAR_HEIGHT, SCREEN_HEIGHT, 1);
+			leftBall = new Ball(data.left_ball_x, data.left_ball_y, BALL_RADIUS, "#FFC312");
+			rightBall = new Ball(data.right_ball_x, data.right_ball_y, BALL_RADIUS, "#FFC312");
+
+			console.log(SCREEN_HEIGHT, SCREEN_WIDTH, BAR_HEIGHT, BAR_WIDTH, BALL_RADIUS);
+			setInterval(interpolate, 5);
+		}
+
+		function interpolate() {
+			leftBar.update();
+			rightBar.update();
+			leftBall.update();
+			rightBall.update();
+			drawGame();
+
+			if (counter % 6 === 0)
+				handleKeyPresses();
+			counter++;
+		}
+	</script>
+</body>
+
+</html>
