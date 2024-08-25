@@ -49,11 +49,11 @@ fi
 source $ENV_DIR/bin/activate
 echo "Virtual environment activated."
 
-python3.12 -m pip install --upgrade pip
+python3.12 -m pip install -q --upgrade pip
 if [ -f "requirements.txt" ]; then
   cnt=$(python3.12 -m pip freeze | grep -f requirements.txt | wc -l)
   if [ $cnt -lt $(cat requirements.txt | wc -l) ]; then
-      python3.12 -m pip install -r requirements.txt
+      python3.12 -m pip install -q -r requirements.txt
       echo "Installed packages from requirements.txt."
   else
     echo "Packages from requirements.txt are already installed."
