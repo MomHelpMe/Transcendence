@@ -1,13 +1,16 @@
 from pathlib import Path
 import os
+from utils import setup_logging
+import logging
+
 # TEST: 로컬에서 테스트할 때 사용, docker-compose 이용 시 환경변수로 알아서 설정됨
 from dotenv import load_dotenv
 
 load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+setup_logging(level=logging.INFO)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
