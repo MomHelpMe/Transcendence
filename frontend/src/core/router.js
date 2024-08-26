@@ -137,11 +137,6 @@ export const initializeRouter = () => {
 	window.addEventListener("popstate", async () => {
 		await parsePath(window.location.pathname);
 	});
-	window.addEventListener('pageshow', (event) => {
-		if (event.persisted) {
-			window.location.reload();
-		}
-	});
 	parsePath(window.location.pathname);
 };
 
