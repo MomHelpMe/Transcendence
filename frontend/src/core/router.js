@@ -95,6 +95,11 @@ export async function parsePath(path) {
 							return changeUrl("/", false);
 					});
 				} else {
+					// API!!! jwt가 있으면 해당 유저의 데이터베이스에서 언어 번호 (0 or 1 or 2) 얻어오기
+					// fetch
+					// if (respose.ok) {
+					//	this.lan.value = data.value;
+					// }
 					return changeUrl("/main", false);
 				}
 			}

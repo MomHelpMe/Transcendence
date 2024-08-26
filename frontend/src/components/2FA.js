@@ -92,7 +92,11 @@ export class TwoFA extends Component {
 			.then(data => {
 				if (data) {
 					if (data.success) {
-						console.log("code good!");
+						// API!!! jwt가 있으면 해당 유저의 데이터베이스에서 언어 번호 (0 or 1 or 2) 얻어오기
+						// fetch
+						// if (respose.ok) {
+						//	this.lan.value = data.value;
+						// }
 						changeUrl('/main'); // 메인 페이지로 이동
 					} else {
 						messageElement.textContent = "Invalid code. Please try again.";

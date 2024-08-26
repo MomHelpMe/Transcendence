@@ -9,17 +9,14 @@ export class Menu extends Component {
 			0: {
 				gameMenuTexts: ["Local Game", "Multi Game", "AI", "Tournament"],
 				userMenuTexts: ["Friends", "Profile", "Logout"],
-				lanText: "Change Language"
 			},
 			1: {
 				gameMenuTexts: ["로컬 게임", "멀티 게임", "AI", "토너먼트"],
 				userMenuTexts: ["친구", "프로필", "로그아웃"],
-				lanText: "언어 변경"
 			},
 			2: {
 				gameMenuTexts: ["ローカルゲーム", "マルチゲーム", "AI", "トーナメント"],
 				userMenuTexts: ["友達", "プロフィール", "ログアウト"],
-				lanText: "言語を変更"
 			}
 		};
 	
@@ -36,7 +33,9 @@ export class Menu extends Component {
 
 		return `
 			<div id="menuBox">
-				<div id="lanButton">${translations.lanText}</div>
+				<div id="enButton">English</div>
+				<div id="koButton">한국어</div>
+				<div id="jpButton">日本語</div>
 				<ul id="gameMenu"></ul>
 				<ul id="userMenu"></ul>
 			</div>
@@ -65,8 +64,30 @@ export class Menu extends Component {
 			changeUrl("/main/tournament");
 		});
 
-		this.addEvent('click', '#lanButton', () => {
-			this.props.lan.value = (this.props.lan.value + 1) % 3;
+		this.addEvent('click', '#enButton', () => {
+			this.props.lan.value = 0;
+			// API!!! this.props.lan.value를 db에 저장
+			// fetch(){
+			// 	this.props.lan.value 저장
+			// }
+			changeUrl("/main")
+		});
+		
+		this.addEvent('click', '#koButton', () => {
+			this.props.lan.value = 1;
+			// API!!! this.props.lan.value를 db에 저장
+			// fetch(){
+			// 	this.props.lan.value 저장
+			// }
+			changeUrl("/main")
+		});
+		
+		this.addEvent('click', '#jpButton', () => {
+			this.props.lan.value = 2;
+			// API!!! this.props.lan.value를 db에 저장
+			// fetch(){
+			// 	this.props.lan.value 저장
+			// }
 			changeUrl("/main")
 		});
 
