@@ -54,7 +54,6 @@ export class ProfileInfo extends Component {
 		.then(data => {
 			this.state.games = data.games;
 			this.state.user = data.user;
-
 			this.state.rate = data.user.lose == 0 ? (data.user.win == 0 ? 0 : 100) :
 							Math.round((data.user.win / (data.user.lose + data.user.win)) * 100);
 		})
@@ -126,6 +125,10 @@ export class ProfileInfo extends Component {
 	setEvent() {
 		this.addEvent('click', '#goBack', () => {
 			window.history.back();
+		});
+
+		this.addEvent('click', '.opNick', (event) => {
+			changeUrl(`/main/profile/${event.target.id}`);
 		});
 
 		this.addEvent('click', '#profile-edit', () => {

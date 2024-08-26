@@ -9,7 +9,6 @@ export class MatchList extends Component {
 		  ${matches.map(element => {
 			// Date 객체로 변환
 			const date = new Date(element.start_timestamp);
-			
 			// 월, 일, 시, 분 추출
 			const month = date.getMonth() + 1; // getMonth()는 0부터 시작하므로 1을 더해줍니다.
 			const day = date.getDate();
@@ -27,7 +26,7 @@ export class MatchList extends Component {
 						<span id="vs">VS</span>
 					</div>
 					<div id="opImg">
-						<span id="opNick">${element.op_user.nickname}</span>
+						<span class="opNick" id="${element.op_user.user_id}">${element.op_user.nickname}</span>
 						<img id="opImg" src=${element.op_user.img_url}></img>
 					</div>
 					<div id="matchScore">
