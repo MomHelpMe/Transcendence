@@ -1411,14 +1411,32 @@ div#match-title {
 
 div#matchingRotate {
 	border-radius: 50%;
-	background-color: #5b5775;
-    width: 670px;
-    height: 670px;
+	background-color: rgb(19, 10, 61);
+    width: 700px;
+    height: 700px;
     position: absolute;
-    top: calc(50% - 285px);
-    left: calc(50% - 335px);
+    top: calc(50% - 280px);
+    left: calc(50% - 350px);
     border-radius: 50%;
-    animation: rotate 2s linear infinite;
+	animation: rotate 4s linear infinite, dayNightCycle 10s infinite alternate;
+	border-radius: 50%;
+	box-shadow:
+		0 0 0 10px #f2f558,
+		0 0 0 20px rgba(242, 245, 88, 0.7),
+		0 0 0 30px rgba(242, 245, 88, 0.4),
+		0 0 0 40px rgba(242, 245, 88, 0.1);
+}
+
+@keyframes dayNightCycle {
+	0% {
+		background-color: rgb(161, 228, 255); /* 낮 */
+	}
+	50% {
+		background-color: rgb(19, 10, 61); /* 밤 */
+	}
+	100% {
+		background-color: rgb(161, 228, 255); /* 낮 */
+	}
 }
 
 @keyframes rotate {
@@ -1430,73 +1448,143 @@ div#matchingRotate {
     }
 }
 
-svg#blackParticle {
+div#red-box {
+	position: relative;
+	top: 50px;
+	left: 300px;
+	height: 100px;
+	width: 100px;
+	animation: rotate 4s linear infinite;
+}
+
+div#redBall {
+	position: absolute;
+	width: 80px;
+	height: 80px;
+	top: 10px;
+	left: 10px;
+	background-color: #FF4C4C;
+	border-radius: 50%;
+}
+
+div#redParticle1 {
     position: absolute;
-    top: 70px;
-    left: 150px;
-    animation: translate1 2s linear infinite;
+    top: -20px;
+    left: 40px;
+	height: 20px;
+	width: 20px;
+	background-color: #FF4C4C;
+	border-radius: 50%;
 }
 
-svg#whiteParticle {
+div#redParticle2 {
     position: absolute;
-    bottom: 70px;
-    right: 150px;
-    animation: translate2 2s linear infinite;
+    bottom: -20px;
+    left: 40px;
+	height: 20px;
+	width: 20px;
+	background-color: #FF4C4C;
+	border-radius: 50%;
 }
 
-svg#blackBall {
+div#redParticle3 {
     position: absolute;
-    top: 70px;
-    left: 270px;
-    animation: translate1 2s linear infinite;
+    top: 40px;
+    left: -20px;
+	height: 20px;
+	width: 20px;
+	background-color: #FF4C4C;
+	border-radius: 50%;
 }
 
-svg#whiteBall {
+div#redParticle4 {
     position: absolute;
-    bottom: 70px;
-    right: 280px;
-    animation: translate2 2s linear infinite;
+    top: 40px;
+    right: -20px;
+	height: 20px;
+	width: 20px;
+	background-color: #FF4C4C;
+	border-radius: 50%;
 }
 
-@keyframes translate1 {
-    0% {
-        transform: translate(0px, -10px);
-    }
-    50% {
-        transform: translate(0px, 40px);
-    }
-    100% {
-        transform: translate(0px, -10px);
-    }
+div#redParticle5 {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+	height: 20px;
+	width: 20px;
+	background-color: #FF4C4C;
+	border-radius: 50%;
 }
 
-@keyframes translate2 {
-    0% {
-        transform: translate(0px, 10px);
-    }
-    50% {
-        transform: translate(0px, -40px);
-    }
-    100% {
-        transform: translate(0px, 10px);
-    }
+div#redParticle6 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+	height: 20px;
+	width: 20px;
+	background-color: #FF4C4C;
+	border-radius: 50%;
+}
+
+div#redParticle7 {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+	height: 20px;
+	width: 20px;
+	background-color: #FF4C4C;
+	border-radius: 50%;
+}
+
+div#redParticle8 {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+	height: 20px;
+	width: 20px;
+	background-color: #FF4C4C;
+	border-radius: 50%;
+}
+
+div#yellow-box {
+	position: absolute;
+	bottom: 50px;
+	left: 300px;
+	height: 100px;
+	width: 100px;
+}
+
+div#yellowBall {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	bottom: 0px;
+	left: 0px;
+	border-radius: 50%;
+	background-color: #FFF078;
+}
+
+div#yellowParticle {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+	height: 60px;
+	width: 60px;
+	background-color: rgb(19, 10, 61);
+	border-radius: 50%;
+	animation: dayNightCycle 10s infinite alternate;
 }
 
 div#matchingText {
 	border-radius: 50%;
-	width: 275px;
-	height: 275px;
+	width: 100px;
+	height: 100px;
 	position: absolute;
-	top: calc(50% - 85px);
-	left: calc(50% - 135px);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	font-size: 40px;
-	font-weight: 500;
-	color: white;
+	top: calc(50% + 20px);
+	left: calc(50% - 50px);
 	background-color: #31363F;
-	border: 2px solid white;
+	border: 1px solid white;
 }
 
 div#tournament-box {
