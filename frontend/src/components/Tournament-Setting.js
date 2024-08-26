@@ -28,11 +28,11 @@ export class TournamentSetting extends Component {
 						<div id="tournament-line2"></div>
 					</div>
 					<div id="tournament-players">
-						<input class="tournament-input" id="tournament-nick1" maxlength="10" placeholder="nickname1"></input>
-						<input class="tournament-input" id="tournament-nick2" maxlength="10" placeholder="nickname2"></input>
+						<input class="tournament-input" autocomplete="off" id="tournament-nick1" maxlength="8" placeholder="nickname1"></input>
+						<input class="tournament-input" autocomplete="off" id="tournament-nick2" maxlength="8" placeholder="nickname2"></input>
 						<div id="tournament-blank"></div>
-						<input class="tournament-input" id="tournament-nick3" maxlength="10" placeholder="nickname3"></input>
-						<input class="tournament-input" id="tournament-nick4" maxlength="10" placeholder="nickname4"></input>
+						<input class="tournament-input" autocomplete="off" id="tournament-nick3" maxlength="8" placeholder="nickname3"></input>
+						<input class="tournament-input" autocomplete="off" id="tournament-nick4" maxlength="8" placeholder="nickname4"></input>
 					</div>
 				</div>
 			</div>
