@@ -110,7 +110,7 @@ export class EditProfile extends Component {
 							</div>
 							<div id="url-upload-wrapper">
 								<label for="image-url">${translations.urlText}</label>
-								<input type="text" class="profile-image-url" value="${this.state.img_url}" placeholder="Enter image URL" readonly>
+								<input type="text" autocomplete="off" class="profile-image-url" value="${this.state.img_url}" placeholder="Enter image URL" readonly>
 							</div>
 						</div>
 						<div id="edit-2FA">
@@ -124,7 +124,7 @@ export class EditProfile extends Component {
 					<div id="changedProfile">
 						<div class="edit" id="edit-nick">
 							<label for="nickname">${translations.nickText}:</label>
-							<input type="text" id="nickname" value="${this.state.nickname}" autocomplete="off" maxlength="10">
+							<input type="text" id="nickname" value="${this.state.nickname}" autocomplete="off" maxlength="8">
 						</div>
 						<div class="edit" id="edit-img">
 							<div id="image-preview">
@@ -132,7 +132,7 @@ export class EditProfile extends Component {
 							</div>
 							<div id="url-upload-wrapper">
 								<label for="image-url">${translations.urlText}</label>
-								<input type="text" class="profile-image-url" id="image-url" value="${this.state.img_url}" placeholder="Enter image URL">
+								<input type="text" autocomplete="off" class="profile-image-url" id="image-url" value="${this.state.img_url}" placeholder="Enter image URL">
 							</div>
 						</div>
 						<div id="edit-2FA">
