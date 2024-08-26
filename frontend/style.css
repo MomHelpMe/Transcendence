@@ -958,11 +958,16 @@ img#opImg {
 	aspect-ratio: 1 / 1;
 }
 
-span#opNick{
-	display: inline-block;
-	width: 100px;
+span.opNick{
+	margin-right: 30px;
 	font-size: 20px;
 	font-weight: 700;
+    color: #31363F;
+    cursor: pointer;
+}
+
+span.opNick:hover {
+	color: #f10000; /* 마우스를 올렸을 때 변경될 글자 색 */
 }
 
 div#matchScore {

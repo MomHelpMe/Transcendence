@@ -125,7 +125,6 @@ export async function parsePath(path) {
 			keys.forEach((key, index) => {
 				props[key.substring(1)] = values[index];
 			});
-			console.log(props);
 			route.component(props);
 			return;
 		}
