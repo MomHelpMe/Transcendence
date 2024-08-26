@@ -108,9 +108,9 @@ export async function parsePath(path) {
 
 	const isAuthenticated = await checkAuth();
 	if ((path === "/" || path === "/2FA") && isAuthenticated) {
-		return changeUrl("/main", false);  // /로 이동할 때 인증되어 있으면 /main으로 이동, replaceState 사용
+		return changeUrl("/main");  // /로 이동할 때 인증되어 있으면 /main으로 이동, replaceState 사용
 	} else if ((path !== "/" && path !== "/2FA") && !isAuthenticated) {
-		return changeUrl("/", false);  // /를 제외한 다른 경로로 이동할 때 인증되지 않은 경우 /로 이동, replaceState 사용
+		return changeUrl("/");  // /를 제외한 다른 경로로 이동할 때 인증되지 않은 경우 /로 이동, replaceState 사용
 	}
 
 	const routeKeys = Object.keys(routes);
@@ -136,6 +136,11 @@ export async function parsePath(path) {
 export const initializeRouter = () => {
 	window.addEventListener("popstate", async () => {
 		await parsePath(window.location.pathname);
+	});
+	window.addEventListener('pageshow', (event) => {
+		if (event.persisted) {
+			window.location.reload();
+		}
 	});
 	parsePath(window.location.pathname);
 };
