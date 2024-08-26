@@ -58,7 +58,10 @@ export class ProfileInfo extends Component {
 			this.state.rate = data.user.lose == 0 ? (data.user.win == 0 ? 0 : 100) :
 							Math.round((data.user.win / (data.user.lose + data.user.win)) * 100);
 		})
-		.catch(error => console.error('Fetch error:', error));
+		.catch(error => {
+			console.error('Fetch error:', error);
+			changeUrl("/404", false);
+		});
 		return { user: this.user, rate: this.rate, games: this.games };
 	}
 
