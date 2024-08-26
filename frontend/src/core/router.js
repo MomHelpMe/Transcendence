@@ -108,9 +108,9 @@ export async function parsePath(path) {
 
 	const isAuthenticated = await checkAuth();
 	if ((path === "/" || path === "/2FA") && isAuthenticated) {
-		return changeUrl("/main", false);  // /로 이동할 때 인증되어 있으면 /main으로 이동, replaceState 사용
+		return changeUrl("/main");  // /로 이동할 때 인증되어 있으면 /main으로 이동, replaceState 사용
 	} else if ((path !== "/" && path !== "/2FA") && !isAuthenticated) {
-		return changeUrl("/", false);  // /를 제외한 다른 경로로 이동할 때 인증되지 않은 경우 /로 이동, replaceState 사용
+		return changeUrl("/");  // /를 제외한 다른 경로로 이동할 때 인증되지 않은 경우 /로 이동, replaceState 사용
 	}
 
 	const routeKeys = Object.keys(routes);
@@ -142,22 +142,12 @@ export const initializeRouter = () => {
 
 async function checkAuth() {
 	try {
-		let valid;
 		const response = await fetch('https://localhost:443/api/validate/', {
 			method: 'GET',
 			credentials: 'include', // 쿠키를 포함하여 요청
-		})
-		//const data = await response.json();
-		//return data.isValid;
-		.then(response => {
-			if (response.status == 200){
-				valid =  true;
-			}
-			else{
-				valid = false;
-			}
 		});
-		return valid;
+
+		return response.ok; // 상태가 200~299 범위에 있으면 true, 그렇지 않으면 false 반환
 	} catch (error) {
 		console.error('Error:', error);
 		return false;
