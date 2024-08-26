@@ -429,9 +429,9 @@ div#online{
 	width: 10px;
 	height: 10px;
 	position:absolute;
-	top: 10px;
+	top: 0px;
 	background-color: rgb(52, 240, 86);
-	left: calc(30%);
+	left: 60px;
 }
 
 div#offline{
@@ -439,9 +439,10 @@ div#offline{
 	width: 10px;
 	height: 10px;
 	position:absolute;
-	top: 10px;
+	top: 0px;
 	background-color: rgb(116, 116, 116);
-	left: calc(30%);
+	left: 60px;
+
 }
 
 div#friendNick{
