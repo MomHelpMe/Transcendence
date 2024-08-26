@@ -124,7 +124,7 @@ export class EditProfile extends Component {
 					<div id="changedProfile">
 						<div class="edit" id="edit-nick">
 							<label for="nickname">${translations.nickText}:</label>
-							<input type="text" id="nickname" value="${this.state.nickname}" autocomplete="off" maxlength="10">
+							<input type="text" id="nickname" value="${this.state.nickname}" autocomplete="off" maxlength="8">
 						</div>
 						<div class="edit" id="edit-img">
 							<div id="image-preview">
