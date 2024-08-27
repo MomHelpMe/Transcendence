@@ -1,6 +1,7 @@
 import { Component } from "../core/Component.js";
 import { changeUrl } from "../core/router.js";
 import { getCookie } from "../core/jwt.js";
+import { socketList } from "../app.js"
 
 export class GameCore extends Component {
 	constructor($el, props) {
@@ -9,13 +10,14 @@ export class GameCore extends Component {
 
 	initState() {
 		this.keysPressed = {};
-		this.gameSocket = this.gameSocket = new WebSocket(
+		this.gameSocket = new WebSocket(
 			'wss://'
 			+ "localhost:443"
 			+ '/ws/game/'
 			+ this.props.uid
 			+ '/'
 		);
+		socketList.push(this.gameSocket);
 		return {};
 	}
 

@@ -16,22 +16,35 @@ class App {
 export const root = new App();
 export const routes = createRoutes(root);
 
+export let socketList = [];
+
+const closeAllSockets = () => {
+	socketList.forEach(socket => {
+		if (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING) {
+			socket.close();
+		}
+	});
+	socketList = [];
+};
+
 const online = () => {
 	const onlineSocket = new WebSocket(
 		'wss://'
 		+ "localhost:443"
 		+ '/ws/online/'
-		);
-		console.log(onlineSocket);
-		onlineSocket.onopen = () => {
-			const token = getCookie("jwt");
-			onlineSocket.send(JSON.stringify({ 'action': 'authenticate', 'token': token }));
-		};
-		onlineSocket.onclose = () => {
-			console.log("online socket closed");
-			changeUrl("/404", false);
-		};
-	}
-	
+	);
+	socketList.push(onlineSocket);
+	console.log(onlineSocket);
+	onlineSocket.onopen = () => {
+		const token = getCookie("jwt");
+		onlineSocket.send(JSON.stringify({ 'action': 'authenticate', 'token': token }));
+	};
+	onlineSocket.onclose = () => {
+		console.log("online socket closed");
+		closeAllSockets();
+		changeUrl("/404", false);
+	};
+}
+
 initializeRouter(routes);
 online();
