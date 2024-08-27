@@ -13,7 +13,7 @@ export class GameCore extends Component {
 			'wss://'
 			+ "localhost:443"
 			+ '/ws/game/'
-			+  this.props.uid
+			+ this.props.uid
 			+ '/'
 		);
 		return {};
@@ -31,11 +31,11 @@ export class GameCore extends Component {
 			'collision': new Audio('../../img/key.mp3'),
 		};
 		let SCREEN_HEIGHT, SCREEN_WIDTH, BAR_HEIGHT, BAR_WIDTH, BAR_X_GAP,
-		BALL_RADIUS, LEFT_BAR_X, LEFT_BAR_Y, RIGHT_BAR_X, RIGHT_BAR_Y,
-		CELL_WIDTH, CELL_HEIGHT;
+			BALL_RADIUS, LEFT_BAR_X, LEFT_BAR_Y, RIGHT_BAR_X, RIGHT_BAR_Y,
+			CELL_WIDTH, CELL_HEIGHT;
 		let counter = 0;
 		let leftBar, rightBar, leftBall, rightBall, map;
-		
+
 		console.log(canvas)
 		function playSound(soundName) {
 			var sound = sounds[soundName];
@@ -92,17 +92,37 @@ export class GameCore extends Component {
 				this.targetY = y;
 				this.radius = radius;
 				this.color = color;
+				this.trail = [];  // 잔상을 저장할 배열
 			}
 
 			draw() {
+				this.trail.forEach((pos, index) => {
+					const alpha = (index + 1) / (this.trail.length + 10);
+					const scale = (index / (this.trail.length + 1));
+					const radius = this.radius * scale;
+		
+					ctx.globalAlpha = alpha;  // 투명도 설정
+					ctx.fillStyle = this.color;
+					ctx.fillRect(pos.x - radius, pos.y - radius, radius * 2, radius * 2);
+				});
+		
+				ctx.globalAlpha = 1;
 				Map.strokeRoundedRect(ctx, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2, 6);
 				ctx.fillStyle = this.color;
 				ctx.fill();
 			}
-
 			update() {
 				this.x = this.targetX;
 				this.y = this.targetY;
+				// 10 프레임마다 잔상 저장
+				if (counter % 4 === 0) {
+					this.trail.push({ x: this.x, y: this.y });
+
+					if (this.trail.length > 10) {
+						this.trail.shift();  // 오래된 잔상을 제거
+					}
+				}
+
 			}
 		}
 

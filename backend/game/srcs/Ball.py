@@ -8,8 +8,8 @@ PENALTY_FRAMES = 50  # 페널티 프레임 수
 
 
 class Ball:
-    SPEED = 2
-    RADIUS = 10
+    SPEED = 1.75
+    RADIUS = 14
 
     def __init__(self, id, screen_height, screen_width, bar):
         self.id = id
