@@ -30,15 +30,15 @@ class Ball:
     def move(self, bar):
         if self.penalty_timer > 0:
             self.penalty_timer -= 1
-            # print(self.penalty_timer)
             if self.penalty_timer == 0:
                 self.initialize(bar)
-            return
+            return self.penalty_timer // 10
 
         self.x += self.dx
         self.y += self.dy
         if self.collision_timer > 0:
             self.collision_timer -= 1
+        return self.penalty_timer // 10
 
     def check_bar_collision(self, bar):
         if self.collision_timer > 0 or self.penalty_timer > 0:

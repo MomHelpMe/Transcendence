@@ -31,6 +31,8 @@ class GameState:
         self.left_ball = Ball(0, SCREEN_HEIGHT, SCREEN_WIDTH, self.left_bar)
         self.right_ball = Ball(1, SCREEN_HEIGHT, SCREEN_WIDTH, self.right_bar)
         self.score = [0, 0]
+        self.player = ["player1", "player2"]
+        self.penalty_time = [0, 0]
 
 class GameConsumer(AsyncWebsocketConsumer):
     game_tasks = {}
@@ -164,6 +166,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     "right_ball_y": state.right_ball.y,
                     "ball_radius": Ball.RADIUS,
                     "map": state.map.map,
+                    "player": state.player,
                 }
             )
         )
@@ -176,12 +179,12 @@ class GameConsumer(AsyncWebsocketConsumer):
                 state.left_bar.update()
                 state.right_bar.update()
 
-                state.left_ball.move(state.left_bar)
+                state.penalty_time[0] = state.left_ball.move(state.left_bar)
                 state.left_ball.check_bar_collision(state.left_bar)
                 state.left_ball.check_bar_collision(state.right_bar)
                 state.left_ball.check_collision(state.map, state.score)
 
-                state.right_ball.move(state.right_bar)
+                state.penalty_time[1] = state.right_ball.move(state.right_bar)
                 state.right_ball.check_bar_collision(state.left_bar)
                 state.right_ball.check_bar_collision(state.right_bar)
                 state.right_ball.check_collision(state.map, state.score)
@@ -213,6 +216,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "right_ball_y": state.right_ball.y,
                 "map_diff": state.map.diff,
                 "score": state.score,
+                "penalty_time": state.penalty_time,
             },
         )
 
@@ -226,6 +230,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         right_ball_x = event["right_ball_x"]
         right_ball_y = event["right_ball_y"]
         score = event["score"]
+        penalty_time = event["penalty_time"]
 
         # Send the updated game state to the WebSocket
         await self.send(
@@ -242,6 +247,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     "right_ball_y": int(right_ball_y),
                     "map_diff": GameConsumer.game_states[self.room_group_name].map.diff,
                     "score": score,
+                    "penalty_time": penalty_time,
                 }
             )
         )

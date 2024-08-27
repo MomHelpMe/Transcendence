@@ -5,7 +5,7 @@ class Bar:
     X_GAP = 40
     HEIGHT = 200
     WIDTH = 20
-    SPEED = 15
+    SPEED = 20
     PULL_SPEED = 1
 
     def __init__(
@@ -37,6 +37,7 @@ class Bar:
         if self.power < self.max_power:
             self.power = abs(self.x - self.min_x)
             self.x += ((-2 / (self.max_power * 2)) * self.power + 3) * self.pull_speed
+            print("power", self.power)
 
     def set_release(self):
         if self.state != BarState.PULLING:
@@ -45,9 +46,10 @@ class Bar:
 
     def release(self):
         self.x += -self.pull_speed * (self.power + 0.1) * 0.25 
+        print(-self.pull_speed * self.power * 0.25 + 0.1)
         if (self.id == 0 and self.x > self.min_x + 10) or (
             self.id == 1 and self.x < self.min_x - 10
-        ) or self.power == 0:
+        ):
             self.x = self.min_x
             self.power = 0
             self.state = BarState.IDLE

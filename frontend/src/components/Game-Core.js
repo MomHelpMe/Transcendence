@@ -32,9 +32,9 @@ export class GameCore extends Component {
 		};
 		let SCREEN_HEIGHT, SCREEN_WIDTH, BAR_HEIGHT, BAR_WIDTH, BAR_X_GAP,
 			BALL_RADIUS, LEFT_BAR_X, LEFT_BAR_Y, RIGHT_BAR_X, RIGHT_BAR_Y,
-			CELL_WIDTH, CELL_HEIGHT;
+			CELL_WIDTH, CELL_HEIGHT, PLAYER;
 		let counter = 0;
-		let leftBar, rightBar, leftBall, rightBall, map, score;
+		let leftBar, rightBar, leftBall, rightBall, map, score, penaltyTime;
 
 		console.log(canvas)
 		function playSound(soundName) {
@@ -68,6 +68,14 @@ export class GameCore extends Component {
 				ctx.lineWidth = 2;
 				Map.strokeRoundedRect(ctx, this.x, this.y, this.width, this.height, this.width / 2);
 				ctx.stroke();
+				if (penaltyTime[this.id] !== 0)
+				{
+					ctx.font = "bold 30px Arial";
+					ctx.textAlign = "center";
+					ctx.textBaseline = "middle";
+					ctx.fillStyle = BALL_COLOR[this.id];
+					ctx.fillText(penaltyTime[this.id], this.x + this.width / 2 + (this.id == 0 ? 1 : -1) * 175, this.y + this.height / 2);
+				}
 			}
 
 			update() {
@@ -266,21 +274,27 @@ export class GameCore extends Component {
 
 		class Score {
 			constructor() {
-				scoreCtx.font = "100px Arial";
 				scoreCtx.textAlign = "center";
 				this.score = [0, 0];
 			}
-
+			
 			update(score) {
 				this.score = score;
 			}
-
+			
 			draw() {
 				scoreCtx.clearRect(0, 0, scoreCanvas.width, scoreCanvas.height);
+				scoreCtx.font = "25px Arial";
 				scoreCtx.fillStyle = COLOR[1];
-				scoreCtx.fillText(this.score[0], 125, 100);
+				scoreCtx.fillText(PLAYER[0], 125, 50);
 				scoreCtx.fillStyle = COLOR[0];
-				scoreCtx.fillText(this.score[1], 375, 100);
+				scoreCtx.fillText(PLAYER[1], 375, 50);
+				
+				scoreCtx.font = "100px Arial";
+				scoreCtx.fillStyle = COLOR[1];
+				scoreCtx.fillText(this.score[0], 125, 140);
+				scoreCtx.fillStyle = COLOR[0];
+				scoreCtx.fillText(this.score[1], 375, 140);
 			}
 		}
 
@@ -303,6 +317,7 @@ export class GameCore extends Component {
 				leftBall.targetY = data.left_ball_y;
 				rightBall.targetX = data.right_ball_x;
 				rightBall.targetY = data.right_ball_y;
+				penaltyTime = data.penalty_time;
 				score.update(data.score);
 				map.update(data.map_diff);
 			}
@@ -367,10 +382,11 @@ export class GameCore extends Component {
 			BAR_WIDTH = data.bar_width;
 			BAR_X_GAP = data.bar_x_gap;
 			BALL_RADIUS = data.ball_radius;
+			PLAYER = data.player;
 			canvas.width = SCREEN_WIDTH;
 			canvas.height = SCREEN_HEIGHT;
 			scoreCanvas.width = 500;
-			scoreCanvas.height = 150;
+			scoreCanvas.height = 175;
 			CELL_WIDTH = canvas.width / data.map[0].length;
 			CELL_HEIGHT = canvas.height / data.map.length;
 
