@@ -1,5 +1,4 @@
 import { Component } from "../core/Component.js";
-import { changeUrl } from "../core/router.js";
 import { TournamentHistory } from "./Tournament-History.js";
 
 export class TournamentSetting extends Component {
