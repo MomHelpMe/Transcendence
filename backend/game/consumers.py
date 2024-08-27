@@ -10,7 +10,7 @@ from channels.exceptions import DenyConnection
 
 SCREEN_HEIGHT = 750
 SCREEN_WIDTH = 1250
-MAX_SCORE = 15
+MAX_SCORE = 150
 
 
 class GameState:
@@ -225,7 +225,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                 "winner": winner,
             },
         )
-    
+
     async def game_result_message(self, event):
         score = event["score"]
         winner = event["winner"]
