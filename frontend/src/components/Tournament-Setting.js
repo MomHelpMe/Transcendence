@@ -64,7 +64,7 @@ export class TournamentSetting extends Component {
 			const historyBody = document.querySelector('#tournament-history-body');
 			const startButton = document.querySelector("#tournament-start-button");
 
-			gameMenu.style.color = 'red';
+			gameMenu.style.color = '#6dd5fa';
 			historyMenu.style.color = 'white';
 			mainBody.style.display = 'none';
 			historyBody.style.display = 'none';
@@ -80,7 +80,7 @@ export class TournamentSetting extends Component {
 			const historyBody = document.querySelector('#tournament-history-body');
 			const startButton = document.querySelector("#tournament-start-button");
 			
-			historyMenu.style.color = 'red';
+			historyMenu.style.color = '#6dd5fa';
 			gameMenu.style.color = 'white';
 			mainBody.style.display = 'none';
 			gameBody.style.display = 'none';
