@@ -9,9 +9,8 @@ export class TournamentSetting extends Component {
 				<div id="tournament-title">Tournament</div>
 				<img src="/img/back.png" id="goBack"></img>
 				<div id="tournament-body">
-					<div id="tournament-start-button-box">
+					<div id="tournament-crown-box">
 						<img id="crown" src="/img/crown.png"></img>
-						<div id="tournament-start-button">start</div>
 					</div>
 					<div id="tournament-players">
 						<div id="tournament-nick">Winner</div>
@@ -35,6 +34,7 @@ export class TournamentSetting extends Component {
 						<input class="tournament-input" autocomplete="off" id="tournament-nick4" maxlength="8" placeholder="nickname4"></input>
 					</div>
 				</div>
+				<div id="tournament-start-button">S T A R T</div>
 			</div>
 		`;
 	}

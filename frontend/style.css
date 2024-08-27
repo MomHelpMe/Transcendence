@@ -1599,7 +1599,6 @@ div#tournament-box {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
 }
 
 div#tournament-title {
@@ -1608,8 +1607,8 @@ div#tournament-title {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin-bottom: 10px;
-	margin-top: 10px;
+	margin-bottom: 20px;
+	margin-top: 30px;
 	font-weight: 900;
 	color:#31363F;
     font-size: 3.0rem;
@@ -1619,7 +1618,7 @@ div#tournament-title {
 
 div#tournament-body {
 	width: 70%;
-	height: 80%;
+	height: 65%;
 	background-color: rgba(90, 93, 106, 0.05);
 	border-radius: 20px;
 	display: flex;
@@ -1627,31 +1626,32 @@ div#tournament-body {
 	align-items: center;
 }
 
-div#tournament-start-button-box {
+div#tournament-crown-box {
 	width: 90%;
-	height: 10%;
-	margin-top: 60px;
+	height: 5%;
+	margin-top: 30px;
 	display: flex;
-	justify-content: flex-end;
+	justify-content: flex-start;
 	position: relative;
-	margin-bottom: 50px;
+	margin-bottom: 30px;
 }
 
 img#crown {
-	width: 150px;
-	height: 150px;
+	width: 80px;
+	height: 80px;
 	position: absolute;
-	left: calc(50% - 75px);
-	top: -30px;
+	left: calc(50% - 40px);
+	top: -15px;
 }
 
 div#tournament-start-button {
-	width: 150px;
+	margin-top: 40px;
+	width: 500px;
 	height: 70px;
-	border-radius: 10px;
-	background-color: #31363F;
-	color: white;
-	font-size: 30px;
+	border-radius: 20px;
+	background-color: #3c4049;
+	color: #ffffff;
+	font-size: 50px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -1661,7 +1661,7 @@ div#tournament-start-button {
 }
 
 div#tournament-start-button:hover {
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5); /* 호버 시 더 깊은 그림자 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* 호버 시 더 깊은 그림자 */
     transform: translateY(-2px); /* 살짝 위로 이동 */
 }
 
@@ -1675,7 +1675,7 @@ div#tournament-players {
 div#tournament-nick {
 	width: 200px;
 	height: 80px;
-	background-color: rgba(90, 93, 106, 0.05);
+	background-color: white;
 	border: 2px solid black;
 	border-radius: 20px;
 	color: black;
@@ -1688,6 +1688,8 @@ div#tournament-nick {
 }
 
 div#tournament-lines {
+	margin-top: 20px;
+	margin-bottom: 20px;
 	width: 100%;
 	height: 10%;
 	display: flex;
@@ -1696,7 +1698,7 @@ div#tournament-lines {
 
 div#tournament-line1 {
 	width: 520px;
-	height: 30px;
+	height: 40px;
 	background-color: rgba(90, 93, 106, 0);
 	border-top: 2px solid black;
 	border-right: 2px solid black;
@@ -1704,6 +1706,7 @@ div#tournament-line1 {
 }
 
 div#tournament-line2 {
+	margin-top: 10px;
 	width: 230px;
 	height: 40px;
 	background-color: rgba(90, 93, 106, 0);
@@ -1717,7 +1720,7 @@ div#tournament-line2 {
 input.tournament-input {
 	width: 200px;
 	height: 80px;
-	background-color: rgba(90, 93, 106, 0.05);
+	background-color: white;
 	border: 2px solid black;
 	border-radius: 20px;
 	color: black;
