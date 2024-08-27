@@ -10,7 +10,7 @@ from channels.exceptions import DenyConnection
 
 SCREEN_HEIGHT = 750
 SCREEN_WIDTH = 1250
-MAX_SCORE = 150
+MAX_SCORE = 15
 
 
 class GameState:
@@ -75,7 +75,6 @@ class GameConsumer(AsyncWebsocketConsumer):
 
             # Start ball movement if not already running
             if self.room_group_name not in GameConsumer.game_tasks:
-                print("starting game loop!")
                 GameConsumer.game_tasks[self.room_group_name] = asyncio.create_task(
                     self.game_loop()
                 )
@@ -196,12 +195,51 @@ class GameConsumer(AsyncWebsocketConsumer):
                     await self.send_game_state()
                     await asyncio.sleep(0.00390625)
                     await state.map.init()
+                    if state.score[0] >= MAX_SCORE:
+                        await asyncio.sleep(0.1)
+                        await self.send_game_result(0)
+                        await asyncio.sleep(0.1)
+                        await self.close()
+                        break
+                    elif state.score[1] >= MAX_SCORE:
+                        await asyncio.sleep(0.1)
+                        await self.send_game_result(1)
+                        await asyncio.sleep(0.1)
+                        await self.close()
+                        break
                 else:
                     await asyncio.sleep(0.00390625)
                 count += 1
         except asyncio.CancelledError:
             # Handle the game loop cancellation
             print("Game loop cancelled for", self.room_group_name)
+            await self.close()
+
+    async def send_game_result(self, winner):
+        state = GameConsumer.game_states[self.room_group_name]
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "game_result_message",
+                "score": state.score,
+                "winner": winner,
+            },
+        )
+    
+    async def game_result_message(self, event):
+        score = event["score"]
+        winner = event["winner"]
+
+        # Send the game result to the WebSocket
+        await self.send(
+            text_data=json.dumps(
+                {
+                    "type": "game_result",
+                    "score": score,
+                    "winner": winner,
+                }
+            )
+        )
 
     async def send_game_state(self):
         state = GameConsumer.game_states[self.room_group_name]

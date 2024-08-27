@@ -145,7 +145,6 @@ export class GameCore extends Component {
 
 			update(mapDiff) {
 				mapDiff.forEach(diff => {
-					console.log(mapDiff)
 					this.map[diff[0]][diff[1]] = diff[2];
 					new Particles(diff[1], diff[0], diff[2]);
 					playSound('collision');
@@ -334,11 +333,21 @@ export class GameCore extends Component {
 				penaltyTime = data.penalty_time;
 				score.update(data.score);
 				map.update(data.map_diff);
+			} else if (data.type === 'game_result') {
+				this.gameSocket.close();
+				socketList.pop();
+				if (data.winner === 0) {
+					alert(`${PLAYER[0]} wins!`);
+				} else {
+					alert(`${PLAYER[1]} wins!`);
+				}
+				changeUrl('/main', false);
 			}
 		};
 
 		let isPoolingLeft = false, isPoolingRight = false;
 		const handleKeyPresses = () => {
+			if (this.gameSocket.readyState !== WebSocket.OPEN) return;
 			if (this.keysPressed['w']) {
 				this.gameSocket.send(JSON.stringify({ 'action': 'move_up', 'bar': 'left' }));
 				leftBar.targetY -= 5;
