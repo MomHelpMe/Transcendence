@@ -6,10 +6,11 @@ export class TournamentSetting extends Component {
 	template () {
 		return `
 			<div id="tournament-box">
-				<div id="tournament-go-history">history</div>
+				<div id="tournament-game-menu">Game</div>
+				<div id="tournament-history-menu">History</div>
 				<div id="tournament-title">Tournament</div>
 				<img src="/img/back.png" id="goBack"></img>
-				<div id="tournament-body">
+				<div id="tournament-game-body">
 					<div id="tournament-crown-box">
 						<img id="crown" src="/img/crown.png"></img>
 					</div>
@@ -48,9 +49,19 @@ export class TournamentSetting extends Component {
 		this.addEvent('click', '#tournament-start-button', (event) => {
 			console.log("you press start button!!");
 		});
+
+		this.addEvent('click', '#tournament-game-menu', (event) => {
+			const gameMenu = document.querySelector('#tournament-game-menu');
+			const historyMenu = document.querySelector('#tournament-history-menu');
+			gameMenu.style.color = 'red';
+			historyMenu.style.color = 'white';
+		});
 		
-		this.addEvent('click', '#tournament-go-history', (event) => {
-			console.log("you press go history button!!");
+		this.addEvent('click', '#tournament-history-menu', (event) => {
+			const gameMenu = document.querySelector('#tournament-game-menu');
+			const historyMenu = document.querySelector('#tournament-history-menu');
+			historyMenu.style.color = 'red';
+			gameMenu.style.color = 'white';
 		});
 	}
 }

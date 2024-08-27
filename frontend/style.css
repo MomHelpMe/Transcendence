@@ -1601,11 +1601,11 @@ div#tournament-box {
 	align-items: center;
 }
 
-div#tournament-go-history {
+div#tournament-game-menu {
 	position: absolute;
 	top: 0;
 	padding-top: 5px;
-	left: 50px;
+	left: 30px;
 	width: 150px;
 	height: 60px;
 	font-size: 30px;
@@ -1613,15 +1613,38 @@ div#tournament-go-history {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	clip-path: polygon(0% 0%, 100% 0%, 90% 100%, 10% 100%);
+	clip-path: polygon(0% 0%, 100% 0%, 92% 100%, 8% 100%);
 	background-color: black; /* 기본 배경색 */
 	color: #fff; /* 기본 텍스트 색상 */
 	cursor: pointer;
 	transition: background-color 0.3s ease, color 0.3s ease; /* 애니메이션 효과 */
 }
 
-div#tournament-go-history:hover {
-    background-color: #444;  /* 배경색 약간 변경 */
+div#tournament-game-menu:hover {
+	color: #FF4C4C;
+}
+
+div#tournament-history-menu {
+	position: absolute;
+	top: 0;
+	padding-top: 5px;
+	left: 180px;
+	width: 150px;
+	height: 60px;
+	font-size: 30px;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	clip-path: polygon(0% 0%, 100% 0%, 92% 100%, 8% 100%);
+	background-color: black; /* 기본 배경색 */
+	color: #fff; /* 기본 텍스트 색상 */
+	cursor: pointer;
+	transition: background-color 0.3s ease, color 0.3s ease; /* 애니메이션 효과 */
+}
+
+div#tournament-history-menu:hover {
+	color: #FF4C4C;
 }
 
 div#tournament-title {
@@ -1639,7 +1662,7 @@ div#tournament-title {
 	
 }
 
-div#tournament-body {
+div#tournament-game-body {
 	width: 70%;
 	height: 65%;
 	background-color: rgba(90, 93, 106, 0.05);
