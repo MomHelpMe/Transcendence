@@ -10,29 +10,26 @@ from channels.exceptions import DenyConnection
 
 SCREEN_HEIGHT = 750
 SCREEN_WIDTH = 1250
+MAX_SCORE = 150
 
 
 class GameState:
     def __init__(self):
         print("initializing game state!")
         self.map = GameMap()
-        self.left_bar = Bar(
-            0,
-            Bar.X_GAP,
-            SCREEN_HEIGHT // 2 - Bar.HEIGHT // 2,
-            0
-        )
+        self.left_bar = Bar(0, Bar.X_GAP, SCREEN_HEIGHT // 2 - Bar.HEIGHT // 2, 0)
         self.right_bar = Bar(
             1,
             SCREEN_WIDTH - Bar.WIDTH - Bar.X_GAP,
             SCREEN_HEIGHT // 2 - Bar.HEIGHT // 2,
-            SCREEN_WIDTH - Bar.WIDTH
+            SCREEN_WIDTH - Bar.WIDTH,
         )
         self.left_ball = Ball(0, SCREEN_HEIGHT, SCREEN_WIDTH, self.left_bar)
         self.right_ball = Ball(1, SCREEN_HEIGHT, SCREEN_WIDTH, self.right_bar)
         self.score = [0, 0]
         self.player = ["player1", "player2"]
         self.penalty_time = [0, 0]
+
 
 class GameConsumer(AsyncWebsocketConsumer):
     game_tasks = {}
@@ -116,9 +113,13 @@ class GameConsumer(AsyncWebsocketConsumer):
             # Decode JWT token
             decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
             uid = decoded.get("id")
-            print(f"uid: {uid}", f"room_name: {self.room_name}", str(uid) == str(self.room_name))
+            print(
+                f"uid: {uid}",
+                f"room_name: {self.room_name}",
+                str(uid) == str(self.room_name),
+            )
             # Check if uid matches the room_name
-            if  str(uid) == str(self.room_name):
+            if str(uid) == str(self.room_name):
                 return True
             else:
                 return False
@@ -132,7 +133,9 @@ class GameConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         # Leave room group
         if self.authenticated:
-            await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+            await self.channel_layer.group_discard(
+                self.room_group_name, self.channel_name
+            )
             # Decrease the client count for this room
             if self.room_group_name in GameConsumer.client_counts:
                 GameConsumer.client_counts[self.room_group_name] -= 1
@@ -143,7 +146,6 @@ class GameConsumer(AsyncWebsocketConsumer):
                     del GameConsumer.client_counts[self.room_group_name]
             else:
                 GameConsumer.client_counts[self.room_group_name] = 0
-
 
     async def send_initialize_game(self):
         state = GameConsumer.game_states[self.room_group_name]
@@ -167,6 +169,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                     "ball_radius": Ball.RADIUS,
                     "map": state.map.map,
                     "player": state.player,
+                    "max_score": MAX_SCORE,
                 }
             )
         )

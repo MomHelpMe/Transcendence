@@ -32,9 +32,9 @@ export class GameCore extends Component {
 		};
 		let SCREEN_HEIGHT, SCREEN_WIDTH, BAR_HEIGHT, BAR_WIDTH, BAR_X_GAP,
 			BALL_RADIUS, LEFT_BAR_X, LEFT_BAR_Y, RIGHT_BAR_X, RIGHT_BAR_Y,
-			CELL_WIDTH, CELL_HEIGHT, PLAYER;
+			CELL_WIDTH, CELL_HEIGHT, PLAYER, MAX_SCORE;
 		let counter = 0;
-		let leftBar, rightBar, leftBall, rightBall, map, score, penaltyTime;
+		let leftBar, rightBar, leftBall, rightBall, map, score, penaltyTime = [0, 0];
 
 		console.log(canvas)
 		function playSound(soundName) {
@@ -68,8 +68,7 @@ export class GameCore extends Component {
 				ctx.lineWidth = 2;
 				Map.strokeRoundedRect(ctx, this.x, this.y, this.width, this.height, this.width / 2);
 				ctx.stroke();
-				if (penaltyTime[this.id] !== 0)
-				{
+				if (penaltyTime[this.id] !== 0) {
 					ctx.font = "bold 30px Arial";
 					ctx.textAlign = "center";
 					ctx.textBaseline = "middle";
@@ -108,12 +107,12 @@ export class GameCore extends Component {
 					const alpha = (index + 1) / (this.trail.length + 15);
 					const scale = (index / (this.trail.length + 1));
 					const radius = this.radius * scale;
-		
+
 					ctx.globalAlpha = alpha;  // 투명도 설정
 					ctx.fillStyle = this.color;
 					ctx.fillRect(pos.x - radius, pos.y - radius, radius * 2, radius * 2);
 				});
-		
+
 				ctx.globalAlpha = 1;
 				Map.strokeRoundedRect(ctx, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2, 6);
 				ctx.fillStyle = this.color;
@@ -274,27 +273,40 @@ export class GameCore extends Component {
 
 		class Score {
 			constructor() {
-				scoreCtx.textAlign = "center";
 				this.score = [0, 0];
 			}
-			
+
 			update(score) {
 				this.score = score;
 			}
-			
+
 			draw() {
 				scoreCtx.clearRect(0, 0, scoreCanvas.width, scoreCanvas.height);
+				scoreCtx.textAlign = "center";
 				scoreCtx.font = "25px Arial";
 				scoreCtx.fillStyle = COLOR[1];
-				scoreCtx.fillText(PLAYER[0], 125, 50);
+				scoreCtx.fillText(PLAYER[0], 200, 50);
 				scoreCtx.fillStyle = COLOR[0];
-				scoreCtx.fillText(PLAYER[1], 375, 50);
-				
+				scoreCtx.fillText(PLAYER[1], scoreCanvas.width - 200, 50);
+
+				scoreCtx.textAlign = "left";
 				scoreCtx.font = "100px Arial";
 				scoreCtx.fillStyle = COLOR[1];
-				scoreCtx.fillText(this.score[0], 125, 140);
+				let firstScore = this.score[0].toString();
+				scoreCtx.fillText(firstScore, 125, 140);
+
+				let firstScoreWidth = scoreCtx.measureText(firstScore).width;
+				scoreCtx.font = "50px Arial";
+				let scoreText = " / " + MAX_SCORE;
+				scoreCtx.fillText(scoreText, 125 + firstScoreWidth, 140);
+
+				scoreCtx.textAlign = "right";
 				scoreCtx.fillStyle = COLOR[0];
-				scoreCtx.fillText(this.score[1], 375, 140);
+				scoreCtx.fillText(scoreText, scoreCanvas.width - 125, 140);
+				let secondScore = this.score[1].toString();
+				let secondScoreX = scoreCanvas.width - 125 - scoreCtx.measureText(scoreText).width;
+				scoreCtx.font = "100px Arial";
+				scoreCtx.fillText(secondScore, secondScoreX, 140);
 			}
 		}
 
@@ -383,9 +395,10 @@ export class GameCore extends Component {
 			BAR_X_GAP = data.bar_x_gap;
 			BALL_RADIUS = data.ball_radius;
 			PLAYER = data.player;
+			MAX_SCORE = data.max_score;
 			canvas.width = SCREEN_WIDTH;
 			canvas.height = SCREEN_HEIGHT;
-			scoreCanvas.width = 500;
+			scoreCanvas.width = 1000;
 			scoreCanvas.height = 175;
 			CELL_WIDTH = canvas.width / data.map[0].length;
 			CELL_HEIGHT = canvas.height / data.map.length;
