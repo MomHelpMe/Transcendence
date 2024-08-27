@@ -1713,12 +1713,13 @@ div#tournament-challenge-text {
 div#tournament-game-body {
 	position: relative;
 	width: 70%;
-	height: 65%;
-	background-color: rgba(90, 93, 106, 0.05);
+	height: 70%;
 	border-radius: 30px;
 	display: none;
 	flex-direction: column;
 	align-items: center;
+	border: 3px solid gold; /* 금색 테두리 */
+	background-color: #6886bd;
 }
 
 div#tournament-crown-box {
@@ -1800,6 +1801,9 @@ div#tournament-line1 {
 	border-top: 4px solid black;
 	border-right: 4px solid black;
 	border-left: 4px solid black;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 div#tournament-line2 {
@@ -1812,6 +1816,9 @@ div#tournament-line2 {
 	border-left: 4px solid black;
 	margin-right: 145px;
 	margin-left: 145px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 input.tournament-input {
@@ -1849,8 +1856,8 @@ div#tournament-blank {
 div#tournament-history-body {
 	position: relative;
 	width: 70%;
-	height: 65%;
-	background-color: rgba(90, 93, 106, 0.05);
+	height: 70%;
+	background-color: rgba(137, 137, 141, 0.1);
 	border-radius: 30px;
 	display: none;
 	flex-direction: column;
@@ -1886,8 +1893,8 @@ div#tournament-prev-button:hover {
 div#tournament-game-name {
 	position: absolute;
 	top: 0px;
-	left: calc(50% - 100px);
-	width: 200px;
+	left: calc(50% - 200px);
+	width: 400px;
 	height: 60px;
 	display: flex;
 	justify-content: center;
@@ -1912,4 +1919,52 @@ div#tournament-next-button {
 div#tournament-next-button:hover {
 	border-left-color: #555; /* hover 시 삼각형 색상 밝게 변경 */
 	transform: scale(1.1); /* hover 시 삼각형 크기 확대 */
+}
+
+#tournament-nick.tournament-win {
+	background-color: #a8def2;
+	border: 3px solid gold; /* 금색 테두리 */
+}
+
+#tournament-nick.tournament-lose {
+	background-color: #d3d3d3;
+}
+
+#tournament-nick2.tournament-win {
+	background-color: #a8def2;
+	border: 3px solid gold; /* 금색 테두리 */
+}
+
+#tournament-nick2.tournament-lose {
+	background-color: #d3d3d3;
+}
+
+div#tournament-left-score{
+	width: 10px;
+	height: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 20px;
+	font-weight: 500;
+	margin-left: 10px;
+}
+
+div#tournament-right-score{
+	width: 10px;
+	height: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 20px;
+	font-weight: 500;
+	margin-right: 10px;
+}
+
+.tournament-win-score{
+	color:#f10000;
+}
+
+.tournament-lose-score{
+	color:black;
 }

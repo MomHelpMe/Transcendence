@@ -1,5 +1,6 @@
 import { Component } from "../core/Component.js";
 import { changeUrl } from "../core/router.js";
+import { TournamentHistory } from "./Tournament-History.js";
 
 export class TournamentSetting extends Component {
 
@@ -8,11 +9,20 @@ export class TournamentSetting extends Component {
 		//	tournament history 조회
 		//}
 
-		let idx = 0;
-		const max = 4;
-		const games = {
-			"game_info": '{ "game1": {"Jiko": 1, "PSY": 2}, "game2": {"KimYuna": 2, "BTS": 1}, "game3": {"PSY": 2, "KimYuna": 1} }'
+		this.games = {
+			"09/02": '{ "game1": {"Seonjo": 2, "Michang": 1}, "game2": {"Jiko": 3, "Jaehejun": 2}, "game3": {"Seonjo": 2, "Jiko": 3} }',
+			"10/02": '{ "game1": {"Jaehejun": 1, "Seonjo": 2}, "game2": {"Michang": 2, "Seunan": 1}, "game3": {"Seonjo": 2, "Michang": 3} }',
+			"10/12": '{ "game1": {"Michang": 2, "Jiko": 1}, "game2": {"Seonjo": 3, "Seunan": 2}, "game3": {"Michang": 1, "Seonjo": 3} }',
+			"10/25": '{ "game1": {"Jaehejun": 2, "Seunan": 3}, "game2": {"Michang": 3, "Seonjo": 2}, "game3": {"Seunan": 1, "Michang": 2} }',
+			"11/12": '{ "game1": {"Jiko": 2, "Jaehejun": 1}, "game2": {"Seunan": 3, "Michang": 2}, "game3": {"Jiko": 2, "Seunan": 3} }',
+			"12/25": '{ "game1": {"Michang": 2, "Seunan": 3}, "game2": {"Jiko": 3, "Seonjo": 2}, "game3": {"Seunan": 1, "Jiko": 2} }',
 		};
+		
+		for (let date in this.games) {
+			this.games[date] = JSON.parse(this.games[date]);
+		}
+
+		console.log(this.games);
 
 		return `
 			<div id="tournament-box">
@@ -51,37 +61,7 @@ export class TournamentSetting extends Component {
 					</div>
 					<div id="tournament-start-button">S T A R T</div>
 				</div>
-				<div id="tournament-history-body">
-					<div id="tournament-crown-box">
-						<img id="crown" src="/img/crown.png"></img>
-					</div>
-					<div id="tournament-players">
-						<div id="tournament-nick">Winner</div>
-					</div>
-					<div id="tournament-lines">
-						<div id="tournament-line1"></div>
-					</div>
-					<div id="tournament-players">
-						<div id="tournament-nick">TBD</div>
-						<div id="tournament-nick">TBD</div>
-					</div>
-					<div id="tournament-lines">
-						<div id="tournament-line2"></div>
-						<div id="tournament-line2"></div>
-					</div>
-					<div id="tournament-players">
-						<div id="tournament-nick2">TBD</div>
-						<div id="tournament-nick2">TBD</div>
-						<div id="tournament-blank"></div>
-						<div id="tournament-nick2">TBD</div>
-						<div id="tournament-nick2">TBD</div>
-					</div>
-					<div id="tournament-history-button-box">
-						<div id="tournament-prev-button"></div>
-						<div id="tournament-game-name">Game 1</div>
-						<div id="tournament-next-button"></div>
-					</div>
-				</div>
+				<div id="tournament-history-body"></div>
 			</div>
 		`;
 	}
@@ -110,6 +90,8 @@ export class TournamentSetting extends Component {
 		});
 		
 		this.addEvent('click', '#tournament-history-menu', (event) => {
+			if (!this.games) return;
+			this.game = this.games[this.idx];
 			const gameMenu = document.querySelector('#tournament-game-menu');
 			const historyMenu = document.querySelector('#tournament-history-menu');
 			const mainBody = document.querySelector('#tournament-main-body');
@@ -121,6 +103,8 @@ export class TournamentSetting extends Component {
 			mainBody.style.display = 'none';
 			gameBody.style.display = 'none';
 			historyBody.style.display = 'flex';
+
+			new TournamentHistory(historyBody, { gameInfo: this.games });
 		});
 	}
 }
