@@ -7,17 +7,17 @@ export class Menu extends Component {
 	translate() {
 		const languages = {
 			0: {
-				gameMenuTexts: ["Local Game", "Multi Game", "AI", "Tournament"],
+				gameMenuTexts: ["Local Game", "Multi Game", "Tournament"],
 				userMenuTexts: ["Friends", "Profile", "Logout"],
 				lanText: "Change Language"
 			},
 			1: {
-				gameMenuTexts: ["로컬 게임", "멀티 게임", "AI", "토너먼트"],
+				gameMenuTexts: ["로컬 게임", "멀티 게임", "토너먼트"],
 				userMenuTexts: ["친구", "프로필", "로그아웃"],
 				lanText: "언어 변경"
 			},
 			2: {
-				gameMenuTexts: ["ローカルゲーム", "マルチゲーム", "AI", "トーナメント"],
+				gameMenuTexts: ["ローカルゲーム", "マルチゲーム", "トーナメント"],
 				userMenuTexts: ["友達", "プロフィール", "ログアウト"],
 				lanText: "言語を変更"
 			}
@@ -44,7 +44,7 @@ export class Menu extends Component {
 	}
 
 	mounted(){
-		new List(document.querySelector("ul#gameMenu"), { className: "gameMode", ids: ["LocalGame", "MultiGame", "AI", "Tournament"], contents: this.translations.gameMenuTexts});
+		new List(document.querySelector("ul#gameMenu"), { className: "gameMode", ids: ["LocalGame", "MultiGame", "Tournament"], contents: this.translations.gameMenuTexts});
 		new List(document.querySelector("ul#userMenu"), { className: "showInfo", ids: ["Friends", "Profile", "Logout"], contents: this.translations.userMenuTexts});
 	}
 
