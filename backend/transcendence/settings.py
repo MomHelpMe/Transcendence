@@ -1,13 +1,20 @@
 from pathlib import Path
 import os
+from utils.logger import setup_logging
+import logging
+from rest_framework.views import exception_handler
+from rest_framework.response import Response
+
+
+
 # TEST: 로컬에서 테스트할 때 사용, docker-compose 이용 시 환경변수로 알아서 설정됨
 from dotenv import load_dotenv
 
 load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+setup_logging(level=logging.INFO)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -55,11 +62,26 @@ INSTALLED_APPS = [
     "login.apps.LoginConfig",
     "game",
 ]
+def custom_exception_handler(exc, context):
+    view = context.get('view', None)
+    func_name = view.__class__.__name__ if view else 'UnknownFunction'
+
+    logger = logging.getLogger(func_name)
+
+    logger.error(f"Exception: {exc.__class__.__name__} - {str(exc)} \n Context: {context}")
+
+    response = exception_handler(exc, context)
+
+    if response is not None:
+        return response
+    else:
+        return Response({'Unkwon Error': 'An error occurred.'}, status=500)
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'EXCEPTION_HANDLER': 'transcendence.custom_exception_handler.custom_exception_handler',
 }
 
 MIDDLEWARE = [

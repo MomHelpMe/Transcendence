@@ -1,9 +1,15 @@
 import { Component } from "../core/Component.js";
 import { changeUrl } from "../core/router.js";
+import { parseJWT } from "../core/jwt.js";
 
 export class EditProfile extends Component {
 
 	translate() {
+		const payload = parseJWT();
+
+		if (parseInt(this.props.uid) !== payload.id)
+			changeUrl("/404", false);
+
 		const languages = {
 			0: {
 				headText: "Edit Profile",
@@ -110,7 +116,7 @@ export class EditProfile extends Component {
 							</div>
 							<div id="url-upload-wrapper">
 								<label for="image-url">${translations.urlText}</label>
-								<input type="text" class="profile-image-url" value="${this.state.img_url}" placeholder="Enter image URL" readonly>
+								<input type="text" autocomplete="off" class="profile-image-url" value="${this.state.img_url}" placeholder="Enter image URL" readonly>
 							</div>
 						</div>
 						<div id="edit-2FA">
@@ -124,7 +130,7 @@ export class EditProfile extends Component {
 					<div id="changedProfile">
 						<div class="edit" id="edit-nick">
 							<label for="nickname">${translations.nickText}:</label>
-							<input type="text" id="nickname" value="${this.state.nickname}" autocomplete="off" maxlength="10">
+							<input type="text" id="nickname" value="${this.state.nickname}" autocomplete="off" maxlength="8">
 						</div>
 						<div class="edit" id="edit-img">
 							<div id="image-preview">
@@ -132,7 +138,7 @@ export class EditProfile extends Component {
 							</div>
 							<div id="url-upload-wrapper">
 								<label for="image-url">${translations.urlText}</label>
-								<input type="text" class="profile-image-url" id="image-url" value="${this.state.img_url}" placeholder="Enter image URL">
+								<input type="text" autocomplete="off" class="profile-image-url" id="image-url" value="${this.state.img_url}" placeholder="Enter image URL">
 							</div>
 						</div>
 						<div id="edit-2FA">
@@ -147,7 +153,7 @@ export class EditProfile extends Component {
 	}
 
 	setEvent() {
-		this.addEvent('click', '#goBack', (event) => {
+		this.addEvent('click', '#goBack', () => {
 			window.history.back();
 		});
 		
@@ -158,15 +164,15 @@ export class EditProfile extends Component {
 			}
 		});
 
-		this.addEvent('click', '#deleteButton', (event) => {
+		this.addEvent('click', '#deleteButton', () => {
 			document.getElementById('deleteDoubleCheck').style.display = 'flex';
 		});
 
-		this.addEvent('click', '#deleteNoButton', (event) => {
+		this.addEvent('click', '#deleteNoButton', () => {
 			document.getElementById('deleteDoubleCheck').style.display = 'none';
 		});
 
-		this.addEvent('click', '#deleteYesButton', (event) => {
+		this.addEvent('click', '#deleteYesButton', () => {
 			//API!! ME DELETE
 			fetch("https://localhost:443/api/me/", {
 				method: 'DELETE',
@@ -186,10 +192,6 @@ export class EditProfile extends Component {
 			const nickname = document.getElementById('nickname').value;
 			const imageUrl = document.getElementById('image-url').value;
 			const is_2FA = document.getElementById('2fa-toggle').checked;	
-
-			console.log(nickname);
-			console.log(imageUrl);
-			console.log(is_2FA);
 
 			// Create FormData object to send file and other data
 			const formData = new FormData();

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -f "requirements.txt" ]; then
-    pip install --upgrade pip && pip install -r requirements.txt
+    pip install -q --upgrade pip && pip install -q -r requirements.txt
     echo "Installed packages from requirements.txt."
 else
     echo "requirements.txt not found."

@@ -1,0 +1,44 @@
+[
+    {
+        "type": "constructor",
+        "inputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "addTournament",
+        "inputs": [
+            {
+                "name": "userId",
+                "type": "uint256",
+                "internalType": "uint256"
+            },
+            {
+                "name": "description",
+                "type": "string",
+                "internalType": "string"
+            }
+        ],
+        "outputs": [],
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "getTournaments",
+        "inputs": [
+            {
+                "name": "userId",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "string[]",
+                "internalType": "string[]"
+            }
+        ],
+        "stateMutability": "view"
+    }
+]
