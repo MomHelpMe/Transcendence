@@ -1662,12 +1662,55 @@ div#tournament-title {
 	
 }
 
+div#tournament-main-body {
+	width: 70%;
+	height: 70%;
+	background-color: rgba(90, 93, 106, 0.05);
+	border-radius: 30px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+img#tournament-img {
+	margin-top: 30px;
+	width: 400px;
+	height: 400px;
+}
+
+div#tournament-challenge-text {
+	margin-top: 30px;
+	width: 800px;
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 50px;
+	font-weight: 700;
+	color: rgb(0, 0, 0);
+
+	/* 파란색 계열 그라디언트 텍스트 스타일링 */
+	background: linear-gradient(20deg, #1e3c72, #6dd5fa);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+
+	/* 그림자 효과 */
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 
+				 4px 4px 8px rgba(0, 0, 0, 0.2);
+
+	/* 텍스트 변환 및 간격 조절 */
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: center;
+}
+
 div#tournament-game-body {
 	width: 70%;
 	height: 65%;
 	background-color: rgba(90, 93, 106, 0.05);
 	border-radius: 30px;
-	display: flex;
+	display: none;
 	flex-direction: column;
 	align-items: center;
 }
@@ -1698,7 +1741,7 @@ div#tournament-start-button {
 	background-color: #3c4049;
 	color: #ffffff;
 	font-size: 50px;
-	display: flex;
+	display: none;
 	justify-content: center;
 	align-items: center;
 	box-shadow: 0 0 0 rgba(0, 0, 0, 0);
@@ -1722,7 +1765,7 @@ div#tournament-nick {
 	width: 200px;
 	height: 80px;
 	background-color: white;
-	border: 2px solid black;
+	border: 4px solid black;
 	border-radius: 20px;
 	color: black;
 	font-size: 30px;
@@ -1746,9 +1789,9 @@ div#tournament-line1 {
 	width: 520px;
 	height: 40px;
 	background-color: rgba(90, 93, 106, 0);
-	border-top: 2px solid black;
-	border-right: 2px solid black;
-	border-left: 2px solid black;
+	border-top: 4px solid black;
+	border-right: 4px solid black;
+	border-left: 4px solid black;
 }
 
 div#tournament-line2 {
@@ -1756,9 +1799,9 @@ div#tournament-line2 {
 	width: 230px;
 	height: 40px;
 	background-color: rgba(90, 93, 106, 0);
-	border-top: 2px solid black;
-	border-right: 2px solid black;
-	border-left: 2px solid black;
+	border-top: 4px solid black;
+	border-right: 4px solid black;
+	border-left: 4px solid black;
 	margin-right: 145px;
 	margin-left: 145px;
 }
@@ -1767,7 +1810,7 @@ input.tournament-input {
 	width: 200px;
 	height: 80px;
 	background-color: white;
-	border: 2px solid black;
+	border: 4px solid black;
 	border-radius: 20px;
 	color: black;
 	font-size: 30px;
@@ -1778,4 +1821,14 @@ input.tournament-input {
 
 div#tournament-blank {
 	width: 60px;
+}
+
+div#tournament-history-body {
+	width: 70%;
+	height: 70%;
+	background-color: rgba(90, 93, 106, 0.05);
+	border-radius: 30px;
+	display: none;
+	flex-direction: column;
+	align-items: center;
 }
