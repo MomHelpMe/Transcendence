@@ -6,6 +6,7 @@ export class TournamentSetting extends Component {
 	template () {
 		return `
 			<div id="tournament-box">
+				<div id="tournament-go-history">history</div>
 				<div id="tournament-title">Tournament</div>
 				<img src="/img/back.png" id="goBack"></img>
 				<div id="tournament-body">
@@ -42,6 +43,14 @@ export class TournamentSetting extends Component {
 	setEvent() {
 		this.addEvent('click', '#goBack', (event) => {
 			window.history.back();
+		});
+		
+		this.addEvent('click', '#tournament-start-button', (event) => {
+			console.log("you press start button!!");
+		});
+		
+		this.addEvent('click', '#tournament-go-history', (event) => {
+			console.log("you press go history button!!");
 		});
 	}
 }
