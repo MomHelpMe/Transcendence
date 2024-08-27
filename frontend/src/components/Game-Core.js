@@ -34,7 +34,7 @@ export class GameCore extends Component {
 			BALL_RADIUS, LEFT_BAR_X, LEFT_BAR_Y, RIGHT_BAR_X, RIGHT_BAR_Y,
 			CELL_WIDTH, CELL_HEIGHT;
 		let counter = 0;
-		let leftBar, rightBar, leftBall, rightBall, map;
+		let leftBar, rightBar, leftBall, rightBall, map, score;
 
 		console.log(canvas)
 		function playSound(soundName) {
@@ -97,7 +97,7 @@ export class GameCore extends Component {
 
 			draw() {
 				this.trail.forEach((pos, index) => {
-					const alpha = (index + 1) / (this.trail.length + 10);
+					const alpha = (index + 1) / (this.trail.length + 15);
 					const scale = (index / (this.trail.length + 1));
 					const radius = this.radius * scale;
 		
@@ -115,7 +115,7 @@ export class GameCore extends Component {
 				this.x = this.targetX;
 				this.y = this.targetY;
 				// 10 프레임마다 잔상 저장
-				if (counter % 4 === 0) {
+				if (counter % 3 === 0) {
 					this.trail.push({ x: this.x, y: this.y });
 
 					if (this.trail.length > 10) {
@@ -264,6 +264,26 @@ export class GameCore extends Component {
 			}
 		}
 
+		class Score {
+			constructor() {
+				scoreCtx.font = "100px Arial";
+				scoreCtx.textAlign = "center";
+				this.score = [0, 0];
+			}
+
+			update(score) {
+				this.score = score;
+			}
+
+			draw() {
+				scoreCtx.clearRect(0, 0, scoreCanvas.width, scoreCanvas.height);
+				scoreCtx.fillStyle = COLOR[1];
+				scoreCtx.fillText(this.score[0], 125, 100);
+				scoreCtx.fillStyle = COLOR[0];
+				scoreCtx.fillText(this.score[1], 375, 100);
+			}
+		}
+
 		this.gameSocket.onopen = () => {
 			const token = getCookie("jwt");
 			this.gameSocket.send(JSON.stringify({ 'action': 'authenticate', 'token': token }));
@@ -283,6 +303,7 @@ export class GameCore extends Component {
 				leftBall.targetY = data.left_ball_y;
 				rightBall.targetX = data.right_ball_x;
 				rightBall.targetY = data.right_ball_y;
+				score.update(data.score);
 				map.update(data.map_diff);
 			}
 		};
@@ -332,6 +353,7 @@ export class GameCore extends Component {
 			leftBall.draw();
 			rightBall.draw();
 			Particles.drawAll();
+			score.draw();
 		}
 
 		function initializeGame(data) {
@@ -349,15 +371,6 @@ export class GameCore extends Component {
 			canvas.height = SCREEN_HEIGHT;
 			scoreCanvas.width = 500;
 			scoreCanvas.height = 150;
-			var text = "2 : 3"
-			// var blur = 10;
-			// var width = scoreCtx.measureText(text).width + blur * 2;
-			// scoreCtx.textBaseline = "top"
-			// scoreCtx.shadowColor = "#000"
-			// scoreCtx.shadowOffsetX = width;
-			// scoreCtx.shadowOffsetY = 0;
-			// scoreCtx.shadowBlur = blur;
-			scoreCtx.fillText(text, -10, 0);
 			CELL_WIDTH = canvas.width / data.map[0].length;
 			CELL_HEIGHT = canvas.height / data.map.length;
 
@@ -366,6 +379,7 @@ export class GameCore extends Component {
 			rightBar = new Bar(RIGHT_BAR_X, RIGHT_BAR_Y, BAR_WIDTH, BAR_HEIGHT, SCREEN_HEIGHT, 1);
 			leftBall = new Ball(data.left_ball_x, data.left_ball_y, BALL_RADIUS, BALL_COLOR[0]);
 			rightBall = new Ball(data.right_ball_x, data.right_ball_y, BALL_RADIUS, BALL_COLOR[1]);
+			score = new Score();
 
 			console.log(SCREEN_HEIGHT, SCREEN_WIDTH, BAR_HEIGHT, BAR_WIDTH, BALL_RADIUS);
 			setInterval(interpolate, 3);
