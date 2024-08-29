@@ -5,7 +5,12 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import User, Friend, Game, Tournament
-from .serializers import UserSerializer, FriendSerializer, FriendRequestSerializer, GameSerializer, TournamentSerializer
+from .serializers import (
+    UserSerializer,
+    LanguageSerializer,
+    FriendSerializer,
+    FriendRequestSerializer,
+)
 from login.views import decode_jwt
 from drf_yasg.utils import swagger_auto_schema
 
@@ -54,6 +59,31 @@ class UserDetailView(APIView):
         response = Response()
         response.delete_cookie("jwt")
         return response
+
+
+class LanguageView(APIView):
+    def get(self, request):
+        payload = decode_jwt(request)
+        if not payload:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        user = get_object_or_404(User, pk=payload.get("id"))
+        return Response({"language": user.language})
+
+    @swagger_auto_schema(request_body=LanguageSerializer, responses={200: LanguageSerializer()})
+    def put(self, request):
+        payload = decode_jwt(request)
+        if not payload:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        user = get_object_or_404(User, pk=payload.get("id"))
+        serializer = LanguageSerializer(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class FriendDetailView(APIView):
