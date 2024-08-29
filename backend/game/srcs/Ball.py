@@ -52,8 +52,7 @@ class Ball:
             if (bar.state == BarState.RELEASE):
                 self.life = bar.get_ball_power()
                 speed = self.SPEED[self.life]
-                self.x = bar.min_x + (bar.width if bar.id == 0 else 0) 
-                print("speed", speed)
+                self.x = bar.min_x + (bar.width if bar.id == 0 else 0)
             # 바와의 충돌로 dx를 반전시키고, dy를 새로 계산
             relative_intersect_y = (bar.y + (bar.height // 2)) - self.y
             normalized_relative_intersect_y = relative_intersect_y / (
