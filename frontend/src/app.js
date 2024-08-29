@@ -8,19 +8,6 @@ class App {
 	constructor() {
 		this.app = document.querySelector("#app");
 		this.lan = { value: 0 };
-		fetch("https://localhost:443/api/language/", {
-			method: 'GET',
-			credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
-		})
-		.then(response => {
-			if (!response.ok){
-				return null;
-			} 
-			return response.json();
-		})
-		.then(data => {
-			if (data) this.lan.value = data.language;
-		});
 	}
 }
 

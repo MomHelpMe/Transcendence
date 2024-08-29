@@ -154,7 +154,23 @@ export const initializeRouter = () => {
 	window.addEventListener("popstate", async () => {
 		await parsePath(window.location.pathname);
 	});
-	parsePath(window.location.pathname);
+	fetch("https://localhost:443/api/language/", {
+		method: 'GET',
+		credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+	})
+	.then(response => {
+		if (!response.ok){
+			console.log("so bad");
+			return null;
+		} 
+		return response.json();
+	})
+	.then(data => {
+		if (data){
+			root.lan.value = data.language;
+		} 
+		parsePath(window.location.pathname);
+	});
 };
 
 async function checkAuth() {
