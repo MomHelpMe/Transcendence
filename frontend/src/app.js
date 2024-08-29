@@ -8,8 +8,6 @@ class App {
 	constructor() {
 		this.app = document.querySelector("#app");
 		this.lan = { value: 0 };
-		console.log("start!!");
-		console.log(this.lan);
 	}
 }
 
