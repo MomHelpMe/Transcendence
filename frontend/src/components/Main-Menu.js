@@ -46,49 +46,55 @@ export class Menu extends Component {
 		new List(document.querySelector("ul#gameMenu"), { className: "gameMode", ids: ["LocalGame", "MultiGame", "Tournament"], contents: this.translations.gameMenuTexts});
 		new List(document.querySelector("ul#userMenu"), { className: "showInfo", ids: ["Friends", "Profile", "Logout"], contents: this.translations.userMenuTexts});
 	}
-
+	
 	setEvent () {
+		
 		this.addEvent('click', '#Friends', () => {
 			changeUrl("/main/friends");
 		});
-
+		
 		this.addEvent('click', '#LocalGame', () => {
 			changeUrl(`/game/local/${this.uid}`);
 		});
-
+		
 		this.addEvent('click', "#MultiGame", () => {
 			changeUrl("/main/matching");
 		});
-
+		
 		this.addEvent('click', "#Tournament", () => {
 			changeUrl("/main/tournament");
 		});
-
+		
+		function storeLang(value) {
+			fetch("https://localhost:443/api/language/", {
+				method: 'PUT',
+				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+				headers: {
+					'Content-Type': 'application/json' // JSON 데이터임을 명시
+				},
+				body: JSON.stringify({
+					language: value
+				})
+			})
+			.then(response => {
+				if (!response.ok) changeUrl("/");
+			})
+			changeUrl("/main");
+		}
+		
 		this.addEvent('click', '#enButton', () => {
 			this.props.lan.value = 0;
-			// API!!! this.props.lan.value를 db에 저장
-			// fetch(){
-			// 	this.props.lan.value 저장
-			// }
-			changeUrl("/main")
+			storeLang(this.props.lan.value);
 		});
 		
 		this.addEvent('click', '#koButton', () => {
 			this.props.lan.value = 1;
-			// API!!! this.props.lan.value를 db에 저장
-			// fetch(){
-			// 	this.props.lan.value 저장
-			// }
-			changeUrl("/main")
+			storeLang(this.props.lan.value);
 		});
 		
 		this.addEvent('click', '#jpButton', () => {
 			this.props.lan.value = 2;
-			// API!!! this.props.lan.value를 db에 저장
-			// fetch(){
-			// 	this.props.lan.value 저장
-			// }
-			changeUrl("/main")
+			storeLang(this.props.lan.value);
 		});
 
 		this.addEvent('click', '#Profile', () => {

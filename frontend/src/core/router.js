@@ -96,11 +96,24 @@ export async function parsePath(path) {
 					});
 				} else {
 					// API!!! jwt가 있으면 해당 유저의 데이터베이스에서 언어 번호 (0 or 1 or 2) 얻어오기
-					// fetch
-					// if (respose.ok) {
-					//	this.lan.value = data.value;
-					// }
-					return changeUrl("/main", false);
+					fetch("https://localhost:443/api/language/", {
+						method: 'GET',
+						credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+					})
+					.then(response => {
+						if (!response.ok){
+							changeUrl("/");
+							return null;
+						} 
+						return response.json();
+					})
+					.then(data => {
+						if (data){
+							console.log(data.language);
+							root.lan.value = data.language;
+							changeUrl('/main'); // 메인 페이지로 이동
+						}
+					});
 				}
 			}
 			else return changeUrl("/", false);

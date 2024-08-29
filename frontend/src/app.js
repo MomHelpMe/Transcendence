@@ -8,11 +8,19 @@ class App {
 	constructor() {
 		this.app = document.querySelector("#app");
 		this.lan = { value: 0 };
-		// API!!! jwt가 있으면 해당 유저의 데이터베이스에서 언어 번호 (0 or 1 or 2) 얻어오기
-		// fetch
-		// if (respose.ok) {
-		//	this.lan.value = data.value;
-		// }
+		fetch("https://localhost:443/api/language/", {
+			method: 'GET',
+			credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+		})
+		.then(response => {
+			if (!response.ok){
+				return null;
+			} 
+			return response.json();
+		})
+		.then(data => {
+			if (data) this.lan.value = data.language;
+		});
 	}
 }
 

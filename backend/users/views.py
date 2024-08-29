@@ -77,6 +77,7 @@ class LanguageView(APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         user = get_object_or_404(User, pk=payload.get("id"))
+        print(request.data.get("language"))
         serializer = LanguageSerializer(user, data=request.data, partial=True)
 
         if serializer.is_valid():
