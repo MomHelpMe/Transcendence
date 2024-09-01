@@ -9,6 +9,7 @@ import { Error } from "../components/Error.js";
 import { Match } from "../components/Match.js";
 import { Tournament } from "../components/Tournament.js";
 import { GameLocal } from "../components/Game-Local.js";
+import { GameMatching } from "../components/Game-matching.js";
 
 export const createRoutes = (root) => {
 	return {
@@ -42,6 +43,10 @@ export const createRoutes = (root) => {
 		"/game/local/:uid": {
 			component: (props) => new GameLocal(root.app, props),
 			props: { uid: "" }
+		},
+		"/game/vs/:room": {
+			component: (props) => new GameMatching(root.app, props),
+			props: { room: "" }
 		},
 	};
 };

@@ -14,8 +14,8 @@ export class WaitForMatch extends Component {
 				const data = JSON.parse(e.data);
 				console.log(data);
 				if (data.action === 'start_game') {
-					console.log("start game on " + data.room_id);
-					changeUrl('/game/vs/' + data.room_id);
+					console.log("start game on " + data.room_name);
+					changeUrl('/game/vs/' + data.room_name);
 				}
 			};
 		}
