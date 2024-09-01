@@ -1471,13 +1471,13 @@ div#match-title {
 div#matchingRotate {
 	border-radius: 50%;
 	background-color: rgb(19, 10, 61);
-    width: 700px;
-    height: 700px;
+	width: 700px;
+	height: 700px;
     position: absolute;
     top: calc(50% - 280px);
     left: calc(50% - 350px);
     border-radius: 50%;
-	animation: rotate 4s linear infinite, dayNightCycle 10s infinite alternate;
+	animation: rotate 6s linear infinite, dayNightCycle 3s infinite alternate;
 	border-radius: 50%;
 	box-shadow:
 		0 0 0 10px #f2f558,
@@ -1490,11 +1490,11 @@ div#matchingRotate {
 	0% {
 		background-color: rgb(161, 228, 255); /* 낮 */
 	}
-	50% {
-		background-color: rgb(19, 10, 61); /* 밤 */
+	25% {
+		background-color: rgb(161, 228, 255); /* 낮 */
 	}
 	100% {
-		background-color: rgb(161, 228, 255); /* 낮 */
+		background-color: rgb(19, 10, 61); /* 밤 */
 	}
 }
 
@@ -1513,7 +1513,7 @@ div#red-box {
 	left: 300px;
 	height: 100px;
 	width: 100px;
-	animation: rotate 4s linear infinite;
+	animation: rotate 6s linear infinite;
 }
 
 div#redBall {
@@ -1632,7 +1632,7 @@ div#yellowParticle {
 	width: 60px;
 	background-color: rgb(19, 10, 61);
 	border-radius: 50%;
-	animation: dayNightCycle 10s infinite alternate;
+	animation: dayNightCycle 3s infinite alternate;
 }
 
 div#matchingText {
