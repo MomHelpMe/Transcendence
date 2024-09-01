@@ -1,5 +1,5 @@
 import { Default } from "./Default.js";
-import { Error404 } from "./Error-404.js";
+import { Error404 } from "./Error404-page.js";
 
 export class Error extends Default {
 	mounted() {
