@@ -1,7 +1,6 @@
 import { initializeRouter, createRoutes, changeUrl } from "./core/router.js";
 import { getCookie } from "./core/jwt.js";
 
-
 class App {
 	app;
 	lan;
