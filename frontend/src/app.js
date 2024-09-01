@@ -1,7 +1,6 @@
 import { initializeRouter, createRoutes, changeUrl } from "./core/router.js";
 import { getCookie } from "./core/jwt.js";
 
-
 class App {
 	app;
 	lan;
@@ -27,7 +26,7 @@ const online = () => {
 		};
 		onlineSocket.onclose = () => {
 			console.log("online socket closed");
-			changeUrl("/404", false);
+			changeUrl("/error", false);
 		};
 	}
 	
