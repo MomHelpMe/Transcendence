@@ -27,7 +27,7 @@ const online = () => {
 		};
 		onlineSocket.onclose = () => {
 			console.log("online socket closed");
-			changeUrl("/404", false);
+			changeUrl("/error", false);
 		};
 	}
 	

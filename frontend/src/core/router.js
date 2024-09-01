@@ -5,10 +5,11 @@ import { Friends } from "../components/Friends.js";
 import { Profile } from "../components/Profile.js";
 import { TwoFA } from "../components/2FA.js";
 import { Edit } from "../components/Edit.js";
-import { Error } from "../components/Error404.js";
+import { Error404 } from "../components/Error404.js";
 import { Match } from "../components/Match.js";
 import { Tournament } from "../components/Tournament.js";
 import { GameLocal } from "../components/Game-Local.js";
+import { Error } from "../components/Error.js";
 
 export const createRoutes = (root) => {
 	return {
@@ -31,7 +32,7 @@ export const createRoutes = (root) => {
 			component: (props) => new Edit(root.app, props)
 		},
 		"/404": {
-			component: (props) => new Error(root.app, props)
+			component: (props) => new Error404(root.app, props)
 		},
 		"/main/matching": {
 			component: (props) => new Match(root.app, props)
@@ -43,6 +44,9 @@ export const createRoutes = (root) => {
 			component: (props) => new GameLocal(root.app, props),
 			props: { uid: "" }
 		},
+		"/error": {
+			component: (props) => new Error(root.app, props)
+		}
 	};
 };
 

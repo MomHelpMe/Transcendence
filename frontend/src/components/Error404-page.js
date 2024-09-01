@@ -1,7 +1,7 @@
 import { Component } from "../core/Component.js";
 import { changeUrl } from "../core/router.js";
 
-export class Error404 extends Component {
+export class Error404Page extends Component {
 
 	template () {
 		return `

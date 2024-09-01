@@ -1,8 +1,8 @@
 import { Default } from "./Default.js";
-import { Error404 } from "./Error404-page.js";
+import { Error404Page } from "./Error404-page.js";
 
-export class Error extends Default {
+export class Error404 extends Default {
 	mounted() {
-		new Error404(document.querySelector("div#contents"), this.props);
+		new Error404Page(document.querySelector("div#contents"), this.props);
 	}
 }
