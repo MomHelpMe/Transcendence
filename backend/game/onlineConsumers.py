@@ -4,6 +4,8 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import jwt
 from django.conf import settings
 from channels.exceptions import DenyConnection
+from .matchingConsumers import MatchingGameConsumer, MatchingGameState
+
 
 class OnlineConsumer(AsyncWebsocketConsumer):
     online_user_list = set([])
@@ -60,7 +62,9 @@ class OnlineConsumer(AsyncWebsocketConsumer):
         # Add user to matching queue
         if self not in OnlineConsumer.matching_queue:
             OnlineConsumer.matching_queue.append(self)
-            print("Matching queue: ", [user.uid for user in OnlineConsumer.matching_queue])
+            print(
+                "Matching queue: ", [user.uid for user in OnlineConsumer.matching_queue]
+            )
 
         # Check if we have enough users to start a game
         if len(OnlineConsumer.matching_queue) >= 2:
@@ -71,7 +75,9 @@ class OnlineConsumer(AsyncWebsocketConsumer):
         if self in OnlineConsumer.matching_queue:
             OnlineConsumer.matching_queue.remove(self)
             print(f"User {self.uid} removed from matching queue")
-            print("Matching queue: ", [user.uid for user in OnlineConsumer.matching_queue])
+            print(
+                "Matching queue: ", [user.uid for user in OnlineConsumer.matching_queue]
+            )
 
     async def start_game(self):
         # Take two users from the matching queue
@@ -82,21 +88,31 @@ class OnlineConsumer(AsyncWebsocketConsumer):
             # Create a unique room name for the game
             room_name = f"{user1.uid}_{user2.uid}"
 
-            # Move users to the new room and start the game
+            # Initialize game state for the room
+            MatchingGameConsumer.game_states[room_name] = MatchingGameState(
+                user1.uid, user2.uid
+            )
+            MatchingGameConsumer.client_counts[room_name] = 2
+
+            # Start the game loop
+            MatchingGameConsumer.game_tasks[room_name] = asyncio.create_task(
+                MatchingGameConsumer.game_loop(room_name)
+            )
+
+            # Notify the users that they have been moved to a game room
             await user1.channel_layer.group_add(room_name, user1.channel_name)
             await user2.channel_layer.group_add(room_name, user2.channel_name)
 
-            # Notify the users that they have been moved to a game room
-            await user1.send(text_data=json.dumps({
-                'action': 'start_game',
-                'room_name': room_name
-            }))
-            await user2.send(text_data=json.dumps({
-                'action': 'start_game',
-                'room_name': room_name
-            }))
+            await user1.send(
+                text_data=json.dumps({"action": "start_game", "room_name": room_name})
+            )
+            await user2.send(
+                text_data=json.dumps({"action": "start_game", "room_name": room_name})
+            )
 
-            print(f"Started game in room: {room_name} with users: {user1.uid}, {user2.uid}")
+            print(
+                f"Users {user1.uid} and {user2.uid} moved to game room: {room_name}"
+            )
 
     async def disconnect(self, close_code):
         # Leave room group
