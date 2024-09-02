@@ -1484,169 +1484,261 @@ div#match-title {
 div#matchingRotate {
 	border-radius: 50%;
 	background-color: rgb(19, 10, 61);
-    width: 700px;
-    height: 700px;
+	height: 56vh;
+	aspect-ratio: 1 / 1;
     position: absolute;
-    top: calc(50% - 280px);
-    left: calc(50% - 350px);
-    border-radius: 50%;
-	animation: rotate 4s linear infinite, dayNightCycle 10s infinite alternate;
-	border-radius: 50%;
+    top: calc(50% + 70px - 28vh); /* 화면 중앙에서 50px 아래로 조정하고, 높이의 절반을 빼서 중앙에 위치 */
+    left: calc(50% - 28vh); /* 화면 중앙에 위치하도록 left 값을 설정 */
 	box-shadow:
 		0 0 0 10px #f2f558,
 		0 0 0 20px rgba(242, 245, 88, 0.7),
 		0 0 0 30px rgba(242, 245, 88, 0.4),
 		0 0 0 40px rgba(242, 245, 88, 0.1);
+	min-width: 560px;
+	min-height: 560px;
+	animation: rotate 6s linear infinite, dayNightCycle 3s infinite alternate;
 }
 
 @keyframes dayNightCycle {
 	0% {
 		background-color: rgb(161, 228, 255); /* 낮 */
 	}
-	50% {
-		background-color: rgb(19, 10, 61); /* 밤 */
+	25% {
+		background-color: rgb(161, 228, 255); /* 낮 */
 	}
 	100% {
-		background-color: rgb(161, 228, 255); /* 낮 */
+		background-color: rgb(19, 10, 61); /* 밤 */
 	}
 }
 
 @keyframes rotate {
-    0% {
-        transform: rotate(0deg);
+	0% {
+		transform: rotate(0deg);
     }
     100% {
-        transform: rotate(360deg);
+		transform: rotate(360deg);
     }
 }
 
 div#red-box {
+	height: 10vh;
+	width: 10vh;
 	position: relative;
-	top: 50px;
-	left: 300px;
-	height: 100px;
-	width: 100px;
-	animation: rotate 4s linear infinite;
+	top: calc(3vh);
+	left: calc(50% - 5vh);
+	min-width: 100px;
+	min-height: 100px;
+	animation: rotate 6s linear infinite;
 }
 
 div#redBall {
 	position: absolute;
-	width: 80px;
-	height: 80px;
-	top: 10px;
-	left: 10px;
+	width: 6vh;
+	height: 6vh;
+	top: calc(50% - 3vh);
+	left: calc(50% - 3vh);
 	background-color: #FF4C4C;
 	border-radius: 50%;
+	min-width: 60px;
+	min-height: 60px;
 }
 
 div#redParticle1 {
     position: absolute;
-    top: -20px;
-    left: 40px;
-	height: 20px;
-	width: 20px;
+    top: -0.15vh;
+    left: calc(50% - 0.75vh);
+	height: 1.5vh;
+	width: 1.5vh;
 	background-color: #FF4C4C;
 	border-radius: 50%;
+	min-width: 15px;
+	min-height: 15px;
 }
 
 div#redParticle2 {
     position: absolute;
-    bottom: -20px;
-    left: 40px;
-	height: 20px;
-	width: 20px;
+    bottom: -0.15vh;
+    left: calc(50% - 0.75vh);
+	height: 1.5vh;
+	width: 1.5vh;
 	background-color: #FF4C4C;
 	border-radius: 50%;
+	min-width: 15px;
+	min-height: 15px;
 }
 
 div#redParticle3 {
     position: absolute;
-    top: 40px;
-    left: -20px;
-	height: 20px;
-	width: 20px;
+    top: calc(50% - 0.75vh);
+    left: -0.15vh;
+	height: 1.5vh;
+	width: 1.5vh;
 	background-color: #FF4C4C;
 	border-radius: 50%;
+	min-width: 15px;
+	min-height: 15px;
 }
 
 div#redParticle4 {
     position: absolute;
-    top: 40px;
-    right: -20px;
-	height: 20px;
-	width: 20px;
+    top: calc(50% - 0.75vh);
+    right: -0.15vh;
+	height: 1.5vh;
+	width: 1.5vh;
 	background-color: #FF4C4C;
 	border-radius: 50%;
+	min-width: 15px;
+	min-height: 15px;
 }
 
 div#redParticle5 {
     position: absolute;
-    top: 0px;
-    right: 0px;
-	height: 20px;
-	width: 20px;
+    top: 1vh;
+    right: 1vh;
+	height: 1.5vh;
+	width: 1.5vh;
 	background-color: #FF4C4C;
 	border-radius: 50%;
+	min-width: 15px;
+	min-height: 15px;
 }
 
 div#redParticle6 {
     position: absolute;
-    top: 0px;
-    left: 0px;
-	height: 20px;
-	width: 20px;
+    top: 1vh;
+    left: 1vh;
+	height: 1.5vh;
+	width: 1.5vh;
 	background-color: #FF4C4C;
 	border-radius: 50%;
+	min-width: 15px;
+	min-height: 15px;
 }
 
 div#redParticle7 {
     position: absolute;
-    bottom: 0px;
-    right: 0px;
-	height: 20px;
-	width: 20px;
+    bottom: 1vh;
+    right: 1vh;
+	height: 1.5vh;
+	width: 1.5vh;
 	background-color: #FF4C4C;
 	border-radius: 50%;
+	min-width: 15px;
+	min-height: 15px;
 }
 
 div#redParticle8 {
     position: absolute;
-    bottom: 0px;
-    left: 0px;
-	height: 20px;
-	width: 20px;
+    bottom: 1vh;
+    left: 1vh;
+	height: 1.5vh;
+	width: 1.5vh;
 	background-color: #FF4C4C;
 	border-radius: 50%;
+	min-width: 15px;
+	min-height: 15px;
 }
 
 div#yellow-box {
+	height: 10vh;
+	width: 10vh;
+	position: relative;
+	bottom: calc(3vh);
+	left: calc(50% - 5vh);
 	position: absolute;
-	bottom: 50px;
-	left: 300px;
-	height: 100px;
-	width: 100px;
+	min-width: 100px;
+	min-height: 100px;
 }
 
 div#yellowBall {
 	position: absolute;
-	width: 100px;
-	height: 100px;
+	width: 8vh;
+	height: 8vh;
 	bottom: 0px;
 	left: 0px;
 	border-radius: 50%;
 	background-color: #FFF078;
+	min-width: 80px;
+	min-height: 80px;
 }
 
 div#yellowParticle {
     position: absolute;
     bottom: 0px;
     left: 0px;
-	height: 60px;
-	width: 60px;
+	height: 5vh;
+	width: 5vh;
 	background-color: rgb(19, 10, 61);
 	border-radius: 50%;
-	animation: dayNightCycle 10s infinite alternate;
+	animation: dayNightCycle 3s infinite alternate;
+	min-width: 50px;
+	min-height: 50px;
 }
+
+
+@media (max-height: 1000px) {
+	div#matchingRotate {
+        top: calc(50% + 70px - 280px); /* min-width 300px에 맞춰서 조정 */
+        left: calc(50% - 280px); /* min-width에 맞춰 left 값도 조정 */
+	}
+	
+	div#red-box {
+		top: 30px;
+		left: calc(50% - 50px);
+	}
+
+	div#redBall {
+		position: absolute;
+		top: 20px;
+		left: 20px;
+	}
+
+	div#redParticle1 {
+		top: -0.5px;
+		left: 42.5px;
+	}
+
+	div#redParticle2 {
+		bottom: -0.5px;
+		left: 42.5px;
+	}
+
+	div#redParticle3 {
+		top: 42.5px;
+		left: -0.5px;
+	}
+
+	div#redParticle4 {
+		top: 42.5px;
+		right: -0.5px;
+	}
+
+	div#redParticle5 {
+		top: 10px;
+		right: 10px;
+	}
+	
+	div#redParticle6 {
+		top: 10px;
+		left: 10px;
+	}
+	
+	div#redParticle7 {
+		bottom: 10px;
+		right: 10px;
+	}
+	
+	div#redParticle8 {
+		bottom: 10px;
+		left: 10px;
+	}
+
+	div#yellow-box {
+		bottom: calc(30px);
+		left: calc(50% - 50px);
+	}
+}
+
 
 div#matchingText {
 	border-radius: 50%;

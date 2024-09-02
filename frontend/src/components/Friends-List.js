@@ -92,7 +92,8 @@ export class FriendsList extends Component {
 				{ className: "fList", ids: friendIdList, contents: friendNicknameList }));
 		})
 		.catch(error => {
-			console.error('Fetch operation failed:', error);
+			console.error('Fetch error:', error);
+			changeUrl("/");
 		});
 	}
 
@@ -177,7 +178,10 @@ export class FriendsList extends Component {
 					}
 					changeUrl(window.location.pathname);
 				})
-				.catch(error => console.error('Error:', error));
+				.catch(error => {
+					console.error('Fetch error:', error);
+					changeUrl("/");
+				});
 			}
 		}
 
@@ -224,7 +228,10 @@ export class FriendsList extends Component {
 					searchResults.appendChild(div);
 				});
 			})
-			.catch(error => console.error('Error:', error));
+			.catch(error => {
+				console.error('Fetch error:', error);
+				changeUrl("/");
+			});
 		})
 
 		this.addEvent('click', '#searchResults', (event) => {
@@ -255,7 +262,10 @@ export class FriendsList extends Component {
 				}
 				changeUrl(window.location.pathname);
 			})
-			.catch(error => console.error('Error:', error));
+			.catch(error => {
+				console.error('Fetch error:', error);
+				changeUrl("/");
+			});
 		});
 	}
 }

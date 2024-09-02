@@ -41,26 +41,31 @@ export class ProfileInfo extends Component {
 		this.user = {win: null, lose: null, img_url: null, nickname: null, uid: null};
 		this.rate = null;
 		this.games = null;
-		fetch(`https://localhost:443/api/user/${this.props.uid}`, {
-			method: 'GET',
-			credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Network response was not ok');
-			}
-			return response.json();
-		})
-		.then(data => {
-			this.state.games = data.games;
-			this.state.user = data.user;
-			this.state.rate = data.user.lose == 0 ? (data.user.win == 0 ? 0 : 100) :
-							Math.round((data.user.win / (data.user.lose + data.user.win)) * 100);
-		})
-		.catch(error => {
-			console.error('Fetch error:', error);
+		if (this.uid !== parseInt(this.props.uid)) {
 			changeUrl("/404", false);
-		});
+		} else {
+			fetch(`https://localhost:443/api/user/${this.props.uid}`, {
+				method: 'GET',
+				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+x				} else {
+					return response.json();
+				}
+			})
+			.then(data => {
+				this.state.games = data.games;
+				this.state.user = data.user;
+				this.state.rate = data.user.lose == 0 ? (data.user.win == 0 ? 0 : 100) :
+							Math.round((data.user.win / (data.user.lose + data.user.win)) * 100);
+			})
+			.catch(error => {
+				console.error('Fetch error:', error);
+				changeUrl("/");
+			});
+		}
 		return { user: this.user, rate: this.rate, games: this.games };
 	}
 
@@ -135,7 +140,6 @@ export class ProfileInfo extends Component {
 			changeUrl(`/main/profile/${this.props.uid}/edit`);
 		});
 
-		// 컴포넌트가 렌더링된 후 원형 진행 막대를 그립니다.
 	}
 
 	drawBackgroundCircle() {
