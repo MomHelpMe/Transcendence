@@ -77,8 +77,14 @@ export class Menu extends Component {
 				})
 			})
 			.then(response => {
-				if (!response.ok) changeUrl("/");
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
 			})
+			.catch(error => {
+				console.error('Fetch error:', error);
+				changeUrl("/");
+			});
 			changeUrl("/main");
 		}
 		
@@ -112,7 +118,10 @@ export class Menu extends Component {
 				if (response.ok) changeUrl(`/`);
 				else throw new Error('Network response was not ok');
 			})
-			.catch(error => console.error('Fetch error:', error));
+			.catch(error => {
+				console.error('Fetch error:', error);
+				changeUrl("/");
+			});
 		});
 	}
 }
