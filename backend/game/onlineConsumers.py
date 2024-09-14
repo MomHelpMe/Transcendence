@@ -10,12 +10,50 @@ from .matchingConsumers import MatchingGameConsumer, MatchingGameState
 class OnlineConsumer(AsyncWebsocketConsumer):
     online_user_list = set([])
     matching_queue = []
+    matching_task = None
+
+    @classmethod
+    async def start_matching_task(cls):
+        """중앙에서 매칭을 처리하는 task"""
+        while True:
+            await asyncio.sleep(2)
+            if len(cls.matching_queue) >= 2:
+                await cls.start_game()
+
+    @classmethod
+    async def start_game(cls):
+        user1 = cls.matching_queue.pop(0)
+        user2 = cls.matching_queue.pop(0)
+
+        # Create a unique room name for the game
+        room_name = f"{user1.uid}_{user2.uid}"
+
+        # Initialize game state for the room
+        MatchingGameConsumer.game_states[room_name] = MatchingGameState(
+            user1.uid, user2.uid
+        )
+        MatchingGameConsumer.client_counts[room_name] = 2
+
+        await user1.send(
+            text_data=json.dumps({"action": "start_game", "room_name": room_name})
+        )
+        await user2.send(
+            text_data=json.dumps({"action": "start_game", "room_name": room_name})
+        )
+
+        print(f"Users {user1.uid} and {user2.uid} moved to game room: {room_name}")
 
     async def connect(self):
         # Wait for authentication before joining room group
         self.uid = None
         self.authenticated = False
         await self.accept()
+
+        # 매칭 task가 없으면 시작
+        if OnlineConsumer.matching_task is None:
+            OnlineConsumer.matching_task = asyncio.create_task(
+                OnlineConsumer.start_matching_task()
+            )
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -66,10 +104,6 @@ class OnlineConsumer(AsyncWebsocketConsumer):
                 "Matching queue: ", [user.uid for user in OnlineConsumer.matching_queue]
             )
 
-        # Check if we have enough users to start a game
-        if len(OnlineConsumer.matching_queue) >= 2:
-            await self.start_game()
-
     async def leave_matching(self):
         # Remove user from matching queue
         if self in OnlineConsumer.matching_queue:
@@ -77,41 +111,6 @@ class OnlineConsumer(AsyncWebsocketConsumer):
             print(f"User {self.uid} removed from matching queue")
             print(
                 "Matching queue: ", [user.uid for user in OnlineConsumer.matching_queue]
-            )
-
-    async def start_game(self):
-        # Take two users from the matching queue
-        if len(OnlineConsumer.matching_queue) >= 2:
-            user1 = OnlineConsumer.matching_queue.pop(0)
-            user2 = OnlineConsumer.matching_queue.pop(0)
-
-            # Create a unique room name for the game
-            room_name = f"{user1.uid}_{user2.uid}"
-
-            # Initialize game state for the room
-            MatchingGameConsumer.game_states[room_name] = MatchingGameState(
-                user1.uid, user2.uid
-            )
-            MatchingGameConsumer.client_counts[room_name] = 2
-
-            # Start the game loop
-            MatchingGameConsumer.game_tasks[room_name] = asyncio.create_task(
-                MatchingGameConsumer.game_loop(room_name)
-            )
-
-            # Notify the users that they have been moved to a game room
-            await user1.channel_layer.group_add(room_name, user1.channel_name)
-            await user2.channel_layer.group_add(room_name, user2.channel_name)
-
-            await user1.send(
-                text_data=json.dumps({"action": "start_game", "room_name": room_name})
-            )
-            await user2.send(
-                text_data=json.dumps({"action": "start_game", "room_name": room_name})
-            )
-
-            print(
-                f"Users {user1.uid} and {user2.uid} moved to game room: {room_name}"
             )
 
     async def disconnect(self, close_code):
