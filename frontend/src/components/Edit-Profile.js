@@ -79,7 +79,10 @@ export class EditProfile extends Component {
 			this.state.img_url = data.img_url;
 			this.state.is_2FA = data.is_2FA;
 		})
-		.catch(error => console.error('Fetch error:', error));
+		.catch(error => {
+			console.error('Fetch error:', error);
+			changeUrl("/");
+		});
 		return { nickname: this.nickname, img_url: this.img_url, is_2FA: this.is_2FA };
 	}
 	
@@ -182,7 +185,10 @@ export class EditProfile extends Component {
 				if (response.ok) changeUrl(`/`);
 				else throw new Error('Network response was not ok');
 			})
-			.catch(error => console.error('Fetch error:', error));
+			.catch(error => {
+				console.error('Fetch error:', error);
+				changeUrl("/");
+			});
 		});
 		
 		this.addEvent('click', '#profileChange', async (event) => {
@@ -217,7 +223,8 @@ export class EditProfile extends Component {
 				changeUrl(`/main/profile/${this.props.uid}/edit`);
 			})
 			.catch(error => {
-				console.error('Error updating profile:', error);
+				console.error('Fetch error:', error);
+				changeUrl("/");
 			});
 		});
 	}

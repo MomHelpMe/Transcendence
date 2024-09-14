@@ -5,11 +5,12 @@ import { Friends } from "../components/Friends.js";
 import { Profile } from "../components/Profile.js";
 import { TwoFA } from "../components/2FA.js";
 import { Edit } from "../components/Edit.js";
-import { Error } from "../components/Error.js";
+import { Error404 } from "../components/Error404.js";
 import { Match } from "../components/Match.js";
 import { Tournament } from "../components/Tournament.js";
 import { GameLocal } from "../components/Game-Local.js";
 import { GameMatching } from "../components/Game-matching.js";
+import { Error } from "../components/Error.js";
 
 export const createRoutes = (root) => {
 	return {
@@ -32,7 +33,7 @@ export const createRoutes = (root) => {
 			component: (props) => new Edit(root.app, props)
 		},
 		"/404": {
-			component: (props) => new Error(root.app, props)
+			component: (props) => new Error404(root.app, props)
 		},
 		"/main/matching": {
 			component: (props) => new Match(root.app, props)
@@ -48,6 +49,9 @@ export const createRoutes = (root) => {
 			component: (props) => new GameMatching(root.app, props),
 			props: { room: "" }
 		},
+		"/error": {
+			component: (props) => new Error(root.app, props)
+		}
 	};
 };
 
@@ -100,7 +104,25 @@ export async function parsePath(path) {
 							return changeUrl("/", false);
 					});
 				} else {
-					return changeUrl("/main", false);
+					// API!!! jwt가 있으면 해당 유저의 데이터베이스에서 언어 번호 (0 or 1 or 2) 얻어오기
+					fetch("https://localhost:443/api/language/", {
+						method: 'GET',
+						credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+					})
+					.then(response => {
+						if (!response.ok){
+							changeUrl("/");
+							return null;
+						} 
+						return response.json();
+					})
+					.then(data => {
+						if (data){
+							console.log(data.language);
+							root.lan.value = data.language;
+							changeUrl('/main'); // 메인 페이지로 이동
+						}
+					});
 				}
 			}
 			else return changeUrl("/", false);
@@ -141,7 +163,23 @@ export const initializeRouter = () => {
 	window.addEventListener("popstate", async () => {
 		await parsePath(window.location.pathname);
 	});
-	parsePath(window.location.pathname);
+	fetch("https://localhost:443/api/language/", {
+		method: 'GET',
+		credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+	})
+	.then(response => {
+		if (!response.ok){
+			console.log("so bad");
+			return null;
+		} 
+		return response.json();
+	})
+	.then(data => {
+		if (data){
+			root.lan.value = data.language;
+		} 
+		parsePath(window.location.pathname);
+	});
 };
 
 async function checkAuth() {

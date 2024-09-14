@@ -1,15 +1,12 @@
 import { initializeRouter, createRoutes, changeUrl } from "./core/router.js";
 import { getCookie } from "./core/jwt.js";
 
-
 class App {
 	app;
 	lan;
 	constructor() {
 		this.app = document.querySelector("#app");
 		this.lan = { value: 0 };
-		console.log("start!!");
-		console.log(this.lan);
 	}
 }
 
@@ -34,6 +31,7 @@ const online = () => {
 		+ '/ws/online/'
 	);
 	socketList.push(onlineSocket);
+
 	console.log(onlineSocket);
 	onlineSocket.onopen = () => {
 		const token = getCookie("jwt");
@@ -42,7 +40,7 @@ const online = () => {
 	onlineSocket.onclose = () => {
 		console.log("online socket closed");
 		closeAllSockets();
-		changeUrl("/404", false);
+		changeUrl("/error", false);
 	};
 }
 

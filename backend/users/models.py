@@ -2,6 +2,12 @@ from django.db import models
 
 
 class User(models.Model):
+    LANGUAGE_CHOICES = [
+        (0, "EN"),
+        (1, "KR"),
+        (2, "JP"),
+    ]
+
     user_id = models.IntegerField(primary_key=True)
     nickname = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
@@ -10,9 +16,10 @@ class User(models.Model):
     is_online = models.BooleanField(default=False)
     win = models.IntegerField(default=0)
     lose = models.IntegerField(default=0)
+    language = models.IntegerField(choices=LANGUAGE_CHOICES, default=0)
 
     def __str__(self):
-        return self.nickname + '#' + str(self.user_id)
+        return self.nickname + "#" + str(self.user_id)
 
 
 class Friend(models.Model):
@@ -38,6 +45,7 @@ class Game(models.Model):
         user1_name = self.user1.nickname if self.user1 else "Unknown"
         user2_name = self.user2.nickname if self.user2 else "Unknown"
         return f"Game {self.game_id}: {user1_name} vs {user2_name}"
+
 
 class Tournament(models.Model):
     tournament_id = models.AutoField(primary_key=True)

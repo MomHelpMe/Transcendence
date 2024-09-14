@@ -9,17 +9,14 @@ export class Menu extends Component {
 			0: {
 				gameMenuTexts: ["Local Game", "Multi Game", "Tournament"],
 				userMenuTexts: ["Friends", "Profile", "Logout"],
-				lanText: "Change Language"
 			},
 			1: {
 				gameMenuTexts: ["로컬 게임", "멀티 게임", "토너먼트"],
 				userMenuTexts: ["친구", "프로필", "로그아웃"],
-				lanText: "언어 변경"
 			},
 			2: {
 				gameMenuTexts: ["ローカルゲーム", "マルチゲーム", "トーナメント"],
 				userMenuTexts: ["友達", "プロフィール", "ログアウト"],
-				lanText: "言語を変更"
 			}
 		};
 	
@@ -36,7 +33,9 @@ export class Menu extends Component {
 
 		return `
 			<div id="menuBox">
-				<div id="lanButton">${translations.lanText}</div>
+				<div id="enButton">English</div>
+				<div id="koButton">한국어</div>
+				<div id="jpButton">日本語</div>
 				<ul id="gameMenu"></ul>
 				<ul id="userMenu"></ul>
 			</div>
@@ -47,27 +46,61 @@ export class Menu extends Component {
 		new List(document.querySelector("ul#gameMenu"), { className: "gameMode", ids: ["LocalGame", "MultiGame", "Tournament"], contents: this.translations.gameMenuTexts});
 		new List(document.querySelector("ul#userMenu"), { className: "showInfo", ids: ["Friends", "Profile", "Logout"], contents: this.translations.userMenuTexts});
 	}
-
+	
 	setEvent () {
+		
 		this.addEvent('click', '#Friends', () => {
 			changeUrl("/main/friends");
 		});
-
+		
 		this.addEvent('click', '#LocalGame', () => {
 			changeUrl(`/game/local/${this.uid}`);
 		});
-
+		
 		this.addEvent('click', "#MultiGame", () => {
 			changeUrl("/main/matching");
 		});
-
+		
 		this.addEvent('click', "#Tournament", () => {
 			changeUrl("/main/tournament");
 		});
-
-		this.addEvent('click', '#lanButton', () => {
-			this.props.lan.value = (this.props.lan.value + 1) % 3;
-			changeUrl("/main")
+		
+		function storeLang(value) {
+			fetch("https://localhost:443/api/language/", {
+				method: 'PUT',
+				credentials: 'include', // 쿠키를 포함하여 요청 (사용자 인증 필요 시)
+				headers: {
+					'Content-Type': 'application/json' // JSON 데이터임을 명시
+				},
+				body: JSON.stringify({
+					language: value
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+			})
+			.catch(error => {
+				console.error('Fetch error:', error);
+				changeUrl("/");
+			});
+			changeUrl("/main");
+		}
+		
+		this.addEvent('click', '#enButton', () => {
+			this.props.lan.value = 0;
+			storeLang(this.props.lan.value);
+		});
+		
+		this.addEvent('click', '#koButton', () => {
+			this.props.lan.value = 1;
+			storeLang(this.props.lan.value);
+		});
+		
+		this.addEvent('click', '#jpButton', () => {
+			this.props.lan.value = 2;
+			storeLang(this.props.lan.value);
 		});
 
 		this.addEvent('click', '#Profile', () => {
@@ -85,7 +118,10 @@ export class Menu extends Component {
 				if (response.ok) changeUrl(`/`);
 				else throw new Error('Network response was not ok');
 			})
-			.catch(error => console.error('Fetch error:', error));
+			.catch(error => {
+				console.error('Fetch error:', error);
+				changeUrl("/");
+			});
 		});
 	}
 }
