@@ -5,11 +5,15 @@ if [ ! -z "$(docker ps -aq -f name=postgres)" ]; then
     docker rmi -f postgres > /dev/null 2>&1
     docker volume rm db_data > /dev/null 2>&1
 fi
+
 if [ ! -z "$(docker ps -aq -f name=nginx)" ]; then
     docker rm -f nginx > /dev/null 2>&1
     docker rmi -f nginx > /dev/null 2>&1
 fi
-rm -rf backend/*/migrations venv backend/.env
+
+rm -rf backend/*/migrations backend/venv
+find . -type d -name "__pycache__" -exec rm -r {} \;
+
 for d in backend/*/; do
     if [ "$d" == "backend/transcendence/" ]; then
         continue

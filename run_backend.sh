@@ -2,6 +2,20 @@
 
 # TEST: 개발 시 로컬 실행용
 
+DOT_ENV=".env"
+
+# Check if .env file exists
+if [ ! -f "$DOT_ENV" ]; then
+  echo "$DOT_ENV file not found."
+  exit 1
+fi
+
+# Check if Docker is running
+if ! docker info > /dev/null 2>&1; then
+  echo "Docker is not running. Please start Docker and try again."
+  exit 1
+fi
+
 # Initialize the environment (arg 1 to clear everything)
 if [ "$1" == "1" ]; then
   ./clean.sh
@@ -18,26 +32,15 @@ fi
 if [ -z "$(docker ps -aq -f name=postgres)" ]; then
   docker volume create db_data
   docker build -t postgres db/
-  docker run -d -p 5432:5432 --name postgres --env-file .env -v db_data:/var/lib/postgresql/data postgres
+  docker run -d -p 5432:5432 --name postgres --env-file $DOT_ENV -v db_data:/var/lib/postgresql/data postgres
 fi
 
-ENV_DIR="venv"
-DOT_ENV_FILE=".env"
+# Update the .env file for local development
+sed -i '' 's/^DB_HOST=.*$/DB_HOST=localhost/' $DOT_ENV
 
 cd backend
 
-cp ../$DOT_ENV_FILE .
-echo "Copied $DOT_ENV_FILE."
-sed -i '' 's/^DB_HOST=.*$/DB_HOST=localhost/' .env
-
-# TEST: .env 파일의 변수들을 환경 변수로 설정 (슈퍼 유저를 생성하기 위해 필요)
-if [ -f "$DOT_ENV_FILE" ]; then
-  export $(grep -v '^#' $DOT_ENV_FILE | xargs)
-  echo "Exported .env variables to environment."
-else
-  echo ".env file not found."
-  exit 1
-fi
+ENV_DIR="venv"
 
 if [ ! -d "$ENV_DIR" ]; then
   python3.12 -m venv $ENV_DIR
@@ -67,15 +70,15 @@ echo "Applying migrations..."
 python3.12 manage.py makemigrations
 python3.12 manage.py migrate
 
-# Create a superuser
-DJANGO_SUPERUSER_USERNAME=$DJANGO_SUPERUSER_USERNAME
-DJANGO_SUPERUSER_PASSWORD=$DJANGO_SUPERUSER_PASSWORD
-DJANGO_SUPERUSER_EMAIL=$DJANGO_SUPERUSER_EMAIL
+# Create a superuser (dotenv variables)
+DJANGO_SUPERUSER_USERNAME=$(grep DJANGO_SUPERUSER_USERNAME ../$DOT_ENV | cut -d '=' -f2)
+DJANGO_SUPERUSER_PASSWORD=$(grep DJANGO_SUPERUSER_PASSWORD ../$DOT_ENV | cut -d '=' -f2)
+DJANGO_SUPERUSER_EMAIL=$(grep DJANGO_SUPERUSER_EMAIL ../$DOT_ENV | cut -d '=' -f2)
 
 USER_EXISTS=$(python3.12 manage.py shell -c "
 from django.contrib.auth import get_user_model;
 User = get_user_model();
-print(User.objects.filter(username='admin').exists())
+print(User.objects.filter(username='$DJANGO_SUPERUSER_USERNAME').exists())
 ")
 
 if [ "$USER_EXISTS" = "False" ]; then
