@@ -9,6 +9,7 @@ import { Error404 } from "../components/Error404.js";
 import { Match } from "../components/Match.js";
 import { Tournament } from "../components/Tournament.js";
 import { GameLocal } from "../components/Game-Local.js";
+import { GameTournament } from "../components/Game-Tournament.js";
 import { Error } from "../components/Error.js";
 
 export const createRoutes = (root) => {
@@ -42,7 +43,9 @@ export const createRoutes = (root) => {
 		},
 		"/game/local/:uid": {
 			component: (props) => new GameLocal(root.app, props),
-			props: { uid: "" }
+		},
+		"/game/tournament/:uid": {
+			component: (props) => new GameTournament(root.app, props),
 		},
 		"/error": {
 			component: (props) => new Error(root.app, props)
@@ -147,6 +150,7 @@ export async function parsePath(path) {
 			keys.forEach((key, index) => {
 				props[key.substring(1)] = values[index];
 			});
+			console.log(props);
 			route.component(props);
 			return;
 		}

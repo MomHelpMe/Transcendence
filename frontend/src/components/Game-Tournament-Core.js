@@ -1,7 +1,7 @@
 import { Component } from "../core/Component.js";
 import { getCookie } from "../core/jwt.js";
 
-export class GameCore extends Component {
+export class GameTournamentCore extends Component {
 	constructor($el, props) {
 		super($el, props);
 	}

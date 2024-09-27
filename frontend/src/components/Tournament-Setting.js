@@ -1,9 +1,15 @@
 import { Component } from "../core/Component.js";
 import { TournamentHistory } from "./Tournament-History.js";
+import { parseJWT } from "../core/jwt.js";
+import { changeUrl } from "../core/router.js";
 
 export class TournamentSetting extends Component {
 
 	template () {
+		const payload = parseJWT();
+		if (!payload) this.uid = null;
+		else this.uid = payload.id;
+
 		// fetch(){
 		//	tournament history 조회
 		//}
@@ -34,6 +40,10 @@ export class TournamentSetting extends Component {
 					<div id="tournament-challenge-text">Take on the challenge</div>
 				</div>
 				<div id="tournament-game-body">
+					<div id="tournament-nick-error">
+						<div id="tournament-nick-error-msg">Please fill in all nickname fields</div>
+						<div id="tournament-nick-error-button">OK</div>
+					</div>
 					<div id="tournament-crown-box">
 						<img id="crown" src="/img/crown.png"></img>
 					</div>
@@ -69,9 +79,30 @@ export class TournamentSetting extends Component {
 		this.addEvent('click', '#goBack', (event) => {
 			window.history.back();
 		});
+
+		this.addEvent('click', '#tournament-nick-error-button', (event) => {
+			document.querySelector('#tournament-nick-error').style.display = 'none';
+		});
 		
 		this.addEvent('click', '#tournament-start-button', (event) => {
-			console.log("you press start button!!");
+			const nick1 = document.querySelector('#tournament-nick1').value;
+			const nick2 = document.querySelector('#tournament-nick2').value;
+			const nick3 = document.querySelector('#tournament-nick3').value;
+			const nick4 = document.querySelector('#tournament-nick4').value;
+
+			if (!nick1 || !nick2 || !nick3 || !nick4) {
+				document.querySelector('#tournament-nick-error').style.display = 'flex';
+				return;
+			}
+
+			localStorage.removeItem('game1');
+			localStorage.removeItem('game2');
+			localStorage.removeItem('game3');
+
+			const nicknames = {nick1, nick2, nick3, nick4};
+			localStorage.setItem('nicknames', JSON.stringify(nicknames));
+
+			changeUrl(`/game/tournament/${this.uid}`);
 		});
 
 		this.addEvent('click', '#tournament-game-menu', (event) => {
