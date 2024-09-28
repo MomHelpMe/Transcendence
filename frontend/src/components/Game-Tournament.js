@@ -5,7 +5,6 @@ import { changeUrl } from "../core/router.js";
 export class GameTournament extends GameDefault {
 	mounted(){
 		const nicknames = JSON.parse(localStorage.getItem("nicknames"));
-		console.log(nicknames[0]);
 		const game1 = localStorage.getItem('game1');
 		const game2 = localStorage.getItem('game2');
 		const game3 = localStorage.getItem('game3');
