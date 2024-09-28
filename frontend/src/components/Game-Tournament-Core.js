@@ -1,5 +1,7 @@
 import { Component } from "../core/Component.js";
 import { getCookie } from "../core/jwt.js";
+import { socketList } from "../app.js"
+import { changeUrl } from "../core/router.js";
 
 export class GameTournamentCore extends Component {
 	constructor($el, props) {
@@ -8,13 +10,14 @@ export class GameTournamentCore extends Component {
 
 	initState() {
 		this.keysPressed = {};
-		this.gameSocket = this.gameSocket = new WebSocket(
+		this.gameSocket = new WebSocket(
 			'wss://'
 			+ "localhost:443"
 			+ '/ws/game/'
-			+  this.props.uid
+			+ this.props.uid
 			+ '/'
 		);
+		socketList.push(this.gameSocket);
 		return {};
 	}
 
@@ -30,11 +33,11 @@ export class GameTournamentCore extends Component {
 			'collision': new Audio('../../img/key.mp3'),
 		};
 		let SCREEN_HEIGHT, SCREEN_WIDTH, BAR_HEIGHT, BAR_WIDTH, BAR_X_GAP,
-		BALL_RADIUS, LEFT_BAR_X, LEFT_BAR_Y, RIGHT_BAR_X, RIGHT_BAR_Y,
-		CELL_WIDTH, CELL_HEIGHT;
+			BALL_RADIUS, LEFT_BAR_X, LEFT_BAR_Y, RIGHT_BAR_X, RIGHT_BAR_Y,
+			CELL_WIDTH, CELL_HEIGHT, PLAYER, MAX_SCORE;
 		let counter = 0;
-		let leftBar, rightBar, leftBall, rightBall, map;
-		
+		let leftBar, rightBar, leftBall, rightBall, map, score, penaltyTime = [0, 0];
+
 		console.log(canvas)
 		function playSound(soundName) {
 			var sound = sounds[soundName];
@@ -67,6 +70,13 @@ export class GameTournamentCore extends Component {
 				ctx.lineWidth = 2;
 				Map.strokeRoundedRect(ctx, this.x, this.y, this.width, this.height, this.width / 2);
 				ctx.stroke();
+				if (penaltyTime[this.id] !== 0) {
+					ctx.font = "bold 30px Arial";
+					ctx.textAlign = "center";
+					ctx.textBaseline = "middle";
+					ctx.fillStyle = BALL_COLOR[this.id];
+					ctx.fillText(penaltyTime[this.id], this.x + this.width / 2 + (this.id == 0 ? 1 : -1) * 175, this.y + this.height / 2);
+				}
 			}
 
 			update() {
@@ -91,17 +101,37 @@ export class GameTournamentCore extends Component {
 				this.targetY = y;
 				this.radius = radius;
 				this.color = color;
+				this.trail = [];  // 잔상을 저장할 배열
 			}
 
 			draw() {
+				this.trail.forEach((pos, index) => {
+					const alpha = (index + 1) / (this.trail.length + 15);
+					const scale = (index / (this.trail.length + 1));
+					const radius = this.radius * scale;
+
+					ctx.globalAlpha = alpha;  // 투명도 설정
+					ctx.fillStyle = this.color;
+					ctx.fillRect(pos.x - radius, pos.y - radius, radius * 2, radius * 2);
+				});
+
+				ctx.globalAlpha = 1;
 				Map.strokeRoundedRect(ctx, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2, 6);
 				ctx.fillStyle = this.color;
 				ctx.fill();
 			}
-
 			update() {
 				this.x = this.targetX;
 				this.y = this.targetY;
+				// 10 프레임마다 잔상 저장
+				if (counter % 3 === 0) {
+					this.trail.push({ x: this.x, y: this.y });
+
+					if (this.trail.length > 10) {
+						this.trail.shift();  // 오래된 잔상을 제거
+					}
+				}
+
 			}
 		}
 
@@ -115,7 +145,6 @@ export class GameTournamentCore extends Component {
 
 			update(mapDiff) {
 				mapDiff.forEach(diff => {
-					console.log(mapDiff)
 					this.map[diff[0]][diff[1]] = diff[2];
 					new Particles(diff[1], diff[0], diff[2]);
 					playSound('collision');
@@ -243,6 +272,45 @@ export class GameTournamentCore extends Component {
 			}
 		}
 
+		class Score {
+			constructor() {
+				this.score = [0, 0];
+			}
+
+			update(score) {
+				this.score = score;
+			}
+
+			draw() {
+				scoreCtx.clearRect(0, 0, scoreCanvas.width, scoreCanvas.height);
+				scoreCtx.textAlign = "center";
+				scoreCtx.font = "25px Arial";
+				scoreCtx.fillStyle = COLOR[1];
+				scoreCtx.fillText(PLAYER[0], 200, 50);
+				scoreCtx.fillStyle = COLOR[0];
+				scoreCtx.fillText(PLAYER[1], scoreCanvas.width - 200, 50);
+
+				scoreCtx.textAlign = "left";
+				scoreCtx.font = "100px Arial";
+				scoreCtx.fillStyle = COLOR[1];
+				let firstScore = this.score[0].toString();
+				scoreCtx.fillText(firstScore, 125, 140);
+
+				let firstScoreWidth = scoreCtx.measureText(firstScore).width;
+				scoreCtx.font = "50px Arial";
+				let scoreText = " / " + MAX_SCORE;
+				scoreCtx.fillText(scoreText, 125 + firstScoreWidth, 140);
+
+				scoreCtx.textAlign = "right";
+				scoreCtx.fillStyle = COLOR[0];
+				scoreCtx.fillText(scoreText, scoreCanvas.width - 125, 140);
+				let secondScore = this.score[1].toString();
+				let secondScoreX = scoreCanvas.width - 125 - scoreCtx.measureText(scoreText).width;
+				scoreCtx.font = "100px Arial";
+				scoreCtx.fillText(secondScore, secondScoreX, 140);
+			}
+		}
+
 		this.gameSocket.onopen = () => {
 			const token = getCookie("jwt");
 			this.gameSocket.send(JSON.stringify({ 'action': 'authenticate', 'token': token }));
@@ -251,7 +319,7 @@ export class GameTournamentCore extends Component {
 		this.gameSocket.onmessage = (e) => {
 			const data = JSON.parse(e.data);
 			if (data.type === 'initialize_game') {
-				initializeGame(data);
+				initializeGame(data, this.props.player1, this.props.player2);
 				drawGame();
 			} else if (data.type === 'update_game_state') {
 				leftBar.targetX = data.left_bar_x;
@@ -262,12 +330,40 @@ export class GameTournamentCore extends Component {
 				leftBall.targetY = data.left_ball_y;
 				rightBall.targetX = data.right_ball_x;
 				rightBall.targetY = data.right_ball_y;
+				penaltyTime = data.penalty_time;
+				score.update(data.score);
 				map.update(data.map_diff);
+			} else if (data.type === 'game_result') {
+				this.gameSocket.close();
+				socketList.pop();
+				console.log("winner!!");
+				console.log(data.winner);
+				const winner = data.winner === 0 ? this.props.player1 : this.props.player2;
+				const loser = data.winner === 0 ? this.props.player2 : this.props.player1;
+				if (this.props.game === 1) {
+					const game1 = { winner: winner, loser: loser, 
+									score1: data.score[0], score2: data.score[1]};
+					localStorage.setItem('game1', JSON.stringify(game1));
+					changeUrl(`/game/tournament/${this.props.uid}/result/${winner}`);
+				} else if (this.props.game === 2) {
+					const game2 = { winner: winner, loser: loser, 
+									score1: data.score[0], score2: data.score[1]};
+					localStorage.setItem('game2', JSON.stringify(game2));
+					changeUrl(`/game/tournament/${this.props.uid}/result/${winner}`);
+				} else if (this.props.game === 3) {
+					const game3 = { winner: winner, loser: loser, 
+									score1: data.score[0], score2: data.score[1]};
+					localStorage.setItem('game3', JSON.stringify(game3));
+					changeUrl(`/game/tournament/${this.props.uid}/result/${winner}`);
+				} else {
+					changeUrl('/main/tournament', false);
+				}
 			}
 		};
 
 		let isPoolingLeft = false, isPoolingRight = false;
 		const handleKeyPresses = () => {
+			if (this.gameSocket.readyState !== WebSocket.OPEN) return;
 			if (this.keysPressed['w']) {
 				this.gameSocket.send(JSON.stringify({ 'action': 'move_up', 'bar': 'left' }));
 				leftBar.targetY -= 5;
@@ -311,9 +407,10 @@ export class GameTournamentCore extends Component {
 			leftBall.draw();
 			rightBall.draw();
 			Particles.drawAll();
+			score.draw();
 		}
 
-		function initializeGame(data) {
+		function initializeGame(data, player1, player2) {
 			SCREEN_HEIGHT = data.screen_height;
 			SCREEN_WIDTH = data.screen_width;
 			LEFT_BAR_X = data.left_bar_x;
@@ -324,19 +421,12 @@ export class GameTournamentCore extends Component {
 			BAR_WIDTH = data.bar_width;
 			BAR_X_GAP = data.bar_x_gap;
 			BALL_RADIUS = data.ball_radius;
+			PLAYER = [ player1, player2 ];
+			MAX_SCORE = data.max_score;
 			canvas.width = SCREEN_WIDTH;
 			canvas.height = SCREEN_HEIGHT;
-			scoreCanvas.width = 500;
-			scoreCanvas.height = 150;
-			var text = "2 : 3"
-			// var blur = 10;
-			// var width = scoreCtx.measureText(text).width + blur * 2;
-			// scoreCtx.textBaseline = "top"
-			// scoreCtx.shadowColor = "#000"
-			// scoreCtx.shadowOffsetX = width;
-			// scoreCtx.shadowOffsetY = 0;
-			// scoreCtx.shadowBlur = blur;
-			scoreCtx.fillText(text, -10, 0);
+			scoreCanvas.width = 1000;
+			scoreCanvas.height = 175;
 			CELL_WIDTH = canvas.width / data.map[0].length;
 			CELL_HEIGHT = canvas.height / data.map.length;
 
@@ -345,6 +435,7 @@ export class GameTournamentCore extends Component {
 			rightBar = new Bar(RIGHT_BAR_X, RIGHT_BAR_Y, BAR_WIDTH, BAR_HEIGHT, SCREEN_HEIGHT, 1);
 			leftBall = new Ball(data.left_ball_x, data.left_ball_y, BALL_RADIUS, BALL_COLOR[0]);
 			rightBall = new Ball(data.right_ball_x, data.right_ball_y, BALL_RADIUS, BALL_COLOR[1]);
+			score = new Score();
 
 			console.log(SCREEN_HEIGHT, SCREEN_WIDTH, BAR_HEIGHT, BAR_WIDTH, BALL_RADIUS);
 			setInterval(interpolate, 3);

@@ -12,6 +12,7 @@ import { GameLocal } from "../components/Game-Local.js";
 import { GameTournament } from "../components/Game-Tournament.js";
 import { GameMatching } from "../components/Game-matching.js";
 import { Error } from "../components/Error.js";
+import { GameResult } from "../components/Game-Result.js";
 
 export const createRoutes = (root) => {
 	return {
@@ -47,6 +48,14 @@ export const createRoutes = (root) => {
 		},
 		"/game/tournament/:uid": {
 			component: (props) => new GameTournament(root.app, props),
+		},
+		"/game/tournament/:uid/result/:winner": {
+			component: (props) => { props["isTournament"] = true;
+									return new GameResult(root.app, props);}
+		},
+		"/game/:uid/result/:winner": {
+			component: (props) => { props["isTournament"] = false;
+									return new GameResult(root.app, props);}
 		},
 		"/game/vs/:room": {
 			component: (props) => new GameMatching(root.app, props),
