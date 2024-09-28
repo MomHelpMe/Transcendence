@@ -13,9 +13,11 @@ SCREEN_WIDTH = 1250
 MAX_SCORE = 150
 
 
-class GameState:
-    def __init__(self):
+class MatchingGameState:
+    def __init__(self, user1, user2):
         print("initializing game state!")
+        self.user = [user1, user2]
+        self.user_authenticated = [False, False]
         self.map = GameMap()
         self.left_bar = Bar(0, Bar.X_GAP, SCREEN_HEIGHT // 2 - Bar.HEIGHT // 2, 0)
         self.right_bar = Bar(
@@ -31,17 +33,14 @@ class GameState:
         self.penalty_time = [0, 0]
 
 
-class GameConsumer(AsyncWebsocketConsumer):
+class MatchingGameConsumer(AsyncWebsocketConsumer):
     game_tasks = {}
     game_states = {}
     client_counts = {}
 
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        self.room_group_name = f"game_{self.room_name}"
-        print(f"room_name: {self.room_name}")
-
-        # Wait for authentication before joining room group
+        self.room_group_name = self.room_name
         self.authenticated = False
 
         await self.accept()
@@ -50,7 +49,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         action = text_data_json["action"]
 
-        # print("text_data", text_data_json)
         if action == "authenticate":
             token = text_data_json.get("token")
             if not token or not self.authenticate(token):
@@ -62,27 +60,26 @@ class GameConsumer(AsyncWebsocketConsumer):
             # Join room group after successful authentication
             await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
-            # Initialize game state for the room if it doesn't exist
-            if self.room_group_name not in GameConsumer.game_states:
-                print("new game!")
-                GameConsumer.game_states[self.room_group_name] = GameState()
-                GameConsumer.client_counts[self.room_group_name] = 0
-
-            GameConsumer.client_counts[self.room_group_name] += 1
-
-            # Send initialize game state to the client
+            # # Send initialize game state to the client
             await self.send_initialize_game()
 
-            # Start ball movement if not already running
-            if self.room_group_name not in GameConsumer.game_tasks:
-                GameConsumer.game_tasks[self.room_group_name] = asyncio.create_task(
-                    self.game_loop()
-                )
+            # Update authentication status in the game state
+            state = MatchingGameConsumer.game_states[self.room_group_name]
+            state.user_authenticated[self.user_index] = True
+
+            # Check if both users are authenticated, then start the game_loop
+            if all(state.user_authenticated):
+                # Start the game loop if not already started
+                if self.room_group_name not in MatchingGameConsumer.game_tasks:
+                    print("user_authenticated", state.user_authenticated)
+                    MatchingGameConsumer.game_tasks[self.room_group_name] = (
+                        asyncio.create_task(self.game_loop())
+                    )
         elif not self.authenticated:
             await self.close(code=4001)
         else:
             bar = text_data_json.get("bar")
-            state = GameConsumer.game_states[self.room_group_name]
+            state = MatchingGameConsumer.game_states[self.room_group_name]
 
             # Update the bar position based on the action
             if bar == "left":
@@ -112,21 +109,19 @@ class GameConsumer(AsyncWebsocketConsumer):
             # Decode JWT token
             decoded = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
             uid = decoded.get("id")
-            print(
-                f"uid: {uid}",
-                f"room_name: {self.room_name}",
-                str(uid) == str(self.room_name),
-            )
             # Check if uid matches the room_name
-            if str(uid) == str(self.room_name):
+            state = MatchingGameConsumer.game_states[self.room_group_name]
+            if str(uid) == str(state.user[0]):
+                self.user_index = 0
+                return True
+            elif str(uid) == str(state.user[1]):
+                self.user_index = 1
                 return True
             else:
                 return False
         except jwt.ExpiredSignatureError:
-            print("Token has expired")
             return False
         except jwt.InvalidTokenError:
-            print("Invalid token")
             return False
 
     async def disconnect(self, close_code):
@@ -136,18 +131,18 @@ class GameConsumer(AsyncWebsocketConsumer):
                 self.room_group_name, self.channel_name
             )
             # Decrease the client count for this room
-            if self.room_group_name in GameConsumer.client_counts:
-                GameConsumer.client_counts[self.room_group_name] -= 1
-                if GameConsumer.client_counts[self.room_group_name] <= 0:
-                    GameConsumer.game_tasks[self.room_group_name].cancel()
-                    del GameConsumer.game_tasks[self.room_group_name]
-                    del GameConsumer.game_states[self.room_group_name]
-                    del GameConsumer.client_counts[self.room_group_name]
+            if self.room_group_name in MatchingGameConsumer.client_counts:
+                MatchingGameConsumer.client_counts[self.room_group_name] -= 1
+                if MatchingGameConsumer.client_counts[self.room_group_name] <= 0:
+                    MatchingGameConsumer.game_tasks[self.room_group_name].cancel()
+                    del MatchingGameConsumer.game_tasks[self.room_group_name]
+                    del MatchingGameConsumer.game_states[self.room_group_name]
+                    del MatchingGameConsumer.client_counts[self.room_group_name]
             else:
-                GameConsumer.client_counts[self.room_group_name] = 0
+                MatchingGameConsumer.client_counts[self.room_group_name] = 0
 
     async def send_initialize_game(self):
-        state = GameConsumer.game_states[self.room_group_name]
+        state = MatchingGameConsumer.game_states[self.room_group_name]
         await self.send(
             text_data=json.dumps(
                 {
@@ -174,10 +169,11 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
 
     async def game_loop(self):
+        print("!!Game loop started for", self.room_group_name)
         try:
             count = 0
             while True:
-                state = GameConsumer.game_states[self.room_group_name]
+                state = MatchingGameConsumer.game_states[self.room_group_name]
                 state.left_bar.update()
                 state.right_bar.update()
 
@@ -209,6 +205,7 @@ class GameConsumer(AsyncWebsocketConsumer):
                         break
                 else:
                     await asyncio.sleep(0.00390625)
+                    # await asyncio.sleep(0.016)
                 count += 1
         except asyncio.CancelledError:
             # Handle the game loop cancellation
@@ -216,7 +213,7 @@ class GameConsumer(AsyncWebsocketConsumer):
             await self.close()
 
     async def send_game_result(self, winner):
-        state = GameConsumer.game_states[self.room_group_name]
+        state = MatchingGameConsumer.game_states[self.room_group_name]
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -242,7 +239,7 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
 
     async def send_game_state(self):
-        state = GameConsumer.game_states[self.room_group_name]
+        state = MatchingGameConsumer.game_states[self.room_group_name]
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -272,7 +269,6 @@ class GameConsumer(AsyncWebsocketConsumer):
         right_ball_y = event["right_ball_y"]
         score = event["score"]
         penalty_time = event["penalty_time"]
-
         # Send the updated game state to the WebSocket
         await self.send(
             text_data=json.dumps(
@@ -286,7 +282,9 @@ class GameConsumer(AsyncWebsocketConsumer):
                     "left_ball_y": int(left_ball_y),
                     "right_ball_x": int(right_ball_x),
                     "right_ball_y": int(right_ball_y),
-                    "map_diff": GameConsumer.game_states[self.room_group_name].map.diff,
+                    "map_diff": MatchingGameConsumer.game_states[
+                        self.room_group_name
+                    ].map.diff,
                     "score": score,
                     "penalty_time": penalty_time,
                 }

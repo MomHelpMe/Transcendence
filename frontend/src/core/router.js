@@ -10,6 +10,7 @@ import { Match } from "../components/Match.js";
 import { Tournament } from "../components/Tournament.js";
 import { GameLocal } from "../components/Game-Local.js";
 import { GameTournament } from "../components/Game-Tournament.js";
+import { GameMatching } from "../components/Game-matching.js";
 import { Error } from "../components/Error.js";
 
 export const createRoutes = (root) => {
@@ -46,6 +47,10 @@ export const createRoutes = (root) => {
 		},
 		"/game/tournament/:uid": {
 			component: (props) => new GameTournament(root.app, props),
+		},
+		"/game/vs/:room": {
+			component: (props) => new GameMatching(root.app, props),
+			props: { room: "" }
 		},
 		"/error": {
 			component: (props) => new Error(root.app, props)
